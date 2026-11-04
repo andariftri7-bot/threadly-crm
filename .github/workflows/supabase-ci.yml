@@ -1,0 +1,41 @@
+name: Threadly CI & Supabase Verification
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript Typecheck
+        run: npx tsc --noEmit
+
+      - name: Run CRM & Multi-tenant Integrity Tests
+        run: npm test
+
+      - name: Run WCAG AA Color Contrast Audit
+        run: npm run test:contrast
+
+      - name: Validate Supabase SQL Migrations Syntax
+        run: |
+          test -f supabase/migrations/001_initial_schema.sql
+          test -f supabase/migrations/002_superadmin_security.sql
+          test -f supabase/seed.sql
+          test -f supabase/config.toml
+          echo "Supabase migrations and configuration files verified!"

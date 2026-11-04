@@ -9,7 +9,10 @@
     "lint": "next lint",
     "seed": "node scripts/seed.mjs",
     "test": "node scripts/verify-crm.mjs",
-    "test:contrast": "node scripts/test-contrast.mjs"
+    "test:contrast": "node scripts/test-contrast.mjs",
+    "db:push": "supabase db push",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.1",
