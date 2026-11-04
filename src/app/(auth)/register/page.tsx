@@ -1,28 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useStore } from '@/lib/store-context';
 import { Button, Input } from '@/components/ui';
-import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, AlertCircle, Info, Store as StoreIcon } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
-  const { login } = useStore();
+  const searchParams = useSearchParams();
+  const { registerAndCreateStore } = useStore();
+
+  const urlEmail = searchParams?.get('email') || '';
+  const isUnregisteredRedirect = searchParams?.get('unregistered') === 'true';
 
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [storeName, setStoreName] = useState('');
+  const [email, setEmail] = useState(urlEmail);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (urlEmail) {
+      setEmail(urlEmail);
+    }
+  }, [urlEmail]);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
+    const cleanEmail = email.toLowerCase().trim();
+    if (!cleanEmail.includes('@')) {
+      setErrorMsg('Alamat email tidak valid.');
+      return;
+    }
+    if (cleanEmail === 'andariftri7@gmail.com') {
+      setErrorMsg('Alamat email super admin dilindungi dan tidak dapat didaftarkan ulang.');
+      return;
+    }
     if (password !== confirmPassword) {
       setErrorMsg('Konfirmasi kata sandi tidak cocok.');
       return;
@@ -34,24 +54,50 @@ export default function RegisterPage() {
 
     setIsLoading(true);
     try {
-      if (email.toLowerCase().trim() === 'andariftri7@gmail.com') {
-        throw new Error('Alamat email ini dilindungi dan tidak dapat didaftarkan ulang.');
-      }
-      await login(email, 'owner');
-      // Transition to store onboarding
-      router.push('/onboarding');
+      const userFullName = fullName.trim() || cleanEmail.split('@')[0];
+      const userStoreName = storeName.trim() || `Butik ${userFullName}`;
+
+      await registerAndCreateStore({
+        email: cleanEmail,
+        fullName: userFullName,
+        storeName: userStoreName,
+      });
+
+      // Setelah pendaftaran berhasil, pengguna langsung masuk ke dashboard toko
+      router.push('/dashboard');
     } catch (err: any) {
-      setErrorMsg(err.message || 'Gagal mendaftar.');
-    } finally {
+      setErrorMsg(err.message || 'Gagal mendaftar. Silakan coba kembali.');
       setIsLoading(false);
     }
   };
 
   const handleGoogleRegister = async () => {
     setIsLoading(true);
-    // Google OAuth: hanya menerima akun yang emailnya sudah terverifikasi
-    await login('new.google.user@fashion.id', 'owner');
-    router.push('/onboarding');
+    setErrorMsg(null);
+    try {
+      const targetEmail = (email.trim() && email.includes('@'))
+        ? email.toLowerCase().trim()
+        : `pemilik.${Date.now().toString().slice(-4)}@gmail.com`;
+
+      if (targetEmail === 'andariftri7@gmail.com') {
+        throw new Error('Alamat email super admin dilindungi.');
+      }
+
+      const userFullName = fullName.trim() || targetEmail.split('@')[0];
+      const userStoreName = storeName.trim() || `Butik ${userFullName}`;
+
+      await registerAndCreateStore({
+        email: targetEmail,
+        fullName: userFullName,
+        storeName: userStoreName,
+      });
+
+      // Langsung masuk ke dashboard toko setelah daftar via Google
+      router.push('/dashboard');
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Gagal mendaftar dengan Google.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -120,9 +166,22 @@ export default function RegisterPage() {
               Daftar Akun Threadly
             </h2>
             <p className="text-xs text-muted-foreground font-medium">
-              Buat akun barumu dan mulai atur etalase serta pelanggan fashion dalam 2 menit.
+              Buat akun barumu dan toko fashion Anda langsung aktif dalam sekejap.
             </p>
           </div>
+
+          {/* Notifikasi jika dialihkan dari halaman login karena belum terdaftar */}
+          {isUnregisteredRedirect && (
+            <div className="p-3.5 rounded-xl bg-secondary/15 text-secondary text-xs flex items-start gap-2.5 border border-secondary/30 font-semibold animate-in fade-in">
+              <Info className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div>
+                <p className="font-bold text-foreground">Akun Belum Terdaftar</p>
+                <p className="text-xs text-muted-foreground mt-0.5 font-medium leading-relaxed">
+                  Email <span className="font-bold text-foreground">{email || urlEmail}</span> belum terdaftar di Threadly. Silakan lengkapi form pendaftaran ini. Setelah mendaftar, Anda akan <strong>langsung masuk</strong> ke dashboard toko tanpa perlu login ulang.
+                </p>
+              </div>
+            </div>
+          )}
 
           {errorMsg && (
             <div className="p-3.5 rounded-xl bg-destructive/15 text-destructive text-xs flex items-center gap-2 border border-destructive/30 font-semibold">
@@ -131,6 +190,7 @@ export default function RegisterPage() {
             </div>
           )}
 
+          {/* Tombol Cepat Google */}
           <button
             type="button"
             onClick={handleGoogleRegister}
@@ -155,7 +215,7 @@ export default function RegisterPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            <span>Daftar dengan Akun Google</span>
+            <span>Daftar &amp; Langsung Masuk dengan Google</span>
           </button>
 
           <div className="relative flex items-center justify-center">
@@ -173,6 +233,13 @@ export default function RegisterPage() {
               placeholder="Contoh: Riska Melinda"
               value={fullName}
               onChange={e => setFullName(e.target.value)}
+            />
+
+            <Input
+              label="Nama Butik / Toko Fashion"
+              placeholder="Contoh: Butik Cantik Elegan (Opsional)"
+              value={storeName}
+              onChange={e => setStoreName(e.target.value)}
             />
 
             <Input
@@ -210,7 +277,7 @@ export default function RegisterPage() {
               isLoading={isLoading}
               rightIcon={<ArrowRight className="w-4 h-4" strokeWidth={1.5} />}
             >
-              Daftar &amp; Lanjut Onboarding
+              Daftar &amp; Langsung Masuk
             </Button>
           </form>
 
@@ -227,5 +294,19 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background text-foreground text-sm font-medium">
+          Memuat formulir pendaftaran...
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -66,6 +66,8 @@ export interface StoreContextType {
   // User & Store Actions
   login: (email: string, role?: 'owner' | 'staff', isSuper?: boolean) => Promise<boolean>;
   logout: () => void;
+  isEmailRegistered: (email: string) => boolean;
+  registerAndCreateStore: (data: { email: string; fullName: string; storeName?: string }) => Promise<{ profile: Profile; store: Store }>;
   createStore: (storeData: Partial<Store>) => Promise<Store>;
   updateStoreSettings: (settings: Partial<Store>) => Promise<void>;
   updateStorePlan: (storeId: string, newPlan: 'standar' | 'pro', reason: string) => Promise<void>;
@@ -397,6 +399,133 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
 
     return true;
+  };
+
+  const isEmailRegistered = useCallback((emailToCheck: string): boolean => {
+    if (!emailToCheck) return false;
+    const clean = emailToCheck.toLowerCase().trim();
+    if (clean === 'andariftri7@gmail.com') return true;
+
+    try {
+      const rawMembers = localStorage.getItem(STORAGE_KEYS.STORE_MEMBERS);
+      const members: StoreMember[] = rawMembers ? JSON.parse(rawMembers) : storeMembers;
+      const found = members.some(
+        m => m.user_email?.toLowerCase().trim() === clean || m.invited_email?.toLowerCase().trim() === clean
+      );
+      if (found) return true;
+
+      const rawUser = localStorage.getItem(STORAGE_KEYS.USER);
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (u.email?.toLowerCase().trim() === clean) return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }, [storeMembers]);
+
+  const registerAndCreateStore = async ({
+    email,
+    fullName,
+    storeName,
+  }: {
+    email: string;
+    fullName: string;
+    storeName?: string;
+  }): Promise<{ profile: Profile; store: Store }> => {
+    const cleanEmail = email.toLowerCase().trim();
+    if (cleanEmail === 'andariftri7@gmail.com') {
+      throw new Error('Alamat email super admin dilindungi.');
+    }
+
+    const profile: Profile = {
+      id: `usr_${Date.now()}`,
+      email: cleanEmail,
+      full_name: fullName.trim() || cleanEmail.split('@')[0],
+      is_superadmin: false,
+      created_at: new Date().toISOString(),
+    };
+
+    const effectiveStoreName = storeName?.trim() || `Butik ${profile.full_name}`;
+    const slug = effectiveStoreName
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]/g, '-')
+      .replace(/-+/g, '-');
+    const storeId = `store_${Date.now()}`;
+    const sevenDaysFromNow = new Date(Date.now() + 7 * 86400000).toISOString();
+
+    const newStore: Store = {
+      id: storeId,
+      name: effectiveStoreName,
+      slug: slug || `toko-${Date.now()}`,
+      logo_url: '',
+      description: 'Butik Fashion UMKM Indonesia',
+      phone_wa: '081234567890',
+      address: 'Indonesia',
+      status: 'active',
+      plan: 'standar',
+      trial_ends_at: sevenDaysFromNow,
+      active_threshold_days: 60,
+      loyal_threshold_orders: 3,
+      loyal_threshold_days: 90,
+      sleeping_threshold_days: 60,
+      ai_persona: 'Ramah, santai, empatik khas fashion advisor butik lokal.',
+      msg_template_followup_sleeping: 'Halo Kak {nama}! Kami kangen nih di {toko}. Ada koleksi baru lho!',
+      msg_template_unpaid_order: 'Halo Kak {nama}! Pesanan {produk} di {toko} menunggu pembayaran ya.',
+      msg_template_birthday: 'Selamat ulang tahun Kak {nama}! Dapatkan diskon spesial hari ini.',
+      msg_template_restock: 'Kabar gembira Kak {nama}! Varian busana favoritmu sudah restock!',
+      message_emoji_style: 'bebas',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    const newMember: StoreMember = {
+      id: `mem_${Date.now()}`,
+      store_id: storeId,
+      user_id: profile.id,
+      user_email: profile.email,
+      role: 'owner',
+      status: 'active',
+      created_at: new Date().toISOString(),
+    };
+
+    const rawStores = localStorage.getItem(STORAGE_KEYS.STORES);
+    const currentStores: Store[] = rawStores ? JSON.parse(rawStores) : allStores;
+    const updatedStores = [...currentStores, newStore];
+    localStorage.setItem(STORAGE_KEYS.STORES, JSON.stringify(updatedStores));
+    setAllStores(updatedStores);
+
+    const rawMembers = localStorage.getItem(STORAGE_KEYS.STORE_MEMBERS);
+    const currentMembers: StoreMember[] = rawMembers ? JSON.parse(rawMembers) : storeMembers;
+    const updatedMembers = [...currentMembers, newMember];
+    localStorage.setItem(STORAGE_KEYS.STORE_MEMBERS, JSON.stringify(updatedMembers));
+    setStoreMembers(updatedMembers);
+
+    setCurrentUser(profile);
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(profile));
+
+    setCurrentStore(newStore);
+    localStorage.setItem(STORAGE_KEYS.CURRENT_STORE_ID, newStore.id);
+
+    if (typeof document !== 'undefined') {
+      const authPayload = {
+        email: profile.email,
+        is_superadmin: false,
+        email_verified: true,
+        valid: true,
+      };
+      document.cookie = `threadly_auth=${encodeURIComponent(JSON.stringify(authPayload))}; path=/; max-age=86400; SameSite=Lax`;
+    }
+
+    setCustomers([]);
+    setProducts([]);
+    setOrders([]);
+    setStockMovements([]);
+    setFollowupTasks([]);
+
+    return { profile, store: newStore };
   };
 
   const logout = () => {
@@ -1478,6 +1607,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         clearNotification,
         login,
         logout,
+        isEmailRegistered,
+        registerAndCreateStore,
         createStore,
         updateStoreSettings,
         updateStorePlan,

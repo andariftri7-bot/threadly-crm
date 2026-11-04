@@ -4,22 +4,57 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/lib/store-context';
-import { Button, Input } from '@/components/ui';
-import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Button, Input, Modal } from '@/components/ui';
+import { ArrowRight, CheckCircle2, AlertCircle, Info, Mail } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useStore();
+  const { login, isEmailRegistered } = useStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [infoMsg, setInfoMsg] = useState<string | null>(null);
+
+  // Google Account Selector Modal
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const [googleEmailInput, setGoogleEmailInput] = useState('');
+
+  const processEmailRouting = async (targetEmail: string, isFromGoogle: boolean = false) => {
+    const cleanEmail = targetEmail.toLowerCase().trim();
+    if (!cleanEmail.includes('@')) {
+      throw new Error('Format email tidak valid.');
+    }
+
+    // 1. Cek apakah email sudah terdaftar
+    const registered = isEmailRegistered(cleanEmail);
+
+    if (!registered) {
+      // Belum terdaftar -> Alihkan ke halaman daftar
+      setInfoMsg(
+        `Email "${cleanEmail}" belum terdaftar di Threadly. Mengalihkan ke pendaftaran agar Anda bisa langsung mendaftar dan masuk...`
+      );
+      setTimeout(() => {
+        router.push(`/register?email=${encodeURIComponent(cleanEmail)}&from=${isFromGoogle ? 'google' : 'email'}&unregistered=true`);
+      }, 1000);
+      return;
+    }
+
+    // 2. Jika sudah terdaftar -> Masuk langsung
+    await login(cleanEmail, 'owner');
+    if (email.toLowerCase().trim() === 'andariftri7@gmail.com' || cleanEmail === 'andariftri7@gmail.com') {
+      router.push('/admin');
+    } else {
+      router.push('/dashboard');
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setInfoMsg(null);
     setIsLoading(true);
 
     try {
@@ -30,25 +65,38 @@ export default function LoginPage() {
         throw new Error('Kata sandi minimal 6 karakter.');
       }
 
-      await login(email, 'owner');
-      // Strictly only andariftri7@gmail.com goes to /admin
-      if (email.toLowerCase().trim() === 'andariftri7@gmail.com') {
-        router.push('/admin');
-      } else {
-        router.push('/dashboard');
-      }
+      await processEmailRouting(email, false);
     } catch (err: any) {
       setErrorMsg(err.message || 'Gagal masuk akun. Periksa kembali email dan kata sandi.');
-    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleBtnClick = () => {
+    setErrorMsg(null);
+    setInfoMsg(null);
+
+    // Jika pengguna sudah mengetik email di input, langsung proses email tersebut
+    if (email.trim() && email.includes('@')) {
+      setIsLoading(true);
+      processEmailRouting(email, true).catch(err => {
+        setErrorMsg(err.message || 'Gagal memproses akun Google.');
+        setIsLoading(false);
+      });
+      return;
+    }
+
+    // Jika input email masih kosong, buka modal pemilihan akun Google
+    setIsGoogleModalOpen(true);
+  };
+
+  const handleSelectGoogleAccount = (selectedEmail: string) => {
+    setIsGoogleModalOpen(false);
     setIsLoading(true);
-    // Google OAuth: hanya menerima akun yang emailnya sudah terverifikasi
-    await login('owner.koleksilokal@threadly.id', 'owner');
-    router.push('/dashboard');
+    processEmailRouting(selectedEmail, true).catch(err => {
+      setErrorMsg(err.message || 'Gagal memproses akun Google.');
+      setIsLoading(false);
+    });
   };
 
   return (
@@ -123,6 +171,13 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {infoMsg && (
+            <div className="p-3.5 rounded-xl bg-secondary/15 text-secondary text-xs flex items-center gap-2 border border-secondary/30 font-semibold animate-in fade-in">
+              <Info className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
+              <span>{infoMsg}</span>
+            </div>
+          )}
+
           {errorMsg && (
             <div className="p-3.5 rounded-xl bg-destructive/15 text-destructive text-xs flex items-center gap-2 border border-destructive/30 font-semibold">
               <AlertCircle className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
@@ -133,7 +188,7 @@ export default function LoginPage() {
           {/* Google OAuth Button */}
           <button
             type="button"
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleBtnClick}
             disabled={isLoading}
             className="w-full py-2.5 px-4 rounded-xl border border-border bg-card text-foreground font-semibold text-xs flex items-center justify-center gap-2.5 hover:bg-muted transition shadow-sm"
           >
@@ -171,7 +226,7 @@ export default function LoginPage() {
               label="Alamat Email"
               type="email"
               required
-              placeholder="nama@tokomu.com"
+              placeholder="nama@tokomu.com atau nama@gmail.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
@@ -222,6 +277,65 @@ export default function LoginPage() {
           Keamanan terjamin &bull; Privasi Row Level Security (RLS)
         </div>
       </div>
+
+      {/* Google Account Selector Modal */}
+      <Modal
+        isOpen={isGoogleModalOpen}
+        onClose={() => setIsGoogleModalOpen(false)}
+        title="Masuk dengan Akun Google"
+        description="Pilih akun Google Anda atau masukkan alamat Gmail Anda."
+      >
+        <div className="space-y-4 pt-2">
+          <div className="space-y-2">
+            <p className="text-xs font-bold text-muted-foreground uppercase">Akun Terdaftar di Sistem:</p>
+            <button
+              type="button"
+              onClick={() => handleSelectGoogleAccount('owner.koleksilokal@threadly.id')}
+              className="w-full p-3 rounded-xl border border-border bg-muted/40 hover:bg-muted text-left flex items-center justify-between transition"
+            >
+              <div>
+                <p className="text-sm font-bold text-foreground">Dian Sastrowardoyo</p>
+                <p className="text-xs text-muted-foreground">owner.koleksilokal@threadly.id</p>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-success/15 text-success">
+                Toko Terdaftar
+              </span>
+            </button>
+          </div>
+
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-border w-full" />
+            <span className="bg-card px-2 text-[10px] uppercase font-bold text-muted-foreground">
+              Atau akun Gmail lain
+            </span>
+            <div className="border-t border-border w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Input
+              label="Alamat Gmail Anda"
+              type="email"
+              placeholder="contoh@gmail.com"
+              value={googleEmailInput}
+              onChange={e => setGoogleEmailInput(e.target.value)}
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              className="w-full"
+              disabled={!googleEmailInput.includes('@')}
+              onClick={() => handleSelectGoogleAccount(googleEmailInput)}
+              leftIcon={<Mail className="w-4 h-4" strokeWidth={1.5} />}
+            >
+              Lanjutkan dengan Gmail Ini
+            </Button>
+            <p className="text-[11px] text-muted-foreground text-center">
+              *Jika Gmail belum terdaftar, Anda akan langsung dialihkan ke pendaftaran dan masuk setelahnya.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
