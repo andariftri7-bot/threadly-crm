@@ -1,5 +1,6 @@
 -- ==============================================================================
 -- THREADLY - Supabase Seed Data for Development & Testing
+-- 100% Synced dengan Schema DDL Database Supabase
 -- ==============================================================================
 
 -- 1. Create Mock Auth Users in auth.users (if using Supabase CLI / local instance)
@@ -93,7 +94,7 @@ ON CONFLICT (id) DO UPDATE SET
     status = EXCLUDED.status;
 
 -- 4. Store Memberships (1 User = 1 Store Isolation, Super Admin excluded)
--- Diperbaiki: user_email dihapus sehingga hanya mengisi id, store_id, user_id, role, status
+-- Sinkron: hanya id, store_id, user_id, role, status
 INSERT INTO public.store_members (id, store_id, user_id, role, status)
 VALUES
     ('c0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000002', 'owner', 'active'),
@@ -102,13 +103,15 @@ VALUES
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 5. Products for Store 1 (Koleksi Lokal)
-INSERT INTO public.products (id, store_id, name, slug, description, category, base_price, is_active)
+-- Sinkron: kolom slug dihapus, base_price disesuaikan menjadi price sesuai skema DDL
+INSERT INTO public.products (id, store_id, name, description, category, price, is_active)
 VALUES
-    ('d0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'Kemeja Linen Oversized', 'kemeja-linen-oversized', 'Kemeja potongan santai berbahan 100% serat rami alami berkualitas tinggi.', 'Atasan', 249000, true),
-    ('d0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'Celana Kulot Highwaist', 'celana-kulot-highwaist', 'Kulot berpinggang tinggi dengan karet belakang elastis yang nyaman seharian.', 'Bawahan', 199000, true)
+    ('d0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'Kemeja Linen Oversized', 'Kemeja potongan santai berbahan 100% serat rami alami berkualitas tinggi.', 'Atasan', 249000, true),
+    ('d0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'Celana Kulot Highwaist', 'Kulot berpinggang tinggi dengan karet belakang elastis yang nyaman seharian.', 'Bawahan', 199000, true)
 ON CONFLICT (id) DO NOTHING;
 
 -- 6. Product Variants
+-- Sinkron: id, product_id, store_id, size, color, stock, min_stock_alert, sku
 INSERT INTO public.product_variants (id, product_id, store_id, size, color, stock, min_stock_alert, sku)
 VALUES
     ('e0000000-0000-0000-0000-000000000001', 'd0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'S', 'Sage Green', 15, 3, 'KL-KLO-S-SG'),
@@ -119,6 +122,7 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- 7. Customers
+-- Sinkron: id, store_id, name, phone_wa, source, birthdate, favorite_size, favorite_color, preferred_style, budget_range, tags, total_spend, order_count, average_order_value, stage, last_purchase_date
 INSERT INTO public.customers (
     id, store_id, name, phone_wa, source, birthdate, favorite_size, favorite_color, preferred_style, budget_range,
     tags, total_spend, order_count, average_order_value, stage, last_purchase_date
@@ -179,7 +183,8 @@ INSERT INTO public.customers (
 )
 ON CONFLICT (id) DO NOTHING;
 
--- 8. Sample Order
+-- 8. Sample Order & Order Items
+-- Sinkron: id, store_id, order_number, customer_id, customer_name, customer_phone, status, subtotal, shipping_cost, discount, total_amount, payment_method, source
 INSERT INTO public.orders (
     id, store_id, order_number, customer_id, customer_name, customer_phone,
     status, subtotal, shipping_cost, discount, total_amount, payment_method, source
@@ -214,6 +219,7 @@ INSERT INTO public.order_items (
 ) ON CONFLICT (id) DO NOTHING;
 
 -- 9. Sample Follow-up Retention Task (Customer Sleeping)
+-- Sinkron: id, store_id, customer_id, type, title, description, status, due_date, whatsapp_url
 INSERT INTO public.followup_tasks (
     id, store_id, customer_id, type, title, description, status, due_date, whatsapp_url
 ) VALUES (
