@@ -93,11 +93,12 @@ ON CONFLICT (id) DO UPDATE SET
     status = EXCLUDED.status;
 
 -- 4. Store Memberships (1 User = 1 Store Isolation, Super Admin excluded)
-INSERT INTO public.store_members (id, store_id, user_id, user_email, role, status)
+-- Diperbaiki: user_email dihapus sehingga hanya mengisi id, store_id, user_id, role, status
+INSERT INTO public.store_members (id, store_id, user_id, role, status)
 VALUES
-    ('c0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000002', 'owner.koleksilokal@threadly.id', 'owner', 'active'),
-    ('c0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000003', 'owner.batikheritage@threadly.id', 'owner', 'active'),
-    ('c0000000-0000-0000-0000-000000000003', 'b0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004', 'owner.urbanthrift@threadly.id', 'owner', 'active')
+    ('c0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000002', 'owner', 'active'),
+    ('c0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000003', 'owner', 'active'),
+    ('c0000000-0000-0000-0000-000000000003', 'b0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004', 'owner', 'active')
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 5. Products for Store 1 (Koleksi Lokal)
