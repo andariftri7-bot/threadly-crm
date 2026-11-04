@@ -186,15 +186,15 @@ export default function NewOrderPage() {
       {/* Top Header */}
       <div className="flex items-center gap-3">
         <Link href="/orders">
-          <button className="p-2 rounded-xl border border-slate-200 dark:border-navy-700 hover:bg-slate-100 dark:hover:bg-navy-800 transition">
-            <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" strokeWidth={1.5} />
+          <button className="p-2 rounded-xl border border-border hover:bg-slate-100 dark:hover:bg-navy-800 transition">
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
           </button>
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Buat Pesanan Baru
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Catat pesanan dari WhatsApp, Instagram DM, atau pembelian langsung.
           </p>
         </div>
@@ -203,7 +203,7 @@ export default function NewOrderPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Customer Selection Card */}
         <Card className="space-y-4">
-          <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+          <h3 className="text-base font-bold text-card-foreground">
             1. Informasi Pelanggan
           </h3>
 
@@ -214,7 +214,7 @@ export default function NewOrderPage() {
               className={`p-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-bold transition ${
                 customerMode === 'existing'
                   ? 'bg-violet-50 dark:bg-violet-950/40 border-violet-500 text-violet-700 dark:text-violet-300'
-                  : 'border-slate-200 dark:border-navy-700 text-slate-500'
+                  : 'border-border text-muted-foreground'
               }`}
             >
               <UserCheck className="w-4 h-4" strokeWidth={1.5} />
@@ -226,7 +226,7 @@ export default function NewOrderPage() {
               className={`p-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-bold transition ${
                 customerMode === 'new'
                   ? 'bg-violet-50 dark:bg-violet-950/40 border-violet-500 text-violet-700 dark:text-violet-300'
-                  : 'border-slate-200 dark:border-navy-700 text-slate-500'
+                  : 'border-border text-muted-foreground'
               }`}
             >
               <UserPlus className="w-4 h-4" strokeWidth={1.5} />
@@ -236,13 +236,13 @@ export default function NewOrderPage() {
 
           {customerMode === 'existing' ? (
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Pilih Dari Data Pelanggan CRM
               </label>
               <select
                 value={selectedCustomerId}
                 onChange={e => setSelectedCustomerId(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+                className="w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-card text-card-foreground"
               >
                 {customers.map(c => (
                   <option key={c.id} value={c.id}>
@@ -281,13 +281,13 @@ export default function NewOrderPage() {
 
         {/* Product Variant Picker Card */}
         <Card className="space-y-4">
-          <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+          <h3 className="text-base font-bold text-card-foreground">
             2. Tambah Varian Busana
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
             <div className="sm:col-span-5">
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Koleksi Produk
               </label>
               <select
@@ -299,7 +299,7 @@ export default function NewOrderPage() {
                     setSelectedVariantId(p.variants[0].id);
                   }
                 }}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card"
               >
                 {products.map(p => (
                   <option key={p.id} value={p.id}>
@@ -310,13 +310,13 @@ export default function NewOrderPage() {
             </div>
 
             <div className="sm:col-span-4">
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Varian Ukuran & Warna
               </label>
               <select
                 value={selectedVariantId}
                 onChange={e => setSelectedVariantId(e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card"
               >
                 {activeVariants.map(v => (
                   <option key={v.id} value={v.id}>
@@ -327,7 +327,7 @@ export default function NewOrderPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Jumlah
               </label>
               <input
@@ -335,7 +335,7 @@ export default function NewOrderPage() {
                 min={1}
                 value={itemQty}
                 onChange={e => setItemQty(parseInt(e.target.value) || 1)}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card"
               />
             </div>
 
@@ -347,31 +347,31 @@ export default function NewOrderPage() {
           </div>
 
           {/* Added items list */}
-          <div className="border border-slate-100 dark:border-navy-800 rounded-xl overflow-hidden mt-4">
+          <div className="border border-border rounded-xl overflow-hidden mt-4">
             {items.length === 0 ? (
-              <p className="text-center py-6 text-xs text-slate-400">
+              <p className="text-center py-6 text-xs text-muted-foreground">
                 Belum ada item ditambahkan ke keranjang pesanan.
               </p>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-navy-800">
+              <div className="divide-y divide-border">
                 {items.map((item, idx) => (
                   <div key={idx} className="p-3 flex items-center justify-between text-xs">
                     <div>
-                      <p className="font-bold text-navy-900 dark:text-ivory-100">
+                      <p className="font-bold text-card-foreground">
                         {item.productName}
                       </p>
-                      <p className="text-slate-500">
+                      <p className="text-muted-foreground">
                         {item.variantName} &bull; {formatRupiah(item.price)} &times; {item.quantity} pcs
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-bold text-navy-900 dark:text-ivory-100">
+                      <span className="font-bold text-card-foreground">
                         {formatRupiah(item.subtotal)}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveItem(idx)}
-                        className="text-slate-400 hover:text-rose-500"
+                        className="text-muted-foreground hover:text-rose-500"
                       >
                         <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                       </button>
@@ -385,7 +385,7 @@ export default function NewOrderPage() {
 
         {/* Pricing, Shipping & Payment Card */}
         <Card className="space-y-4">
-          <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+          <h3 className="text-base font-bold text-card-foreground">
             3. Pengiriman, Pembayaran & Total
           </h3>
 
@@ -403,13 +403,13 @@ export default function NewOrderPage() {
               onChange={e => setDiscount(Number(e.target.value))}
             />
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Metode Pembayaran
               </label>
               <select
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card"
               >
                 <option value="Transfer Bank BCA">Transfer Bank BCA</option>
                 <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
@@ -422,13 +422,13 @@ export default function NewOrderPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Status Pesanan Awal
               </label>
               <select
                 value={orderStatus}
                 onChange={e => setOrderStatus(e.target.value as OrderStatus)}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card"
               >
                 <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
                 <option value="DP">DP (Uang Muka)</option>
@@ -448,16 +448,16 @@ export default function NewOrderPage() {
           </div>
 
           {/* Grand total calculation block */}
-          <div className="bg-slate-50 dark:bg-navy-800/60 p-4 rounded-xl border border-slate-100 dark:border-navy-800 space-y-2 text-xs">
-            <div className="flex justify-between text-slate-500">
+          <div className="bg-muted/60/60 p-4 rounded-xl border border-border space-y-2 text-xs">
+            <div className="flex justify-between text-muted-foreground">
               <span>Subtotal Produk:</span>
-              <span className="font-semibold text-navy-900 dark:text-ivory-100">
+              <span className="font-semibold text-card-foreground">
                 {formatRupiah(itemsSubtotal)}
               </span>
             </div>
-            <div className="flex justify-between text-slate-500">
+            <div className="flex justify-between text-muted-foreground">
               <span>Ongkos Kirim:</span>
-              <span className="font-semibold text-navy-900 dark:text-ivory-100">
+              <span className="font-semibold text-card-foreground">
                 {formatRupiah(shippingCost)}
               </span>
             </div>
@@ -467,7 +467,7 @@ export default function NewOrderPage() {
                 <span>-{formatRupiah(discount)}</span>
               </div>
             )}
-            <div className="flex justify-between text-base font-bold text-navy-900 dark:text-ivory-100 pt-2 border-t border-slate-200 dark:border-navy-700">
+            <div className="flex justify-between text-base font-bold text-card-foreground pt-2 border-t border-border">
               <span>TOTAL PEMBAYARAN:</span>
               <span className="text-violet-600 dark:text-violet-400">
                 {formatRupiah(grandTotal)}

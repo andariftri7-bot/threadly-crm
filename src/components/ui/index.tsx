@@ -18,14 +18,19 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading = false, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
     const baseClasses =
-      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed select-none active:scale-[0.98]';
 
     const variants = {
-      primary: 'bg-navy-900 hover:bg-navy-800 text-ivory-100 shadow-sm hover:shadow dark:bg-gradient-accent dark:hover:opacity-95 dark:text-white',
-      secondary: 'bg-gradient-accent hover:opacity-95 text-white shadow-glow-sm hover:shadow-glow-violet transition-all duration-200',
-      outline: 'border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 hover:bg-slate-50 dark:hover:bg-navy-800',
-      ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-navy-800 text-navy-800 dark:text-ivory-200',
-      danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-sm',
+      primary:
+        'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/90',
+      secondary:
+        'bg-secondary bg-gradient-accent hover:opacity-95 text-white shadow-sm transition-all duration-200',
+      outline:
+        'border border-border bg-card text-foreground hover:bg-muted shadow-sm',
+      ghost:
+        'bg-transparent hover:bg-muted text-foreground',
+      danger:
+        'bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-sm',
     };
 
     const sizes = {
@@ -70,7 +75,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5 text-left">
         {label && (
-          <label htmlFor={generatedId} className="block text-xs font-semibold text-navy-800 dark:text-slate-200 tracking-wide uppercase">
+          <label htmlFor={generatedId} className="block text-xs font-bold text-foreground tracking-wide uppercase">
             {label}
           </label>
         )}
@@ -78,16 +83,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={generatedId}
           ref={ref}
           className={cn(
-            'w-full px-3.5 py-2.5 text-sm bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-700 rounded-xl text-navy-900 dark:text-ivory-100 placeholder:text-slate-400 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 disabled:bg-slate-100 dark:disabled:bg-navy-800 disabled:cursor-not-allowed',
-            error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/25',
+            'w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed',
+            error && 'border-destructive focus:border-destructive focus:ring-destructive/25',
             className
           )}
           {...props}
         />
         {error ? (
-          <p className="text-xs text-rose-500 font-medium">{error}</p>
+          <p className="text-xs text-destructive font-semibold">{error}</p>
         ) : helperText ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>
+          <p className="text-xs text-muted-foreground font-medium">{helperText}</p>
         ) : null}
       </div>
     );
@@ -109,19 +114,19 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const variants = {
-    default: 'bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-navy-700',
-    success: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
-    warning: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800',
-    info: 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-800',
-    purple: 'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800',
-    danger: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800',
-    champagne: 'bg-[#C9A96E]/15 text-[#9A7840] dark:text-[#EBD9B4] border border-[#C9A96E]/40 font-semibold',
+    default: 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-700',
+    success: 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-700',
+    warning: 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700',
+    info: 'bg-sky-100 dark:bg-sky-950/80 text-sky-900 dark:text-sky-200 border-sky-300 dark:border-sky-700',
+    purple: 'bg-violet-100 dark:bg-violet-950/80 text-violet-900 dark:text-violet-200 border-violet-300 dark:border-violet-700',
+    danger: 'bg-rose-100 dark:bg-rose-950/80 text-rose-900 dark:text-rose-200 border-rose-300 dark:border-rose-700',
+    champagne: 'bg-[var(--champagne-bg)] text-[var(--champagne-text)] border-[#C9A96E] font-bold',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border tracking-wide select-none',
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border tracking-wide select-none',
         variants[variant],
         className
       )}
@@ -143,7 +148,7 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   return (
     <div
       className={cn(
-        'bg-white dark:bg-navy-900 border border-slate-200/80 dark:border-navy-800 rounded-2xl shadow-sm p-6 text-navy-900 dark:text-ivory-100 transition-all',
+        'bg-card border border-border rounded-2xl shadow-sm p-6 text-card-foreground transition-all',
         className
       )}
       {...props}
@@ -183,23 +188,23 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
         className={cn(
-          'w-full bg-white dark:bg-navy-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-navy-700 p-6 space-y-4 max-h-[90vh] overflow-y-auto',
+          'w-full bg-card rounded-2xl shadow-2xl border border-border p-6 space-y-4 max-h-[90vh] overflow-y-auto text-card-foreground',
           maxWidths[maxWidth]
         )}
       >
-        <div className="flex items-start justify-between border-b border-slate-100 dark:border-navy-800 pb-3">
+        <div className="flex items-start justify-between border-b border-border pb-3">
           <div>
-            <h3 className="text-lg font-bold text-navy-900 dark:text-ivory-100">{title}</h3>
+            <h3 className="text-lg font-bold text-card-foreground">{title}</h3>
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-navy-800 transition"
+            className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
           >
             <X className="w-5 h-5" strokeWidth={1.5} />
           </button>
@@ -236,12 +241,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-white dark:bg-navy-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-navy-800">
-      <div className="w-14 h-14 rounded-2xl bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 flex items-center justify-center mb-4">
+    <div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-card rounded-2xl border border-dashed border-border text-card-foreground">
+      <div className="w-14 h-14 rounded-2xl bg-muted text-secondary flex items-center justify-center mb-4">
         {icon}
       </div>
-      <h4 className="text-base font-semibold text-navy-900 dark:text-ivory-100 mb-1">{title}</h4>
-      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-6">{description}</p>
+      <h4 className="text-base font-bold text-card-foreground mb-1">{title}</h4>
+      <p className="text-sm text-muted-foreground max-w-sm mb-6">{description}</p>
       {actionText && onAction && (
         <Button onClick={onAction} variant="secondary" size="sm">
           {actionText}

@@ -372,10 +372,10 @@ export default function ProductsPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Katalog Produk &amp; Stok Varian
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Kelola varian ukuran dan warna dengan akurasi stok otomatis per pergerakan.
           </p>
         </div>
@@ -420,12 +420,12 @@ export default function ProductsPage() {
             return (
               <Card
                 key={product.id}
-                className="p-0 overflow-hidden border border-slate-200 dark:border-navy-800 transition shadow-sm hover:shadow"
+                className="p-0 overflow-hidden border border-border transition shadow-sm hover:shadow"
               >
                 {/* Main Product Row Header */}
                 <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-navy-800 flex-shrink-0 border border-slate-200 dark:border-navy-700">
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-navy-800 flex-shrink-0 border border-border">
                       {product.image_url ? (
                         <Image
                           src={product.image_url}
@@ -435,24 +435,24 @@ export default function ProductsPage() {
                           unoptimized
                         />
                       ) : (
-                        <Package className="w-8 h-8 m-auto text-slate-400" strokeWidth={1.5} />
+                        <Package className="w-8 h-8 m-auto text-muted-foreground" strokeWidth={1.5} />
                       )}
                     </div>
 
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+                        <h3 className="font-bold text-base text-card-foreground">
                           {product.name}
                         </h3>
                         <Badge variant="default">{product.category}</Badge>
                       </div>
-                      <p className="text-xs text-slate-500 font-mono mt-0.5">
+                      <p className="text-xs text-muted-foreground font-mono mt-0.5">
                         SKU: {product.sku || '-'} &bull; {product.variants?.length || 0} Varian
                       </p>
                       <p className="text-sm font-extrabold text-violet-600 dark:text-violet-400 mt-1">
                         {formatRupiah(product.price)}
                         {product.cost_price && (
-                          <span className="text-xs text-slate-400 font-normal ml-2">
+                          <span className="text-xs text-muted-foreground font-normal ml-2">
                             (Modal: {formatRupiah(product.cost_price)})
                           </span>
                         )}
@@ -460,10 +460,10 @@ export default function ProductsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-navy-800">
+                  <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-border">
                     <div className="text-left sm:text-right">
-                      <p className="text-xs text-slate-500">Total Stok</p>
-                      <p className="text-base font-bold text-navy-900 dark:text-ivory-100">
+                      <p className="text-xs text-muted-foreground">Total Stok</p>
+                      <p className="text-base font-bold text-card-foreground">
                         {totalStock} pcs
                       </p>
                       {lowStockCount > 0 && (
@@ -492,7 +492,7 @@ export default function ProductsPage() {
 
                       <button
                         onClick={() => handleOpenEdit(product)}
-                        className="p-2 rounded-lg text-slate-400 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-950/40 transition"
+                        className="p-2 rounded-lg text-muted-foreground hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-950/40 transition"
                         title="Ubah Rincian Produk"
                       >
                         <Edit2 className="w-4 h-4" strokeWidth={1.5} />
@@ -500,7 +500,7 @@ export default function ProductsPage() {
 
                       <button
                         onClick={() => setProductToDelete(product)}
-                        className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
+                        className="p-2 rounded-lg text-muted-foreground hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
                         title="Hapus Produk"
                       >
                         <Trash2 className="w-4 h-4" strokeWidth={1.5} />
@@ -511,8 +511,8 @@ export default function ProductsPage() {
 
                 {/* Variants Expansion Table */}
                 {isExpanded && (
-                  <div className="border-t border-slate-100 dark:border-navy-800 bg-slate-50/60 dark:bg-navy-950/40 p-4">
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between">
+                  <div className="border-t border-border bg-slate-50/60 dark:bg-navy-950/40 p-4">
+                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center justify-between">
                       <span>Rincian Varian Ukuran &amp; Warna</span>
                       <span>Aksi Stok</span>
                     </div>
@@ -527,13 +527,13 @@ export default function ProductsPage() {
                             className="py-2.5 flex items-center justify-between text-xs"
                           >
                             <div className="flex items-center gap-3">
-                              <span className="font-bold text-navy-900 dark:text-ivory-100 min-w-16">
+                              <span className="font-bold text-card-foreground min-w-16">
                                 Size {variant.size}
                               </span>
-                              <span className="text-slate-600 dark:text-slate-400">
+                              <span className="text-slate-600 dark:text-muted-foreground">
                                 Warna: {variant.color}
                               </span>
-                              <span className="text-slate-400 font-mono text-[11px]">
+                              <span className="text-muted-foreground font-mono text-[11px]">
                                 {variant.sku}
                               </span>
                             </div>
@@ -546,12 +546,12 @@ export default function ProductsPage() {
                                       ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400'
                                       : isLow
                                       ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-400'
-                                      : 'bg-slate-200 dark:bg-navy-800 text-slate-700 dark:text-slate-300'
+                                      : 'bg-slate-200 dark:bg-navy-800 text-card-foreground'
                                   }`}
                                 >
                                   {variant.stock} pcs
                                 </span>
-                                <span className="text-[10px] text-slate-400 block mt-0.5">
+                                <span className="text-[10px] text-muted-foreground block mt-0.5">
                                   Min. {variant.min_stock_alert}
                                 </span>
                               </div>
@@ -597,7 +597,7 @@ export default function ProductsPage() {
               className={`p-3 rounded-xl border text-xs font-bold text-center transition ${
                 adjustType === 'in'
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-700 dark:text-emerald-400'
-                  : 'border-slate-200 dark:border-navy-700 text-slate-500'
+                  : 'border-border text-muted-foreground'
               }`}
             >
               Stok Masuk (Restock / Retur)
@@ -608,7 +608,7 @@ export default function ProductsPage() {
               className={`p-3 rounded-xl border text-xs font-bold text-center transition ${
                 adjustType === 'out'
                   ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-700 dark:text-rose-400'
-                  : 'border-slate-200 dark:border-navy-700 text-slate-500'
+                  : 'border-border text-muted-foreground'
               }`}
             >
               Stok Keluar (Rusak / Sample)
@@ -632,7 +632,7 @@ export default function ProductsPage() {
             onChange={e => setAdjustReason(e.target.value)}
           />
 
-          <div className="pt-2 flex justify-end gap-2 border-t border-slate-100 dark:border-navy-800">
+          <div className="pt-2 flex justify-end gap-2 border-t border-border">
             <Button type="button" variant="outline" onClick={() => setAdjustingVariant(null)}>
               Batal
             </Button>
@@ -668,13 +668,13 @@ export default function ProductsPage() {
               onChange={e => setNewProdSku(e.target.value)}
             />
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Kategori Busana
               </label>
               <select
                 value={newProdCategory}
                 onChange={e => setNewProdCategory(e.target.value)}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card text-card-foreground"
               >
                 <option value="Atasan">Atasan (Kemeja, Blouse, Kaos)</option>
                 <option value="Bawahan">Bawahan (Kulot, Celana, Rok)</option>
@@ -703,11 +703,11 @@ export default function ProductsPage() {
 
           {/* Photo Upload with Local File Picker & Fallback */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide">
               Foto Produk (Unggah atau URL)
             </label>
             <div className="flex items-center gap-3">
-              <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-navy-700 bg-slate-50 dark:bg-navy-800 hover:bg-slate-100 text-xs font-semibold transition">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-muted/60 hover:bg-slate-100 text-xs font-semibold transition">
                 <Upload className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
                 <span>Pilih Foto dari Perangkat</span>
                 <input
@@ -719,7 +719,7 @@ export default function ProductsPage() {
               </label>
               {newProdImg && (
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg overflow-hidden relative border border-slate-200">
+                  <div className="w-9 h-9 rounded-lg overflow-hidden relative border border-border">
                     <Image src={newProdImg} alt="Preview" fill className="object-cover" unoptimized />
                   </div>
                   <button
@@ -740,7 +740,7 @@ export default function ProductsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
               Deskripsi Produk
             </label>
             <textarea
@@ -748,14 +748,14 @@ export default function ProductsPage() {
               value={newProdDesc}
               onChange={e => setNewProdDesc(e.target.value)}
               placeholder="Bahan, fitting, instruksi cuci..."
-              className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+              className="w-full p-2.5 text-xs rounded-xl border border-border bg-card"
             />
           </div>
 
           {/* Dynamic Variant Rows */}
-          <div className="space-y-2 border-t border-slate-100 dark:border-navy-800 pt-3">
+          <div className="space-y-2 border-t border-border pt-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-navy-900 dark:text-ivory-100">
+              <span className="text-xs font-bold uppercase tracking-wider text-card-foreground">
                 Kombinasi Varian (Ukuran &amp; Warna)
               </span>
               <Button type="button" variant="outline" size="sm" onClick={handleAddVariantRow}>
@@ -776,7 +776,7 @@ export default function ProductsPage() {
                         copy[idx].size = e.target.value;
                         setVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-3">
@@ -789,7 +789,7 @@ export default function ProductsPage() {
                         copy[idx].color = e.target.value;
                         setVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-2">
@@ -802,7 +802,7 @@ export default function ProductsPage() {
                         copy[idx].stock = Number(e.target.value);
                         setVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-3">
@@ -815,14 +815,14 @@ export default function ProductsPage() {
                         copy[idx].minStock = Number(e.target.value);
                         setVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-1 text-center">
                     <button
                       type="button"
                       onClick={() => handleRemoveVariantRow(idx)}
-                      className="text-slate-400 hover:text-rose-500 p-1"
+                      className="text-muted-foreground hover:text-rose-500 p-1"
                     >
                       <X className="w-4 h-4" strokeWidth={1.5} />
                     </button>
@@ -832,7 +832,7 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 dark:border-navy-800 flex justify-end gap-2">
+          <div className="pt-3 border-t border-border flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
               Batal
             </Button>
@@ -853,12 +853,12 @@ export default function ProductsPage() {
       >
         <div className="max-h-[60vh] overflow-y-auto space-y-2 text-xs">
           {stockMovements.length === 0 ? (
-            <p className="text-center py-8 text-slate-500">Belum ada mutasi stok tercatat.</p>
+            <p className="text-center py-8 text-muted-foreground">Belum ada mutasi stok tercatat.</p>
           ) : (
             stockMovements.map(sm => (
               <div
                 key={sm.id}
-                className="p-3 rounded-xl border border-slate-100 dark:border-navy-800 bg-slate-50/50 dark:bg-navy-800/40 flex items-center justify-between"
+                className="p-3 rounded-xl border border-border bg-slate-50/50 dark:bg-navy-800/40 flex items-center justify-between"
               >
                 <div>
                   <div className="flex items-center gap-2">
@@ -877,19 +877,19 @@ export default function ProductsPage() {
                         ? '- Terjual'
                         : '- Keluar'}
                     </span>
-                    <span className="font-semibold text-navy-900 dark:text-ivory-100">
+                    <span className="font-semibold text-card-foreground">
                       {sm.variant_info || 'Varian Busana'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     {sm.notes || '-'} &bull; {formatDateWIB(sm.created_at)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                  <span className="font-bold text-sm text-card-foreground">
                     {sm.quantity} pcs
                   </span>
-                  <p className="text-[10px] text-slate-400">Sisa: {sm.balance_after} pcs</p>
+                  <p className="text-[10px] text-muted-foreground">Sisa: {sm.balance_after} pcs</p>
                 </div>
               </div>
             ))
@@ -921,13 +921,13 @@ export default function ProductsPage() {
             />
 
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Kategori
               </label>
               <select
                 value={editProdCategory}
                 onChange={e => setEditProdCategory(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-card text-card-foreground"
               >
                 <option value="Atasan">Atasan</option>
                 <option value="Bawahan">Bawahan</option>
@@ -958,11 +958,11 @@ export default function ProductsPage() {
 
           {/* Photo in Edit Modal */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide">
               Foto Produk
             </label>
             <div className="flex items-center gap-3">
-              <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 dark:border-navy-700 bg-slate-50 dark:bg-navy-800 hover:bg-slate-100 text-xs font-semibold transition">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-muted/60 hover:bg-slate-100 text-xs font-semibold transition">
                 <Upload className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
                 <span>Unggah Foto Baru</span>
                 <input
@@ -974,7 +974,7 @@ export default function ProductsPage() {
               </label>
               {editProdImg && (
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg overflow-hidden relative border border-slate-200">
+                  <div className="w-9 h-9 rounded-lg overflow-hidden relative border border-border">
                     <Image src={editProdImg} alt="Preview" fill className="object-cover" unoptimized />
                   </div>
                   <button
@@ -995,21 +995,21 @@ export default function ProductsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
               Deskripsi Produk
             </label>
             <textarea
               rows={2}
               value={editProdDesc}
               onChange={e => setEditProdDesc(e.target.value)}
-              className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+              className="w-full p-2.5 text-xs rounded-xl border border-border bg-card text-card-foreground"
             />
           </div>
 
           {/* Variant Rows in Edit */}
-          <div className="space-y-2 border-t border-slate-100 dark:border-navy-800 pt-3">
+          <div className="space-y-2 border-t border-border pt-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-navy-900 dark:text-ivory-100">
+              <span className="text-xs font-bold uppercase tracking-wider text-card-foreground">
                 Varian Ukuran &amp; Warna ({editVariantsRows.length})
               </span>
               <Button type="button" variant="outline" size="sm" onClick={handleEditAddVariantRow}>
@@ -1030,7 +1030,7 @@ export default function ProductsPage() {
                         copy[idx].size = e.target.value;
                         setEditVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-3">
@@ -1043,7 +1043,7 @@ export default function ProductsPage() {
                         copy[idx].color = e.target.value;
                         setEditVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-2">
@@ -1056,7 +1056,7 @@ export default function ProductsPage() {
                         copy[idx].stock = Number(e.target.value);
                         setEditVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-3">
@@ -1069,14 +1069,14 @@ export default function ProductsPage() {
                         copy[idx].minStock = Number(e.target.value);
                         setEditVariantsRows(copy);
                       }}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900"
+                      className="w-full p-2 rounded-lg border border-border bg-card"
                     />
                   </div>
                   <div className="col-span-1 text-center">
                     <button
                       type="button"
                       onClick={() => handleEditRemoveVariantRow(idx)}
-                      className="text-slate-400 hover:text-rose-500 p-1"
+                      className="text-muted-foreground hover:text-rose-500 p-1"
                     >
                       <X className="w-4 h-4" strokeWidth={1.5} />
                     </button>
@@ -1086,7 +1086,7 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-navy-800">
+          <div className="flex justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"
@@ -1114,7 +1114,7 @@ export default function ProductsPage() {
         title="Hapus Produk dari Katalog"
         description={`Apakah Anda yakin ingin menghapus produk "${productToDelete?.name}"? Tindakan ini tidak dapat dibatalkan.`}
       >
-        <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-navy-800">
+        <div className="flex justify-end gap-3 pt-3 border-t border-border">
           <Button variant="outline" size="sm" onClick={() => setProductToDelete(null)}>
             Batal
           </Button>

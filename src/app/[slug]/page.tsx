@@ -54,11 +54,11 @@ export default function PublicStorefrontPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-ivory-100 text-center">
         <Card className="max-w-md w-full p-8 space-y-4">
-          <div className="w-12 h-12 rounded-full bg-slate-100 mx-auto flex items-center justify-center text-slate-400">
+          <div className="w-12 h-12 rounded-full bg-slate-100 mx-auto flex items-center justify-center text-muted-foreground">
             <Store className="w-6 h-6" strokeWidth={1.5} />
           </div>
           <h2 className="text-xl font-bold text-navy-900">Toko Tidak Ditemukan</h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             Alamat etalase toko <strong>/{slug}</strong> tidak terdaftar di Threadly.
           </p>
         </Card>
@@ -75,7 +75,7 @@ export default function PublicStorefrontPage() {
             <AlertCircle className="w-6 h-6" strokeWidth={1.5} />
           </div>
           <h2 className="text-xl font-bold text-navy-900">{store.name} Sedang Tutup</h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             Etalase toko ini sedang tidak aktif sementara. Silakan hubungi penjual secara langsung.
           </p>
         </Card>
@@ -168,7 +168,7 @@ export default function PublicStorefrontPage() {
       {/* Store Header Banner */}
       <header className="bg-navy-900 text-ivory-100 py-10 px-4 border-b border-navy-800">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
-          <div className="w-20 h-20 rounded-2xl bg-white text-navy-900 flex items-center justify-center font-extrabold text-2xl shadow-lg border border-slate-200">
+          <div className="w-20 h-20 rounded-2xl bg-white text-navy-900 flex items-center justify-center font-extrabold text-2xl shadow-lg border border-border">
             {store.name.charAt(0)}
           </div>
           <div className="space-y-1">
@@ -178,7 +178,7 @@ export default function PublicStorefrontPage() {
             </div>
             <p className="text-sm text-slate-300 max-w-xl">{store.description}</p>
             {store.address && (
-              <p className="text-xs text-slate-400 flex items-center justify-center sm:justify-start gap-1 pt-1">
+              <p className="text-xs text-muted-foreground flex items-center justify-center sm:justify-start gap-1 pt-1">
                 <MapPin className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>{store.address}</span>
               </p>
@@ -200,7 +200,7 @@ export default function PublicStorefrontPage() {
               Terima kasih <strong>{buyerName}</strong>, pesananmu nomor{' '}
               <strong className="text-violet-600">#{submittedOrderNumber}</strong> telah kami terima.
             </p>
-            <div className="p-4 bg-slate-50 rounded-xl text-xs text-left space-y-1.5 text-slate-600 border border-slate-200">
+            <div className="p-4 bg-slate-50 rounded-xl text-xs text-left space-y-1.5 text-slate-600 border border-border">
               <p>
                 <strong>Produk:</strong> {selectedProduct?.name} ({selectedVariant?.size} /{' '}
                 {selectedVariant?.color}) &times; {orderQty} pcs
@@ -212,7 +212,7 @@ export default function PublicStorefrontPage() {
                 <strong>Alamat:</strong> {buyerAddress}
               </p>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               Klik tombol di bawah untuk konfirmasi otomatis ke WhatsApp pemilik toko:
             </p>
             <a
@@ -247,11 +247,11 @@ export default function PublicStorefrontPage() {
             <div className="md:col-span-7 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-lg text-navy-900">Pilih Koleksi Busana</h3>
-                <span className="text-xs text-slate-500">{storeProducts.length} produk tersedia</span>
+                <span className="text-xs text-muted-foreground">{storeProducts.length} produk tersedia</span>
               </div>
 
               {storeProducts.length === 0 ? (
-                <Card className="text-center py-12 text-slate-500 text-sm">
+                <Card className="text-center py-12 text-muted-foreground text-sm">
                   Belum ada koleksi produk yang aktif di etalase ini.
                 </Card>
               ) : (
@@ -268,7 +268,7 @@ export default function PublicStorefrontPage() {
                         className={`cursor-pointer rounded-2xl overflow-hidden border transition-all duration-200 bg-white ${
                           isSelected
                             ? 'border-violet-500 ring-2 ring-violet-500/20 shadow-md'
-                            : 'border-slate-200 hover:border-slate-300 shadow-sm'
+                            : 'border-border hover:border-slate-300 shadow-sm'
                         }`}
                       >
                         <div className="relative h-44 w-full bg-slate-100">
@@ -298,7 +298,7 @@ export default function PublicStorefrontPage() {
                         </div>
 
                         <div className="p-3.5 space-y-1">
-                          <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
                             {product.category}
                           </p>
                           <h4 className="font-bold text-sm text-navy-900 truncate">
@@ -317,10 +317,10 @@ export default function PublicStorefrontPage() {
 
             {/* Order Form Card (5 Cols) */}
             <div className="md:col-span-5">
-              <Card className="sticky top-6 p-6 space-y-5 border-slate-200 shadow-md">
-                <div className="border-b border-slate-100 pb-3">
+              <Card className="sticky top-6 p-6 space-y-5 border-border shadow-md">
+                <div className="border-b border-border pb-3">
                   <h3 className="font-bold text-base text-navy-900">Form Pemesanan Cepat</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     Langsung terhubung dengan sistem kasir & penjual toko.
                   </p>
                 </div>
@@ -333,7 +333,7 @@ export default function PublicStorefrontPage() {
                 )}
 
                 {!selectedProduct ? (
-                  <div className="text-center py-8 text-slate-400 text-xs">
+                  <div className="text-center py-8 text-muted-foreground text-xs">
                     &larr; Klik salah satu pakaian di katalog sebelah kiri untuk memilih ukuran dan warna.
                   </div>
                 ) : (
@@ -366,13 +366,13 @@ export default function PublicStorefrontPage() {
                                 isPicked
                                   ? 'border-violet-500 bg-violet-50 text-violet-700 font-bold'
                                   : isOutOfStock
-                                  ? 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed line-through'
-                                  : 'border-slate-200 hover:border-slate-300 text-navy-900'
+                                  ? 'border-border bg-slate-100 text-muted-foreground cursor-not-allowed line-through'
+                                  : 'border-border hover:border-slate-300 text-navy-900'
                               }`}
                             >
                               <div className="font-bold">Size {v.size}</div>
-                              <div className="text-[11px] text-slate-500">{v.color}</div>
-                              <div className="text-[10px] text-slate-400 mt-0.5">
+                              <div className="text-[11px] text-muted-foreground">{v.color}</div>
+                              <div className="text-[10px] text-muted-foreground mt-0.5">
                                 {isOutOfStock ? 'Habis' : `Stok: ${v.stock}`}
                               </div>
                             </button>
@@ -392,7 +392,7 @@ export default function PublicStorefrontPage() {
                         max={selectedVariant?.stock || 1}
                         value={orderQty}
                         onChange={e => setOrderQty(parseInt(e.target.value) || 1)}
-                        className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200"
+                        className="w-full px-3 py-2 text-sm rounded-xl border border-border"
                       />
                     </div>
 
@@ -435,7 +435,7 @@ export default function PublicStorefrontPage() {
                         placeholder="Alamat lengkap, nomor rumah, RT/RW, kecamatan, kota..."
                         value={buyerAddress}
                         onChange={e => setBuyerAddress(e.target.value)}
-                        className="w-full p-2.5 text-xs rounded-xl border border-slate-200 text-navy-900"
+                        className="w-full p-2.5 text-xs rounded-xl border border-border text-navy-900"
                       />
                     </div>
 

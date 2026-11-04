@@ -167,17 +167,17 @@ export default function DashboardPage() {
       {/* Top Banner Header & Period Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Halo, selamat datang kembali!
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Berikut ringkasan performa dan retensi pelanggan di {currentStore?.name}.
           </p>
         </div>
 
         {/* Period Filter Buttons */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div className="inline-flex p-1 rounded-xl bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 shadow-sm">
+          <div className="inline-flex p-1 rounded-xl bg-card border border-border shadow-sm">
             {(['today', '7d', '30d', 'custom', 'all'] as const).map(p => {
               const labels = {
                 today: 'Hari Ini',
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                   className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition ${
                     period === p
                       ? 'bg-navy-900 text-white dark:bg-violet-600'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-navy-900 dark:hover:text-ivory-100'
+                      : 'text-slate-600 dark:text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
                   }`}
                 >
                   {labels[p]}
@@ -203,19 +203,19 @@ export default function DashboardPage() {
           </div>
 
           {period === 'custom' && (
-            <div className="flex items-center gap-2 bg-white dark:bg-navy-900 p-1.5 rounded-xl border border-slate-200 dark:border-navy-800 text-xs">
+            <div className="flex items-center gap-2 bg-card p-1.5 rounded-xl border border-border text-xs">
               <input
                 type="date"
                 value={customStart}
                 onChange={e => setCustomStart(e.target.value)}
-                className="px-2 py-1 rounded-lg border border-slate-200 dark:border-navy-700 bg-transparent text-navy-900 dark:text-ivory-100"
+                className="px-2 py-1 rounded-lg border border-border bg-transparent text-card-foreground"
               />
-              <span className="text-slate-400">-</span>
+              <span className="text-muted-foreground">-</span>
               <input
                 type="date"
                 value={customEnd}
                 onChange={e => setCustomEnd(e.target.value)}
-                className="px-2 py-1 rounded-lg border border-slate-200 dark:border-navy-700 bg-transparent text-navy-900 dark:text-ivory-100"
+                className="px-2 py-1 rounded-lg border border-border bg-transparent text-card-foreground"
               />
             </div>
           )}
@@ -226,10 +226,10 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <Card className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Total Omzet
             </p>
-            <h3 className="text-2xl font-extrabold text-navy-900 dark:text-ivory-100 mt-1">
+            <h3 className="text-2xl font-extrabold text-card-foreground mt-1">
               {formatRupiah(totalOmzet)}
             </h3>
             <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-1">
@@ -243,13 +243,13 @@ export default function DashboardPage() {
 
         <Card className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Jumlah Pesanan
             </p>
-            <h3 className="text-2xl font-extrabold text-navy-900 dark:text-ivory-100 mt-1">
+            <h3 className="text-2xl font-extrabold text-card-foreground mt-1">
               {totalOrdersCount}
             </h3>
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-muted-foreground mt-1">
               Periode {period === 'today' ? 'hari ini' : period === '7d' ? '7 hari' : '30 hari'}
             </p>
           </div>
@@ -267,15 +267,15 @@ export default function DashboardPage() {
         >
           <div>
             <div className="flex items-center gap-1.5">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Pelanggan Baru
               </p>
               <Badge variant="success">Buka List</Badge>
             </div>
-            <h3 className="text-2xl font-extrabold text-navy-900 dark:text-ivory-100 mt-1 group-hover:text-emerald-600 transition">
+            <h3 className="text-2xl font-extrabold text-card-foreground mt-1 group-hover:text-emerald-600 transition">
               {newCustomersCount}
             </h3>
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-muted-foreground mt-1">
               Belum pernah membeli &bull; Klik untuk daftar
             </p>
           </div>
@@ -312,16 +312,16 @@ export default function DashboardPage() {
       </div>
 
       {/* Siklus Pelanggan Toko & Retensi Section */}
-      <Card className="p-6 border-slate-200 dark:border-navy-800">
+      <Card className="p-6 border-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-bold text-navy-900 dark:text-ivory-100">
+              <h3 className="text-lg font-bold text-card-foreground">
                 Siklus Pelanggan Toko ({customers.length} Pelanggan)
               </h3>
               <Badge variant="purple">CRM Lifecycle</Badge>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Kategorisasi otomatis perjalanan pembeli. Klik kartu siklus untuk melihat daftar dan menghubungi pelanggan tidur via WhatsApp.
             </p>
           </div>
@@ -350,10 +350,10 @@ export default function DashboardPage() {
                   {customers.length > 0 ? Math.round((stageCounts.Baru / customers.length) * 100) : 0}%
                 </span>
               </div>
-              <p className="text-2xl font-black text-navy-900 dark:text-ivory-100 mt-2">
-                {stageCounts.Baru} <span className="text-xs font-normal text-slate-500">orang</span>
+              <p className="text-2xl font-black text-card-foreground mt-2">
+                {stageCounts.Baru} <span className="text-xs font-normal text-muted-foreground">orang</span>
               </p>
-              <p className="text-[11px] text-slate-500 mt-1">
+              <p className="text-[11px] text-muted-foreground mt-1">
                 Belum pernah bertransaksi di toko
               </p>
             </div>
@@ -380,10 +380,10 @@ export default function DashboardPage() {
                   {customers.length > 0 ? Math.round((stageCounts.Aktif / customers.length) * 100) : 0}%
                 </span>
               </div>
-              <p className="text-2xl font-black text-navy-900 dark:text-ivory-100 mt-2">
-                {stageCounts.Aktif} <span className="text-xs font-normal text-slate-500">orang</span>
+              <p className="text-2xl font-black text-card-foreground mt-2">
+                {stageCounts.Aktif} <span className="text-xs font-normal text-muted-foreground">orang</span>
               </p>
-              <p className="text-[11px] text-slate-500 mt-1">
+              <p className="text-[11px] text-muted-foreground mt-1">
                 Beli dlm {currentStore?.active_threshold_days || 60} hari terakhir
               </p>
             </div>
@@ -410,10 +410,10 @@ export default function DashboardPage() {
                   {customers.length > 0 ? Math.round((stageCounts.Setia / customers.length) * 100) : 0}%
                 </span>
               </div>
-              <p className="text-2xl font-black text-navy-900 dark:text-ivory-100 mt-2">
-                {stageCounts.Setia} <span className="text-xs font-normal text-slate-500">orang</span>
+              <p className="text-2xl font-black text-card-foreground mt-2">
+                {stageCounts.Setia} <span className="text-xs font-normal text-muted-foreground">orang</span>
               </p>
-              <p className="text-[11px] text-slate-500 mt-1">
+              <p className="text-[11px] text-muted-foreground mt-1">
                 Min. {currentStore?.loyal_threshold_orders || 3} pesanan dlm {currentStore?.loyal_threshold_days || 90} hari
               </p>
             </div>
@@ -441,9 +441,9 @@ export default function DashboardPage() {
                 </span>
               </div>
               <p className="text-2xl font-black text-amber-700 dark:text-amber-400 mt-2">
-                {stageCounts.Tidur} <span className="text-xs font-normal text-slate-500">orang</span>
+                {stageCounts.Tidur} <span className="text-xs font-normal text-muted-foreground">orang</span>
               </p>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 font-medium">
+              <p className="text-[11px] text-muted-foreground mt-1 font-medium">
                 Tidak beli &gt; {currentStore?.sleeping_threshold_days || 60} hari (Perlu Retensi)
               </p>
             </div>
@@ -466,10 +466,10 @@ export default function DashboardPage() {
           <Card>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+                <h3 className="text-base font-bold text-card-foreground">
                   Tindak Lanjut Retensi Hari Ini
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Ajak kembali pelangganmu sebelum mereka beralih ke toko lain.
                 </p>
               </div>
@@ -481,7 +481,7 @@ export default function DashboardPage() {
             </div>
 
             {pendingTasks.length === 0 ? (
-              <p className="text-sm text-slate-500 py-6 text-center">
+              <p className="text-sm text-muted-foreground py-6 text-center">
                 Semua tugas retensi hari ini sudah selesai. Kerja bagus!
               </p>
             ) : (
@@ -489,7 +489,7 @@ export default function DashboardPage() {
                 {pendingTasks.map(task => (
                   <div
                     key={task.id}
-                    className="p-3.5 rounded-xl border border-slate-200 dark:border-navy-800 flex items-center justify-between gap-4 hover:border-violet-300 dark:hover:border-violet-700 transition bg-slate-50/50 dark:bg-navy-800/40"
+                    className="p-3.5 rounded-xl border border-border flex items-center justify-between gap-4 hover:border-violet-300 dark:hover:border-violet-700 transition bg-slate-50/50 dark:bg-navy-800/40"
                   >
                     <div>
                       <div className="flex items-center gap-2">
@@ -508,11 +508,11 @@ export default function DashboardPage() {
                             ? 'Pesanan Tertunda'
                             : 'Ulang Tahun'}
                         </Badge>
-                        <span className="text-xs font-semibold text-navy-900 dark:text-ivory-100">
+                        <span className="text-xs font-semibold text-card-foreground">
                           {task.customer_name}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                      <p className="text-xs text-slate-600 dark:text-muted-foreground mt-1">
                         {task.description}
                       </p>
                     </div>
@@ -538,10 +538,10 @@ export default function DashboardPage() {
           <Card>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+                <h3 className="text-base font-bold text-card-foreground">
                   Produk Fashion Terlaris
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Koleksi favorit pembeli berdasarkan jumlah terjual.
                 </p>
               </div>
@@ -553,22 +553,22 @@ export default function DashboardPage() {
             </div>
 
             {topProducts.length === 0 ? (
-              <p className="text-sm text-slate-500 py-6 text-center">
+              <p className="text-sm text-muted-foreground py-6 text-center">
                 Belum ada data penjualan tercatat.
               </p>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-navy-800">
+              <div className="divide-y divide-border">
                 {topProducts.map((p, idx) => (
                   <div key={p.name} className="py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="w-6 text-center font-bold text-sm text-slate-400">
+                      <span className="w-6 text-center font-bold text-sm text-muted-foreground">
                         #{idx + 1}
                       </span>
                       <div>
-                        <p className="text-sm font-semibold text-navy-900 dark:text-ivory-100">
+                        <p className="text-sm font-semibold text-card-foreground">
                           {p.name}
                         </p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                           {p.count} potong terjual
                         </p>
                       </div>
@@ -588,11 +588,11 @@ export default function DashboardPage() {
           <Card className="border-amber-200 dark:border-amber-900/60 bg-amber-50/20 dark:bg-amber-950/10">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="w-5 h-5 text-amber-600" strokeWidth={1.5} />
-              <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100">
+              <h3 className="text-base font-bold text-card-foreground">
                 Peringatan Stok Varian
               </h3>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+            <p className="text-xs text-slate-600 dark:text-muted-foreground mb-4">
               Varian busana berikut telah menyentuh batas minimum stok. Segera produksi ulang atau restock agar repeat order tidak terhambat.
             </p>
 
@@ -605,13 +605,13 @@ export default function DashboardPage() {
                 {lowStockVariants.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-white dark:bg-navy-900 rounded-xl border border-amber-200/80 dark:border-amber-900/40 flex items-center justify-between"
+                    className="p-3 bg-card rounded-xl border border-amber-200/80 dark:border-amber-900/40 flex items-center justify-between"
                   >
                     <div>
-                      <p className="text-xs font-bold text-navy-900 dark:text-ivory-100">
+                      <p className="text-xs font-bold text-card-foreground">
                         {item.productName}
                       </p>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-muted-foreground">
                         {item.variantName}
                       </p>
                     </div>
@@ -625,7 +625,7 @@ export default function DashboardPage() {
                       >
                         {item.stock === 0 ? 'Habis (0)' : `Sisa ${item.stock}`}
                       </span>
-                      <p className="text-[10px] text-slate-400 mt-0.5">
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
                         Min. {item.minStock} pcs
                       </p>
                     </div>
@@ -681,27 +681,27 @@ export default function DashboardPage() {
 
           {/* Search within Modal */}
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" strokeWidth={1.5} />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-3" strokeWidth={1.5} />
             <input
               type="text"
               placeholder="Cari nama, nomor WhatsApp, ukuran, warna..."
               value={modalSearch}
               onChange={e => setModalSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-slate-50 dark:bg-navy-800 text-navy-900 dark:text-ivory-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-border bg-muted/60 text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
           </div>
 
           {/* Table / List */}
-          <div className="border border-slate-200 dark:border-navy-800 rounded-xl overflow-hidden max-h-[50vh] overflow-y-auto">
+          <div className="border border-border rounded-xl overflow-hidden max-h-[50vh] overflow-y-auto">
             {stageCustomers.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-500">
+              <div className="p-8 text-center text-xs text-muted-foreground">
                 {modalSearch
                   ? `Tidak ada pelanggan yang cocok dengan pencarian "${modalSearch}".`
                   : `Belum ada pelanggan pada siklus ${selectedStageModal}.`}
               </div>
             ) : (
-              <table className="w-full text-left text-xs text-slate-600 dark:text-slate-300">
-                <thead className="bg-slate-50 dark:bg-navy-800 uppercase font-bold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-navy-800 sticky top-0">
+              <table className="w-full text-left text-xs text-muted-foreground">
+                <thead className="bg-muted/60 uppercase font-bold text-muted-foreground border-b border-border sticky top-0">
                   <tr>
                     <th className="p-3">Pelanggan</th>
                     <th className="p-3">Preferensi</th>
@@ -710,12 +710,12 @@ export default function DashboardPage() {
                     <th className="p-3 text-right">Tindakan Retensi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
+                <tbody className="divide-y divide-border">
                   {stageCustomers.map(cust => (
                     <tr key={cust.id} className="hover:bg-slate-50/70 dark:hover:bg-navy-800/50 transition">
                       <td className="p-3">
-                        <p className="font-bold text-navy-900 dark:text-ivory-100">{cust.name}</p>
-                        <p className="text-[11px] font-mono text-slate-500">{cust.phone_wa}</p>
+                        <p className="font-bold text-card-foreground">{cust.name}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground">{cust.phone_wa}</p>
                       </td>
                       <td className="p-3">
                         <p className="text-xs">
@@ -723,14 +723,14 @@ export default function DashboardPage() {
                           {cust.favorite_color ? ` / ${cust.favorite_color}` : ''}
                         </p>
                         {cust.preferred_style && (
-                          <p className="text-[10px] text-slate-400">{cust.preferred_style}</p>
+                          <p className="text-[10px] text-muted-foreground">{cust.preferred_style}</p>
                         )}
                       </td>
                       <td className="p-3">
                         <p className="font-bold text-violet-600 dark:text-violet-400">
                           {formatRupiah(cust.total_spend)}
                         </p>
-                        <p className="text-[10px] text-slate-400">{cust.order_count} transaksi</p>
+                        <p className="text-[10px] text-muted-foreground">{cust.order_count} transaksi</p>
                       </td>
                       <td className="p-3">
                         <p className="text-xs">
@@ -756,7 +756,7 @@ export default function DashboardPage() {
                             )}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-navy-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-navy-800 text-xs font-medium transition"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-navy-800 text-xs font-medium transition"
                           >
                             <MessageCircle className="w-3.5 h-3.5 text-emerald-500" strokeWidth={1.5} />
                             <span>WA</span>
@@ -765,7 +765,7 @@ export default function DashboardPage() {
 
                         <Link
                           href={`/customers/${cust.id}`}
-                          className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-slate-400 hover:text-navy-900 dark:hover:text-ivory-100 transition"
+                          className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100 transition"
                           title="Buka Profil Lengkap"
                         >
                           <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -778,8 +778,8 @@ export default function DashboardPage() {
             )}
           </div>
 
-          <div className="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-navy-800">
-            <span className="text-xs text-slate-400">
+          <div className="flex justify-between items-center pt-2 border-t border-border">
+            <span className="text-xs text-muted-foreground">
               Total {stageCustomers.length} pelanggan tercantum
             </span>
             <Button

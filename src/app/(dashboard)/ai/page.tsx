@@ -249,11 +249,11 @@ export default function AiAssistantPage() {
       <div>
         <div className="flex items-center gap-2">
           <PenLine className="w-6 h-6 text-violet-500" strokeWidth={1.5} />
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Asisten AI
           </h2>
         </div>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           Otomatisasi penginputan pesanan dari obrolan WhatsApp dan susun balasan cerdas berbasis katalog stok toko.
         </p>
       </div>
@@ -267,13 +267,13 @@ export default function AiAssistantPage() {
       )}
 
       {/* Feature Navigation Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-navy-800 gap-6">
+      <div className="flex border-b border-border gap-6">
         <button
           onClick={() => setActiveTab('chat_to_order')}
           className={`pb-3 text-sm font-bold border-b-2 transition ${
             activeTab === 'chat_to_order'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           Tempel Chat Jadi Pesanan
@@ -283,7 +283,7 @@ export default function AiAssistantPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition ${
             activeTab === 'reply_composer'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           Penyusun Balasan Cerdas
@@ -293,7 +293,7 @@ export default function AiAssistantPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition ${
             activeTab === 'persona'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           Persona &amp; Gaya Bahasa
@@ -305,10 +305,10 @@ export default function AiAssistantPage() {
         <div className="space-y-6">
           <Card className="space-y-4">
             <div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 1. Tempel Percakapan WhatsApp / DM Pembeli
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 AI akan mengekstrak nama, kontak, produk, ukuran, warna, jumlah, dan alamat ke format terstruktur.
               </p>
             </div>
@@ -318,7 +318,7 @@ export default function AiAssistantPage() {
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
               placeholder="Tempel riwayat chat dari pembeli di sini..."
-              className="w-full p-3.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+              className="w-full p-3.5 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
             />
 
             <div className="flex justify-end">
@@ -340,7 +340,7 @@ export default function AiAssistantPage() {
               <div className="flex items-center justify-between border-b border-emerald-100 dark:border-emerald-900/40 pb-3">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-emerald-600" strokeWidth={1.5} />
-                  <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+                  <h3 className="font-bold text-base text-card-foreground">
                     2. Konfirmasi Data Pesanan Hasil Ekstraksi
                   </h3>
                 </div>
@@ -420,10 +420,10 @@ export default function AiAssistantPage() {
         <div className="space-y-6">
           <Card className="space-y-4">
             <div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Pertanyaan dari Calon Pembeli
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Balasan disusun berdasarkan katalog stok toko yang aktif dengan persona ramah dan akurat.
               </p>
             </div>
@@ -433,7 +433,7 @@ export default function AiAssistantPage() {
               value={inquiryInput}
               onChange={e => setInquiryInput(e.target.value)}
               placeholder="Tempel pertanyaan pembeli di sini..."
-              className="w-full p-3.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+              className="w-full p-3.5 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
             />
 
             <div className="flex justify-end gap-2">
@@ -451,7 +451,7 @@ export default function AiAssistantPage() {
 
           {composedReply && (
             <Card className="space-y-3 bg-violet-50/20 dark:bg-violet-950/10 border-violet-200 dark:border-violet-900/40">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 pb-2">
+              <div className="flex items-center justify-between border-b border-border pb-2">
                 <h4 className="text-xs font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider">
                   Draf Balasan yang Siap Dikirimkan
                 </h4>
@@ -476,7 +476,7 @@ export default function AiAssistantPage() {
                 </div>
               </div>
 
-              <div className="p-4 bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-700 text-xs text-navy-900 dark:text-ivory-100 leading-relaxed whitespace-pre-line">
+              <div className="p-4 bg-card rounded-xl border border-border text-xs text-card-foreground leading-relaxed whitespace-pre-line">
                 {composedReply}
               </div>
             </Card>
@@ -489,29 +489,29 @@ export default function AiAssistantPage() {
         <div className="space-y-6">
           <Card className="space-y-5">
             <div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Persona &amp; Gaya Bahasa Asisten AI
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Tentukan bagaimana AI toko kamu berkomunikasi menyapa pelanggan (misalnya: butik elegan, casual streetwear, atau sopan santun tradisi).
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Instruksi Karakter &amp; Nada Bicara
               </label>
               <textarea
                 rows={4}
                 value={personaText}
                 onChange={e => setPersonaText(e.target.value)}
-                className="w-full p-3.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                className="w-full p-3.5 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
               />
             </div>
 
             {/* Emoji Style Setting */}
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Emoji pada Pesan Chat
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -520,18 +520,18 @@ export default function AiAssistantPage() {
                   className={`p-3 rounded-xl border cursor-pointer transition ${
                     emojiStyle === 'bebas'
                       ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                      : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                      : 'border-border hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                    <span className="font-bold text-xs text-card-foreground">
                       Emoji Bebas
                     </span>
                     {emojiStyle === 'bebas' && (
                       <Badge variant="purple">Aktif</Badge>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Bebas berekspresi tanpa batasan jumlah atau varian emoji.
                   </p>
                 </div>
@@ -541,18 +541,18 @@ export default function AiAssistantPage() {
                   className={`p-3 rounded-xl border cursor-pointer transition ${
                     emojiStyle === 'minimal'
                       ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                      : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                      : 'border-border hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                    <span className="font-bold text-xs text-card-foreground">
                       Minimal (Maksimal 2)
                     </span>
                     {emojiStyle === 'minimal' && (
                       <Badge variant="purple">Aktif</Badge>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Hanya menggunakan emoji santun dan profesional dalam batas wajar.
                   </p>
                 </div>
@@ -562,32 +562,32 @@ export default function AiAssistantPage() {
                   className={`p-3 rounded-xl border cursor-pointer transition ${
                     emojiStyle === 'none'
                       ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                      : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                      : 'border-border hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                    <span className="font-bold text-xs text-card-foreground">
                       Tanpa Emoji
                     </span>
                     {emojiStyle === 'none' && (
                       <Badge variant="purple">Aktif</Badge>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Pesan bersih murni teks formal tanpa ikon emotikon apapun.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-navy-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border">
               <div>
                 {currentStore?.last_persona_updated_at ? (
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-muted-foreground">
                     Terakhir disimpan: {formatDateWIB(currentStore.last_persona_updated_at)}
                   </span>
                 ) : (
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-muted-foreground">
                     Gaya bahasa ini digunakan saat menyusun balasan chat.
                   </span>
                 )}
@@ -606,17 +606,17 @@ export default function AiAssistantPage() {
 
           {/* Panel Uji Balasan */}
           <Card className="space-y-4">
-            <div className="border-b border-slate-100 dark:border-navy-800 pb-3">
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+            <div className="border-b border-border pb-3">
+              <h3 className="font-bold text-base text-card-foreground">
                 Uji Balasan Persona
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Coba kirimkan pertanyaan untuk melihat bagaimana persona dan aturan emoji di atas diterapkan pada pesan balasan.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Pertanyaan Simulasi
               </label>
               <textarea
@@ -624,7 +624,7 @@ export default function AiAssistantPage() {
                 value={testInquiry}
                 onChange={e => setTestInquiry(e.target.value)}
                 placeholder="Tulis pertanyaan uji coba di sini..."
-                className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
               />
             </div>
 
@@ -641,11 +641,11 @@ export default function AiAssistantPage() {
             </div>
 
             {testReplyResult && (
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-800/60 border border-slate-200 dark:border-navy-700 space-y-2">
+              <div className="p-4 rounded-xl bg-muted/60/60 border border-border space-y-2">
                 <span className="text-[11px] font-bold text-violet-600 uppercase tracking-wider block">
                   Hasil Pratinjau Balasan:
                 </span>
-                <p className="text-xs text-navy-900 dark:text-ivory-100 leading-relaxed whitespace-pre-line">
+                <p className="text-xs text-card-foreground leading-relaxed whitespace-pre-line">
                   {testReplyResult}
                 </p>
               </div>

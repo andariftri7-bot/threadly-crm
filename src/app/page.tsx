@@ -2,24 +2,19 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Users,
   Sparkles,
-  Store,
   Layers,
   ArrowRight,
   CheckCircle2,
   AlertTriangle,
-  Receipt,
   MessageCircle,
-  HelpCircle,
   ChevronDown,
   ChevronUp,
-  ShieldCheck,
-  Zap,
 } from 'lucide-react';
 import { Button, Badge, Card } from '@/components/ui';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function LandingPage() {
   // FAQ accordion state
@@ -57,41 +52,43 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-ivory-100 dark:bg-navy-950 text-navy-900 dark:text-ivory-100 font-sans selection:bg-violet-500 selection:text-white">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-secondary selection:text-white">
       {/* 1. STICKY NAVBAR */}
-      <header className="sticky top-0 z-40 bg-ivory-100/90 dark:bg-navy-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-navy-800 transition">
+      <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-md border-b border-border transition">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-navy-900 dark:bg-violet-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-primary dark:bg-secondary text-primary-foreground dark:text-secondary-foreground flex items-center justify-center font-bold text-base shadow-sm">
               T
             </div>
-            <span className="font-bold text-xl tracking-tight text-navy-900 dark:text-ivory-100">
+            <span className="font-bold text-xl tracking-tight text-foreground">
               Threadly
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600 dark:text-slate-300">
-            <a href="#masalah" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+          <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-muted-foreground">
+            <a href="#masalah" className="hover:text-secondary transition">
               Masalah
             </a>
-            <a href="#solusi" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+            <a href="#solusi" className="hover:text-secondary transition">
               Solusi
             </a>
-            <a href="#cara-kerja" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+            <a href="#cara-kerja" className="hover:text-secondary transition">
               Cara Kerja
             </a>
-            <a href="#fitur" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+            <a href="#fitur" className="hover:text-secondary transition">
               Fitur
             </a>
-            <a href="#harga" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+            <a href="#harga" className="hover:text-secondary transition">
               Harga
             </a>
-            <a href="#faq" className="hover:text-violet-600 dark:hover:text-violet-400 transition">
+            <a href="#faq" className="hover:text-secondary transition">
               FAQ
             </a>
           </nav>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             <Link href="/login">
               <Button variant="ghost" size="sm">
                 Masuk
@@ -108,13 +105,13 @@ export default function LandingPage() {
 
       {/* 2. HERO SECTION */}
       <section className="relative overflow-hidden pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="relative rounded-3xl bg-gradient-brand text-white p-8 sm:p-14 lg:p-16 text-center space-y-6 shadow-2xl border border-white/10 overflow-hidden">
+        <div className="relative rounded-3xl bg-[#0F172A] bg-gradient-brand text-white p-8 sm:p-14 lg:p-16 text-center space-y-6 shadow-2xl border border-white/10 overflow-hidden">
           {/* Subtle Ambient Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-accent opacity-20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#C9A96E] opacity-10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#5B4BDB] bg-gradient-accent opacity-25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#C9A96E] opacity-15 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-ivory-100 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-champagne" strokeWidth={1.5} />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-[#EBD9B4]" strokeWidth={1.5} />
             <span>Platform CRM Khusus Fashion UMKM Indonesia</span>
           </div>
 
@@ -122,7 +119,7 @@ export default function LandingPage() {
             Kenali pelangganmu, ajak mereka kembali.
           </h1>
 
-          <p className="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-medium">
             Catat preferensi ukuran dan warna favorit pelanggan, kelola stok varian secara akurat, dan dapatkan repeat order berkelanjutan tanpa repot mencatat manual di buku chat.
           </p>
 
@@ -138,63 +135,63 @@ export default function LandingPage() {
               </Button>
             </Link>
             <a href="#cara-kerja" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 text-white border-white/20 hover:bg-white/20">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/15 text-white border-white/30 hover:bg-white/25">
                 Pelajari Cara Kerja
               </Button>
             </a>
           </div>
 
-          <p className="text-xs text-slate-300 pt-1">
+          <p className="text-xs text-slate-300 pt-1 font-semibold">
             Tidak perlu kartu kredit &bull; Siap pakai dalam 2 menit &bull; Dukungan penuh UMKM
           </p>
         </div>
       </section>
 
       {/* 3. PROBLEM SECTION */}
-      <section id="masalah" className="py-20 bg-white dark:bg-navy-900 border-y border-slate-200 dark:border-navy-800">
+      <section id="masalah" className="py-20 bg-muted/50 border-y border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
               Tantangan Nyata Penjual Fashion UMKM
             </h2>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground font-medium">
               Kebanyakan pemilik butik dan thrift kehilangan hingga 40% repeat order karena masalah klasik ini:
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="p-6 space-y-3 border-rose-100 dark:border-rose-950 bg-rose-50/20 dark:bg-rose-950/10">
-              <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 flex items-center justify-center">
+            <Card className="p-6 space-y-3 border-destructive/20 bg-destructive/5">
+              <div className="w-10 h-10 rounded-xl bg-destructive/15 text-destructive flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5" strokeWidth={1.5} />
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Preferensi Pelanggan Terlupakan
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Ukuran favorit (S/M/L) dan warna yang disukai pembeli hilang di tumpukan riwayat chat WhatsApp. Penjual menanyakan ulang info yang sama sehingga terasa tidak profesional.
               </p>
             </Card>
 
-            <Card className="p-6 space-y-3 border-amber-100 dark:border-amber-950 bg-amber-50/20 dark:bg-amber-950/10">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 flex items-center justify-center">
+            <Card className="p-6 space-y-3 border-warning/20 bg-warning/5">
+              <div className="w-10 h-10 rounded-xl bg-warning/15 text-warning flex items-center justify-center">
                 <Users className="w-5 h-5" strokeWidth={1.5} />
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Pelanggan Lama Tidak Dihubungi
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Pembeli yang pernah puas berbelanja dibiarkan begitu saja tanpa pernah disapa kembali saat ada restock koleksi baru yang sesuai ukuran mereka.
               </p>
             </Card>
 
-            <Card className="p-6 space-y-3 border-sky-100 dark:border-sky-950 bg-sky-50/20 dark:bg-sky-950/10">
-              <div className="w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-900/40 text-sky-600 flex items-center justify-center">
+            <Card className="p-6 space-y-3 border-secondary/20 bg-secondary/5">
+              <div className="w-10 h-10 rounded-xl bg-secondary/15 text-secondary flex items-center justify-center">
                 <Layers className="w-5 h-5" strokeWidth={1.5} />
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Stok Varian Ukuran Tidak Akurat
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Catatan manual di buku membuat jumlah varian (misal Size M Hitam vs Size L Putih) sering selisih, berujung pembatalan pesanan yang mengecewakan pembeli.
               </p>
             </Card>
@@ -206,35 +203,35 @@ export default function LandingPage() {
       <section id="solusi" className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
           <Badge variant="purple">Solusi Cerdas Threadly</Badge>
-          <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
             Didesain Khusus untuk Karakter Fashion Lokal
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground font-medium">
             Satu ekosistem lengkap untuk mengubah pembeli satu kali menjadi pelanggan setia berulang kali.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="p-8 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center">
               <Users className="w-6 h-6" strokeWidth={1.5} />
             </div>
-            <h3 className="font-bold text-lg text-navy-900 dark:text-ivory-100">
+            <h3 className="font-bold text-lg text-card-foreground">
               Profil CRM Busana Terlengkap
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
               Catat ukuran favorit, warna yang disukai, gaya busana, hingga tanggal lahir. Tahap loyalitas (Baru, Aktif, Setia, Tidur) dan total belanja terhitung otomatis setiap ada pesanan baru.
             </p>
           </Card>
 
           <Card className="p-8 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-success/15 text-success flex items-center justify-center">
               <MessageCircle className="w-6 h-6" strokeWidth={1.5} />
             </div>
-            <h3 className="font-bold text-lg text-navy-900 dark:text-ivory-100">
+            <h3 className="font-bold text-lg text-card-foreground">
               Tindak Lanjut WhatsApp 1-Klik
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
               Daftar pelanggan yang tidur (&gt;60 hari) atau pesanan yang belum dibayar (&gt;24 jam) otomatis muncul dengan tautan WhatsApp wa.me siap kirim tanpa repot mengetik template.
             </p>
           </Card>
@@ -242,50 +239,50 @@ export default function LandingPage() {
       </section>
 
       {/* 5. 3-STEP HOW IT WORKS */}
-      <section id="cara-kerja" className="py-20 bg-slate-50 dark:bg-navy-900/60 border-y border-slate-200 dark:border-navy-800">
+      <section id="cara-kerja" className="py-20 bg-muted/40 border-y border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
               Cara Kerja Tiga Langkah Sederhana
             </h2>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted-foreground font-medium">
               Mulai dari pendaftaran hingga peningkatan omzet toko dalam hitungan hari.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-navy-900 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
                 1
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-foreground">
                 Daftar &amp; Masukkan Koleksi
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Buat toko dalam 2 menit. Input busana beserta variasi ukuran (S, M, L) dan warna dengan jumlah stok masing-masing.
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-violet-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-secondary text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
                 2
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-foreground">
                 Pasang Link Bio &amp; Catat Pesanan
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Salin tautan etalase publik ke bio Instagram/TikTok. Pesanan yang masuk otomatis memotong stok varian dan mencatat profil pembeli.
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-success text-success-foreground font-extrabold text-xl flex items-center justify-center mx-auto shadow-md">
                 3
               </div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-foreground">
                 Ajak Kembali dengan Retensi
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 Pantau daftar pelanggan Tidur dan sapa mereka via WhatsApp dengan penawaran koleksi baru sesuai ukuran favorit mereka.
               </p>
             </div>
@@ -299,19 +296,19 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="space-y-4">
             <Badge variant="purple">Asisten AI Cerdas</Badge>
-            <h3 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground">
               Tempel Chat WhatsApp Menjadi Pesanan Rapi
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
               Cukup salin teks obrolan pembeli yang berantakan, AI Threadly mengekstrak nama, nomor HP, alamat tujuan, produk, ukuran, dan jumlah dalam format terstruktur. Kamu tinggal mengonfirmasi sebelum disimpan!
             </p>
           </div>
-          <Card className="p-6 bg-slate-50 dark:bg-navy-900 border-slate-200 text-xs font-mono space-y-2">
-            <div className="text-slate-400 uppercase font-bold text-[10px]">Contoh Ekstraksi:</div>
-            <p className="text-slate-700 dark:text-slate-300">
+          <Card className="p-6 bg-muted/40 border border-border text-xs font-mono space-y-2">
+            <div className="text-muted-foreground uppercase font-bold text-[10px]">Contoh Ekstraksi:</div>
+            <p className="text-foreground font-medium">
               &quot;Mbak mau pesen Kemeja Linen Broken White size M 1 pcs, kirim ke Jl. Kemang No. 14, Rania (08123456789)&quot;
             </p>
-            <div className="p-3 bg-white dark:bg-navy-950 rounded-xl border border-violet-200 dark:border-violet-900 text-violet-700 dark:text-violet-300 space-y-1">
+            <div className="p-3 bg-card rounded-xl border border-secondary/30 text-secondary space-y-1 font-semibold">
               <p>&bull; Pelanggan: Rania (08123456789)</p>
               <p>&bull; Produk: Kemeja Linen (Broken White / M) &times; 1</p>
               <p>&bull; Status: Menunggu Pembayaran</p>
@@ -321,30 +318,30 @@ export default function LandingPage() {
 
         {/* Feature 2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <Card className="order-2 md:order-1 p-6 bg-slate-50 dark:bg-navy-900 border-slate-200 space-y-3">
-            <div className="flex items-center justify-between text-xs border-b border-slate-200 dark:border-navy-800 pb-2">
-              <span className="font-bold">Koleksi Busana</span>
-              <span className="font-bold">Stok Varian</span>
+          <Card className="order-2 md:order-1 p-6 bg-muted/40 border border-border space-y-3">
+            <div className="flex items-center justify-between text-xs border-b border-border pb-2">
+              <span className="font-bold text-card-foreground">Koleksi Busana</span>
+              <span className="font-bold text-card-foreground">Stok Varian</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span>Kemeja Linen &bull; Size M / Sage</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">15 pcs</span>
+              <span className="font-medium text-card-foreground">Kemeja Linen &bull; Size M / Sage</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700 font-bold">15 pcs</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span>Kulot Highwaist &bull; Size L / Hitam</span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">2 pcs (Menipis)</span>
+              <span className="font-medium text-card-foreground">Kulot Highwaist &bull; Size L / Hitam</span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 font-bold">2 pcs (Menipis)</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-              <span>Midi Dress Floral &bull; Size S / Cream</span>
-              <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold">0 pcs (Habis)</span>
+              <span className="font-medium text-card-foreground">Midi Dress Floral &bull; Size S / Cream</span>
+              <span className="px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-200 border border-rose-300 dark:border-rose-700 font-bold">0 pcs (Habis)</span>
             </div>
           </Card>
           <div className="space-y-4 order-1 md:order-2">
             <Badge variant="success">Stok Varian &amp; Mutasi</Badge>
-            <h3 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground">
               Kendali Mutasi Stok Tanpa Khawatir Selisih
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
               Setiap kali pesanan dikonfirmasi lunas, stok varian otomatis berkurang. Jika pesanan dibatalkan, stok langsung dikembalikan ke rak. Lengkap dengan riwayat mutasi masuk, keluar, dan peringatan stok menipis.
             </p>
           </div>
@@ -352,66 +349,66 @@ export default function LandingPage() {
       </section>
 
       {/* 7. PRICING PLANS SECTION */}
-      <section id="harga" className="py-20 bg-white dark:bg-navy-900 border-y border-slate-200 dark:border-navy-800">
+      <section id="harga" className="py-20 bg-card border-y border-border">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <Badge variant="purple">Pilihan Paket Langganan</Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-card-foreground">
               Investasi Terjangkau untuk Pertumbuhan Toko Fashion
             </h2>
-            <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/40 p-2.5 rounded-xl inline-block border border-amber-200 dark:border-amber-800">
-              Pembayaran belum diaktifkan; seluruh akun baru mendapat masa coba 7 hari
+            <p className="text-xs text-amber-900 dark:text-amber-200 font-semibold bg-amber-100 dark:bg-amber-950/70 p-2.5 rounded-xl inline-block border border-amber-300 dark:border-amber-700">
+              Pembayaran belum diaktifkan; seluruh akun baru mendapat masa coba 7 hari gratis
             </p>
           </div>
 
           {/* 2 Column Cards: Standar vs Pro */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Paket Standar: Rp20.000/bln */}
-            <Card className="p-8 space-y-6 border-2 border-slate-200 dark:border-navy-700 flex flex-col justify-between">
+            <Card className="p-8 space-y-6 border-2 border-border flex flex-col justify-between">
               <div className="space-y-6">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Paket Standar
                   </span>
                   <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-4xl font-extrabold text-navy-900 dark:text-ivory-100">
+                    <span className="text-4xl font-extrabold text-card-foreground">
                       Rp20.000
                     </span>
-                    <span className="text-xs text-slate-400">/ bulan</span>
+                    <span className="text-xs text-muted-foreground font-medium">/ bulan</span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed font-medium">
                     Solusi esensial untuk butik dan thrift shop yang mulai merapikan basis pelanggan dan stok varian.
                   </p>
                 </div>
 
-                <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+                <div className="space-y-3 text-xs text-muted-foreground font-medium">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span><strong>1 toko</strong>, <strong>2 pengguna</strong> (1 Owner dan 1 Staff)</span>
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
+                    <span><strong className="text-card-foreground">1 toko</strong>, <strong className="text-card-foreground">2 pengguna</strong> (1 Owner dan 1 Staff)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span>Hingga <strong>300 pelanggan</strong> dan <strong>100 produk</strong></span>
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
+                    <span>Hingga <strong className="text-card-foreground">300 pelanggan</strong> dan <strong className="text-card-foreground">100 produk</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
                     <span>Pesanan, stok varian, dan invoice PDF</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
                     <span>Etalase publik dan form pesan</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
                     <span>Tindak lanjut dasar (pelanggan Tidur dan pesanan unpaid)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
                     <span>Ekspor data CSV</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span>Asisten AI: <strong>30 pemakaian</strong> per bulan</span>
+                    <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" strokeWidth={1.5} />
+                    <span>Asisten AI: <strong className="text-card-foreground">30 pemakaian</strong> per bulan</span>
                   </div>
                 </div>
               </div>
@@ -424,60 +421,60 @@ export default function LandingPage() {
             </Card>
 
             {/* Paket Pro: Rp45.000/bln */}
-            <Card className="p-8 space-y-6 border-2 border-violet-500 bg-violet-50/20 dark:bg-violet-950/20 relative shadow-lg flex flex-col justify-between">
+            <Card className="p-8 space-y-6 border-2 border-secondary bg-secondary/5 relative shadow-lg flex flex-col justify-between">
               <div className="absolute -top-3 right-6">
-                <span className="bg-violet-600 text-white text-[10px] uppercase font-extrabold px-3 py-1 rounded-full shadow-sm">
+                <span className="bg-secondary text-white text-[10px] uppercase font-extrabold px-3 py-1 rounded-full shadow-sm">
                   Paling Populer
                 </span>
               </div>
 
               <div className="space-y-6">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+                  <span className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Paket Pro
                   </span>
                   <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-4xl font-extrabold text-navy-900 dark:text-ivory-100">
+                    <span className="text-4xl font-extrabold text-card-foreground">
                       Rp45.000
                     </span>
-                    <span className="text-xs text-slate-400">/ bulan</span>
+                    <span className="text-xs text-muted-foreground font-medium">/ bulan</span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed font-medium">
                     Fitur lengkap tanpa batas untuk brand lokal yang agresif mengejar repeat order berkelanjutan.
                   </p>
                 </div>
 
-                <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+                <div className="space-y-3 text-xs text-muted-foreground font-medium">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span><strong>1 toko</strong>, hingga <strong>5 pengguna</strong> tim</span>
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
+                    <span><strong className="text-card-foreground">1 toko</strong>, hingga <strong className="text-card-foreground">5 pengguna</strong> tim</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span><strong>Pelanggan dan produk tanpa batas</strong></span>
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
+                    <span><strong className="text-card-foreground">Pelanggan dan produk tanpa batas</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                     <span>Semua fitur Paket Standar</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                     <span>Tindak lanjut lengkap (Ultah &amp; Restock) + template kustom</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                     <span>Impor dan ekspor CSV lengkap</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                     <span>Dashboard lanjutan (produk terlaris &amp; filter kustom)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
-                    <span>Asisten AI: <strong>300 pemakaian</strong>/bulan + persona kustom</span>
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
+                    <span>Asisten AI: <strong className="text-card-foreground">300 pemakaian</strong>/bulan + persona kustom</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <CheckCircle2 className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                     <span>Dukungan prioritas tim Threadly</span>
                   </div>
                 </div>
@@ -493,59 +490,59 @@ export default function LandingPage() {
 
           {/* Feature Comparison Table */}
           <div className="space-y-4 pt-4">
-            <h3 className="text-lg font-bold text-navy-900 dark:text-ivory-100 text-center">
+            <h3 className="text-lg font-bold text-card-foreground text-center">
               Perbandingan Fitur Lengkap
             </h3>
 
-            <div className="bg-slate-50 dark:bg-navy-900/70 border border-slate-200 dark:border-navy-800 rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-100 dark:bg-navy-800 text-[11px] font-bold text-slate-500 uppercase border-b border-slate-200 dark:border-navy-700">
+                <thead className="bg-muted text-[11px] font-bold text-muted-foreground uppercase border-b border-border">
                   <tr>
                     <th className="p-4">Fitur Layanan</th>
                     <th className="p-4 text-center">Standar (Rp20.000/bln)</th>
-                    <th className="p-4 text-center text-violet-600 dark:text-violet-400">Pro (Rp45.000/bln)</th>
+                    <th className="p-4 text-center text-secondary">Pro (Rp45.000/bln)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-navy-800">
+                <tbody className="divide-y divide-border">
                   <tr>
-                    <td className="p-4 font-semibold">Batas Pengguna</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">2 Pengguna (Owner + Staff)</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">Hingga 5 Pengguna</td>
+                    <td className="p-4 font-semibold text-card-foreground">Batas Pengguna</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">2 Pengguna (Owner + Staff)</td>
+                    <td className="p-4 text-center font-bold text-secondary">Hingga 5 Pengguna</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Kapasitas Basis Pelanggan</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">300 Pelanggan</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">Tanpa Batas</td>
+                    <td className="p-4 font-semibold text-card-foreground">Kapasitas Basis Pelanggan</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">300 Pelanggan</td>
+                    <td className="p-4 text-center font-bold text-secondary">Tanpa Batas</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Kapasitas Katalog Produk</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">100 Produk</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">Tanpa Batas</td>
+                    <td className="p-4 font-semibold text-card-foreground">Kapasitas Katalog Produk</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">100 Produk</td>
+                    <td className="p-4 text-center font-bold text-secondary">Tanpa Batas</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Tindak Lanjut Retensi WhatsApp</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">Dasar (Tidur &amp; Unpaid)</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">Lengkap (Ultah + Restock + Kustom)</td>
+                    <td className="p-4 font-semibold text-card-foreground">Tindak Lanjut Retensi WhatsApp</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">Dasar (Tidur &amp; Unpaid)</td>
+                    <td className="p-4 text-center font-bold text-secondary">Lengkap (Ultah + Restock + Kustom)</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Impor &amp; Ekspor CSV</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">Hanya Ekspor CSV</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">Impor &amp; Ekspor Lengkap</td>
+                    <td className="p-4 font-semibold text-card-foreground">Impor &amp; Ekspor CSV</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">Hanya Ekspor CSV</td>
+                    <td className="p-4 text-center font-bold text-secondary">Impor &amp; Ekspor Lengkap</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Asisten AI Fashion</td>
-                    <td className="p-4 text-center text-slate-600 dark:text-slate-400">30 Pemakaian / Bulan</td>
-                    <td className="p-4 text-center font-bold text-violet-600 dark:text-violet-400">300 Pemakaian / Bulan + Persona Kustom</td>
+                    <td className="p-4 font-semibold text-card-foreground">Asisten AI Fashion</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">30 Pemakaian / Bulan</td>
+                    <td className="p-4 text-center font-bold text-secondary">300 Pemakaian / Bulan + Persona Kustom</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Dashboard Analisis Lanjutan</td>
-                    <td className="p-4 text-center text-slate-400">-</td>
-                    <td className="p-4 text-center font-bold text-emerald-600">Termasuk</td>
+                    <td className="p-4 font-semibold text-card-foreground">Dashboard Analisis Lanjutan</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">-</td>
+                    <td className="p-4 text-center font-bold text-success">Termasuk</td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold">Dukungan Prioritas</td>
-                    <td className="p-4 text-center text-slate-400">Standar</td>
-                    <td className="p-4 text-center font-bold text-emerald-600">Prioritas WhatsApp</td>
+                    <td className="p-4 font-semibold text-card-foreground">Dukungan Prioritas</td>
+                    <td className="p-4 text-center text-muted-foreground font-medium">Standar</td>
+                    <td className="p-4 text-center font-bold text-success">Prioritas WhatsApp</td>
                   </tr>
                 </tbody>
               </table>
@@ -554,14 +551,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 8. FAQ SECTION (MINIMAL 7 QUESTIONS) */}
+      {/* 8. FAQ SECTION */}
       <section id="faq" className="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center space-y-2">
           <Badge variant="purple">Pertanyaan Populer</Badge>
-          <h2 className="text-2xl sm:text-3xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
             Pertanyaan yang Sering Diajukan
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground font-medium">
             Segala hal yang perlu kamu ketahui tentang pengoperasian Threadly CRM.
           </p>
         </div>
@@ -573,22 +570,22 @@ export default function LandingPage() {
             return (
               <Card
                 key={idx}
-                className="p-5 cursor-pointer transition border border-slate-200 dark:border-navy-800"
+                className="p-5 cursor-pointer transition border border-border"
                 onClick={() => setOpenFaq(isOpen ? null : idx)}
               >
                 <div className="flex items-center justify-between gap-4">
-                  <h4 className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                  <h4 className="font-bold text-sm text-card-foreground">
                     {faq.q}
                   </h4>
                   {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-violet-500 flex-shrink-0" strokeWidth={1.5} />
+                    <ChevronUp className="w-4 h-4 text-secondary flex-shrink-0" strokeWidth={1.5} />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" strokeWidth={1.5} />
+                    <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" strokeWidth={1.5} />
                   )}
                 </div>
 
                 {isOpen && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-3 pt-3 border-t border-slate-100 dark:border-navy-800 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-3 pt-3 border-t border-border leading-relaxed font-medium">
                     {faq.a}
                   </p>
                 )}
@@ -599,12 +596,12 @@ export default function LandingPage() {
       </section>
 
       {/* 9. FINAL CTA */}
-      <section className="py-20 bg-navy-900 text-ivory-100 text-center px-4 sm:px-6 lg:px-8 border-t border-navy-800 relative overflow-hidden">
+      <section className="py-20 bg-[#0F172A] bg-gradient-brand text-white text-center px-4 sm:px-6 lg:px-8 border-t border-white/10 relative overflow-hidden">
         <div className="max-w-3xl mx-auto space-y-6 relative z-10">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Saatnya naik kelas dari catatan manual ke CRM fashion modern.
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-slate-200 max-w-xl mx-auto font-medium">
             Jangan biarkan pembeli setia tokomu terlupakan. Gabung bersama ratusan pemilik butik dan brand lokal lainnya sekarang.
           </p>
           <div className="pt-2">
@@ -622,14 +619,14 @@ export default function LandingPage() {
       </section>
 
       {/* 10. FOOTER */}
-      <footer className="bg-navy-950 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 text-xs border-t border-navy-900">
+      <footer className="bg-[#0B1020] text-slate-300 py-12 px-4 sm:px-6 lg:px-8 text-xs border-t border-white/10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-violet-600 text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-6 h-6 rounded-lg bg-secondary text-white flex items-center justify-center font-bold text-xs">
               T
             </div>
             <span className="font-bold text-sm text-white">Threadly</span>
-            <span className="text-slate-500 ml-2">&bull; &quot;Kenali pelangganmu, ajak mereka kembali.&quot;</span>
+            <span className="text-slate-400 ml-2">&bull; &quot;Kenali pelangganmu, ajak mereka kembali.&quot;</span>
           </div>
 
           <div className="flex items-center gap-6">
@@ -644,7 +641,7 @@ export default function LandingPage() {
             </Link>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-6 pt-6 border-t border-navy-900 text-center sm:text-left text-slate-500">
+        <div className="max-w-7xl mx-auto mt-6 pt-6 border-t border-white/10 text-center sm:text-left text-slate-400">
           &copy; {new Date().getFullYear()} Threadly. Hak Cipta Dilindungi Undang-Undang. Zona Waktu WIB (Asia/Jakarta).
         </div>
       </footer>

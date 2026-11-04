@@ -38,10 +38,10 @@ export default function CustomerDetailPage() {
   if (!customer) {
     return (
       <div className="text-center py-16 space-y-4">
-        <h3 className="text-lg font-bold text-navy-900 dark:text-ivory-100">
+        <h3 className="text-lg font-bold text-card-foreground">
           Pelanggan Tidak Ditemukan
         </h3>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           Data pelanggan mungkin telah dihapus atau berada pada toko lain.
         </p>
         <Link href="/customers">
@@ -103,13 +103,13 @@ export default function CustomerDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link href="/customers">
-            <button className="p-2 rounded-xl border border-slate-200 dark:border-navy-700 hover:bg-slate-100 dark:hover:bg-navy-800 transition">
-              <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" strokeWidth={1.5} />
+            <button className="p-2 rounded-xl border border-border hover:bg-slate-100 dark:hover:bg-navy-800 transition">
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
             </button>
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+              <h2 className="text-2xl font-bold text-card-foreground">
                 {customer.name}
               </h2>
               <Badge
@@ -126,7 +126,7 @@ export default function CustomerDetailPage() {
                 {customer.stage}
               </Badge>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Bergabung sejak {formatShortDate(customer.created_at)} &bull; Sumber: {customer.source}
             </p>
           </div>
@@ -167,26 +167,26 @@ export default function CustomerDetailPage() {
       {/* 4 Quick Stat Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-4">
-          <p className="text-xs font-medium text-slate-500 uppercase">Total Belanja</p>
-          <p className="text-xl font-bold text-navy-900 dark:text-ivory-100 mt-1">
+          <p className="text-xs font-medium text-muted-foreground uppercase">Total Belanja</p>
+          <p className="text-xl font-bold text-card-foreground mt-1">
             {formatRupiah(customer.total_spend)}
           </p>
         </Card>
         <Card className="p-4">
-          <p className="text-xs font-medium text-slate-500 uppercase">Jumlah Transaksi</p>
-          <p className="text-xl font-bold text-navy-900 dark:text-ivory-100 mt-1">
+          <p className="text-xs font-medium text-muted-foreground uppercase">Jumlah Transaksi</p>
+          <p className="text-xl font-bold text-card-foreground mt-1">
             {customer.order_count} pesanan
           </p>
         </Card>
         <Card className="p-4">
-          <p className="text-xs font-medium text-slate-500 uppercase">Rata-rata Nilai Pesanan</p>
-          <p className="text-xl font-bold text-navy-900 dark:text-ivory-100 mt-1">
+          <p className="text-xs font-medium text-muted-foreground uppercase">Rata-rata Nilai Pesanan</p>
+          <p className="text-xl font-bold text-card-foreground mt-1">
             {formatRupiah(customer.average_order_value)}
           </p>
         </Card>
         <Card className="p-4">
-          <p className="text-xs font-medium text-slate-500 uppercase">Pembelian Terakhir</p>
-          <p className="text-sm font-semibold text-navy-900 dark:text-ivory-100 mt-1.5">
+          <p className="text-xs font-medium text-muted-foreground uppercase">Pembelian Terakhir</p>
+          <p className="text-sm font-semibold text-card-foreground mt-1.5">
             {customer.last_purchase_date ? formatDateWIB(customer.last_purchase_date) : 'Belum pernah beli'}
           </p>
         </Card>
@@ -198,35 +198,35 @@ export default function CustomerDetailPage() {
         <div className="space-y-6">
           {/* Fashion Preferences */}
           <Card className="space-y-4">
-            <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-card-foreground flex items-center gap-2">
               <Heart className="w-4 h-4 text-rose-500" strokeWidth={1.5} />
               <span>Preferensi Busana & Gaya</span>
             </h3>
 
-            <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400">Ukuran Favorit:</span>
-                <span className="font-bold text-navy-900 dark:text-ivory-100">{customer.favorite_size || '-'}</span>
+            <div className="space-y-2.5 text-xs text-muted-foreground">
+              <div className="flex justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Ukuran Favorit:</span>
+                <span className="font-bold text-card-foreground">{customer.favorite_size || '-'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400">Warna Favorit:</span>
-                <span className="font-semibold text-navy-900 dark:text-ivory-100">{customer.favorite_color || '-'}</span>
+              <div className="flex justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Warna Favorit:</span>
+                <span className="font-semibold text-card-foreground">{customer.favorite_color || '-'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400">Gaya Berpakaian:</span>
-                <span className="font-semibold text-navy-900 dark:text-ivory-100">{customer.preferred_style || '-'}</span>
+              <div className="flex justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Gaya Berpakaian:</span>
+                <span className="font-semibold text-card-foreground">{customer.preferred_style || '-'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400">Kisaran Budget:</span>
+              <div className="flex justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Kisaran Budget:</span>
                 <span>{customer.budget_range || '-'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400">Tanggal Lahir:</span>
+              <div className="flex justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Tanggal Lahir:</span>
                 <span>{customer.birthdate ? formatShortDate(customer.birthdate) : '-'}</span>
               </div>
               <div className="py-1">
-                <span className="text-slate-400 block mb-1">Alamat Pengiriman:</span>
-                <p className="font-medium text-navy-900 dark:text-ivory-100">
+                <span className="text-muted-foreground block mb-1">Alamat Pengiriman:</span>
+                <p className="font-medium text-card-foreground">
                   {customer.address || 'Belum ada alamat tersimpan'}
                 </p>
               </div>
@@ -238,7 +238,7 @@ export default function CustomerDetailPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
-                <h4 className="text-sm font-bold text-navy-900 dark:text-ivory-100">
+                <h4 className="text-sm font-bold text-card-foreground">
                   Ringkasan AI Pelanggan
                 </h4>
               </div>
@@ -254,11 +254,11 @@ export default function CustomerDetailPage() {
             </div>
 
             {aiSummary ? (
-              <p className="text-xs text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-navy-900/60 p-3 rounded-xl border border-violet-100 dark:border-violet-900/30 leading-relaxed">
+              <p className="text-xs text-card-foreground bg-white/60 dark:bg-navy-900/60 p-3 rounded-xl border border-violet-100 dark:border-violet-900/30 leading-relaxed">
                 {aiSummary}
               </p>
             ) : (
-              <p className="text-xs text-slate-500 italic">
+              <p className="text-xs text-muted-foreground italic">
                 Klik tombol di atas untuk menganalisis kebiasaan belanja dan profil busana pelanggan dengan AI.
               </p>
             )}
@@ -266,7 +266,7 @@ export default function CustomerDetailPage() {
 
           {/* Internal CRM Notes */}
           <Card className="space-y-3">
-            <h4 className="text-sm font-bold text-navy-900 dark:text-ivory-100">
+            <h4 className="text-sm font-bold text-card-foreground">
               Catatan Khusus Pelanggan
             </h4>
             <textarea
@@ -274,7 +274,7 @@ export default function CustomerDetailPage() {
               value={editingNotes}
               onChange={e => setEditingNotes(e.target.value)}
               placeholder="Tuliskan catatan preferensi khusus, riwayat komplain, atau kebiasaan pelanggan..."
-              className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-slate-50 dark:bg-navy-800 text-navy-900 dark:text-ivory-100 focus:bg-white"
+              className="w-full p-3 text-xs rounded-xl border border-border bg-muted/60 text-card-foreground focus:bg-white"
             />
             <div className="flex justify-end">
               <Button
@@ -292,7 +292,7 @@ export default function CustomerDetailPage() {
         {/* Right 2 Columns: Order History */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-card-foreground flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
               <span>Riwayat Transaksi Pesanan ({customerOrders.length})</span>
             </h3>
@@ -304,17 +304,17 @@ export default function CustomerDetailPage() {
           </div>
 
           {customerOrders.length === 0 ? (
-            <Card className="text-center py-12 text-slate-500 text-sm">
+            <Card className="text-center py-12 text-muted-foreground text-sm">
               Pelanggan ini belum pernah melakukan pemesanan.
             </Card>
           ) : (
             <div className="space-y-3">
               {customerOrders.map(order => (
                 <Card key={order.id} className="p-4 hover:border-violet-200 dark:hover:border-violet-800 transition">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-800 pb-3 mb-3">
+                  <div className="flex items-center justify-between border-b border-border pb-3 mb-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                        <span className="font-bold text-sm text-card-foreground">
                           #{order.order_number}
                         </span>
                         <Badge
@@ -329,13 +329,13 @@ export default function CustomerDetailPage() {
                           {order.status}
                         </Badge>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
                         {formatDateWIB(order.created_at)} &bull; {order.payment_method}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-sm font-bold text-navy-900 dark:text-ivory-100">
+                      <p className="text-sm font-bold text-card-foreground">
                         {formatRupiah(order.total_amount)}
                       </p>
                       <Link
@@ -348,7 +348,7 @@ export default function CustomerDetailPage() {
                   </div>
 
                   {/* Items preview */}
-                  <div className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
+                  <div className="text-xs text-slate-600 dark:text-muted-foreground space-y-1">
                     {order.items?.map(item => (
                       <div key={item.id} className="flex justify-between">
                         <span>
@@ -373,10 +373,10 @@ export default function CustomerDetailPage() {
         description="Pelanggan ini meminta penghapusan data pribadi (sesuai Kebijakan Privasi). Tindakan ini tidak dapat dibatalkan."
       >
         <div className="space-y-4 pt-2">
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-slate-600 dark:text-muted-foreground">
             Seluruh data profil, preferensi busana, dan label untuk <strong>{customer.name}</strong> akan dihapus permanen. Riwayat transaksi pembukuan tetap disimpan tanpa identitas pribadi.
           </p>
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-navy-800">
+          <div className="flex justify-end gap-2 pt-2 border-t border-border">
             <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
               Batal
             </Button>

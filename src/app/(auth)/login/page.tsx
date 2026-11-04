@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/lib/store-context';
 import { Button, Input } from '@/components/ui';
-import { Sparkles, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,16 +52,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-ivory-100 dark:bg-navy-950 font-sans">
-      {/* Brand Panel (40% width on Desktop, hidden on mobile as required) */}
-      <div className="hidden lg:flex lg:w-5/12 bg-gradient-brand text-ivory-100 flex-col justify-between p-12 relative overflow-hidden border-r border-navy-800">
+    <div className="min-h-screen flex w-full bg-background font-sans">
+      {/* Brand Panel (40% width on Desktop, hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-5/12 bg-[#0F172A] bg-gradient-brand text-white flex-col justify-between p-12 relative overflow-hidden border-r border-white/10">
         {/* Soft decorative background glow */}
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-gradient-accent opacity-20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#5B4BDB] bg-gradient-accent opacity-25 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#C9A96E] opacity-15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-violet-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-secondary text-white flex items-center justify-center font-bold text-lg shadow-sm">
               T
             </div>
             <span className="font-bold text-xl tracking-tight text-white">Threadly</span>
@@ -71,55 +72,59 @@ export default function LoginPage() {
           <h1 className="text-3xl font-extrabold text-white leading-tight">
             Kenali pelangganmu, ajak mereka kembali.
           </h1>
-          <p className="text-sm text-slate-300 leading-relaxed">
+          <p className="text-sm text-slate-200 leading-relaxed font-medium">
             Satu-satunya CRM terintegrasi khusus UMKM fashion Indonesia. Kelola varian ukuran &amp; warna, ingat preferensi pembeli, dan raih repeat order otomatis.
           </p>
 
-          <div className="space-y-3 pt-4 text-xs text-slate-300">
+          <div className="space-y-3 pt-4 text-xs text-slate-200 font-medium">
             <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-violet-400" strokeWidth={1.5} />
+              <CheckCircle2 className="w-4 h-4 text-violet-300" strokeWidth={1.5} />
               <span>Otomatisasi pengingat pelanggan tidur via WhatsApp</span>
             </div>
             <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-violet-400" strokeWidth={1.5} />
+              <CheckCircle2 className="w-4 h-4 text-violet-300" strokeWidth={1.5} />
               <span>Stok varian akurat real-time dengan etalase bio</span>
             </div>
             <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-violet-400" strokeWidth={1.5} />
+              <CheckCircle2 className="w-4 h-4 text-violet-300" strokeWidth={1.5} />
               <span>Asisten AI cerdas pengubah chat menjadi pesanan</span>
             </div>
           </div>
         </div>
 
-        <div className="relative z-10 text-xs text-slate-400">
+        <div className="relative z-10 text-xs text-slate-300 font-medium">
           &copy; {new Date().getFullYear()} Threadly. Dibuat untuk UMKM Fashion Indonesia.
         </div>
       </div>
 
       {/* Form Panel (60% width on Desktop, 100% on mobile) */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-6 animate-in fade-in duration-300">
+      <div className="flex-1 flex flex-col justify-between p-6 sm:p-12 relative">
+        <div className="flex justify-end w-full">
+          <ThemeToggle />
+        </div>
+
+        <div className="w-full max-w-md mx-auto space-y-6 my-auto animate-in fade-in duration-300">
           {/* Mobile Brand Logo */}
           <div className="lg:hidden text-center mb-6">
             <Link href="/" className="inline-flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-navy-900 text-white flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">
                 T
               </div>
-              <span className="font-bold text-lg text-navy-900 dark:text-ivory-100">Threadly</span>
+              <span className="font-bold text-lg text-foreground">Threadly</span>
             </Link>
           </div>
 
           <div className="space-y-1 text-center sm:text-left">
-            <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+            <h2 className="text-2xl font-bold text-foreground">
               Selamat datang kembali
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground font-medium">
               Masuk untuk mengelola pelanggan dan stok tokomu hari ini.
             </p>
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-rose-50 text-rose-700 text-xs flex items-center gap-2 border border-rose-200">
+            <div className="p-3.5 rounded-xl bg-destructive/15 text-destructive text-xs flex items-center gap-2 border border-destructive/30 font-semibold">
               <AlertCircle className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
               <span>{errorMsg}</span>
             </div>
@@ -130,7 +135,7 @@ export default function LoginPage() {
             type="button"
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 font-semibold text-xs flex items-center justify-center gap-2.5 hover:bg-slate-50 dark:hover:bg-navy-800 transition shadow-sm"
+            className="w-full py-2.5 px-4 rounded-xl border border-border bg-card text-foreground font-semibold text-xs flex items-center justify-center gap-2.5 hover:bg-muted transition shadow-sm"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -154,11 +159,11 @@ export default function LoginPage() {
           </button>
 
           <div className="relative flex items-center justify-center">
-            <div className="border-t border-slate-200 dark:border-navy-700 w-full" />
-            <span className="bg-ivory-100 dark:bg-navy-950 px-3 text-[11px] uppercase font-bold text-slate-400">
+            <div className="border-t border-border w-full" />
+            <span className="bg-background px-3 text-[11px] uppercase font-bold text-muted-foreground">
               Atau dengan email
             </span>
-            <div className="border-t border-slate-200 dark:border-navy-700 w-full" />
+            <div className="border-t border-border w-full" />
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -173,12 +178,12 @@ export default function LoginPage() {
 
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-foreground uppercase tracking-wide">
                   Kata Sandi
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-violet-600 dark:text-violet-400 hover:underline"
+                  className="text-xs text-secondary hover:underline font-semibold"
                 >
                   Lupa kata sandi?
                 </Link>
@@ -189,7 +194,7 @@ export default function LoginPage() {
                 placeholder="Minimal 6 karakter"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-700 rounded-xl text-navy-900 dark:text-ivory-100 placeholder:text-slate-400 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25"
+                className="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25"
               />
             </div>
 
@@ -197,7 +202,7 @@ export default function LoginPage() {
               type="submit"
               variant="secondary"
               size="lg"
-              className="w-full"
+              className="w-full shadow-sm"
               isLoading={isLoading}
               rightIcon={<ArrowRight className="w-4 h-4" strokeWidth={1.5} />}
             >
@@ -205,12 +210,16 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-xs text-slate-500">
+          <p className="text-center text-xs text-muted-foreground font-medium">
             Belum punya akun Threadly?{' '}
-            <Link href="/register" className="font-bold text-violet-600 hover:underline">
+            <Link href="/register" className="font-bold text-secondary hover:underline">
               Daftar Gratis Sekarang
             </Link>
           </p>
+        </div>
+
+        <div className="text-center text-[11px] text-muted-foreground pt-4">
+          Keamanan terjamin &bull; Privasi Row Level Security (RLS)
         </div>
       </div>
     </div>

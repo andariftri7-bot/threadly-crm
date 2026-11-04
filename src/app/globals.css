@@ -10,32 +10,41 @@
     --gradient-accent-hover: linear-gradient(135deg, #5B4BDB 0%, #906DF7 100%);
     --gradient-champagne: linear-gradient(135deg, #C9A96E 0%, #EBD9B4 100%);
 
-    /* Champagne Secondary Accent */
-    --color-champagne: #C9A96E;
-    --color-champagne-light: #EBD9B4;
-    --color-champagne-dark: #9A7840;
-
-    /* Base Surfaces */
-    --background: #FAF9F6; /* Ivory White */
-    --foreground: #0F172A; /* Dark Navy */
+    /* Paired Tokens: Mode Terang (Default) */
+    --background: #FAF9F6;
+    --foreground: #0F172A;
     --card: #FFFFFF;
     --card-foreground: #0F172A;
     --popover: #FFFFFF;
     --popover-foreground: #0F172A;
     --primary: #0F172A;
-    --primary-foreground: #FAF9F6;
-    --accent: #6D5BE8; /* Brand Accent */
+    --primary-foreground: #FFFFFF;
+    --secondary: #5B4BDB;
+    --secondary-foreground: #FFFFFF;
+    --accent: #5B4BDB;
     --accent-foreground: #FFFFFF;
-    --muted: #F4F1EA;
-    --muted-foreground: #64748B;
-    --border: #E2E8F0;
-    --input: #E2E8F0;
-    --ring: #6D5BE8;
+    --muted: #F1F5F9;
+    --muted-foreground: #334155; /* Slate-700: 10.3:1 contrast on white */
+    --border: #64748B;          /* Slate-500: 4.6:1 UI boundary contrast against white */
+    --input: #64748B;
+    --ring: #5B4BDB;
+    --destructive: #B91C1C;     /* Red-700: 5.8:1 contrast on light alert backgrounds */
+    --destructive-foreground: #FFFFFF;
+    --success: #15803D;
+    --success-foreground: #FFFFFF;
+    --warning: #B45309;
+    --warning-foreground: #FFFFFF;
+
+    /* Champagne Token Pair */
+    --champagne: #C9A96E;
+    --champagne-bg: #FBF7EE;
+    --champagne-text: #784D0B;   /* 6.8:1 contrast on #FBF7EE */
+
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Mode Gelap: latar #0B1020, permukaan #111833, border rgba(255,255,255,0.08) */
+    /* Paired Tokens: Mode Gelap */
     --background: #0B1020;
     --foreground: #F8FAFC;
     --card: #111833;
@@ -44,35 +53,79 @@
     --popover-foreground: #F8FAFC;
     --primary: #F8FAFC;
     --primary-foreground: #0B1020;
-    --accent: #6D5BE8;
-    --accent-foreground: #FFFFFF;
+    --secondary: #6D5BE8;
+    --secondary-foreground: #FFFFFF;
+    --accent: #A78BFA;          /* Soft Violet: 7.6:1 contrast against #111833 */
+    --accent-foreground: #0B1020;
     --muted: #1E293B;
-    --muted-foreground: #94A3B8;
-    --border: rgba(255, 255, 255, 0.08);
-    --input: rgba(255, 255, 255, 0.08);
-    --ring: #6D5BE8;
+    --muted-foreground: #CBD5E1; /* Slate-300: 11.7:1 contrast on #111833 */
+    --border: #64748B;          /* Slate-500: 3.24:1 contrast against #111833 */
+    --input: #64748B;
+    --ring: #A78BFA;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --success: #22C55E;
+    --success-foreground: #0B1020;
+    --warning: #F59E0B;
+    --warning-foreground: #0B1020;
+
+    /* Champagne Token Pair for Dark */
+    --champagne: #C9A96E;
+    --champagne-bg: #231C10;
+    --champagne-text: #EBD9B4;   /* 12.1:1 contrast on #231C10 */
   }
+}
+
+/* Fallback solid backgrounds for all gradients (ensures white text never fails contrast) */
+.bg-gradient-brand {
+  background-color: #0F172A !important;
+  background-image: var(--gradient-brand) !important;
+}
+
+.bg-gradient-accent {
+  background-color: #5B4BDB !important;
+  background-image: var(--gradient-accent) !important;
+}
+
+.bg-gradient-accent-hover:hover {
+  background-color: #4C3EC7 !important;
+  background-image: var(--gradient-accent-hover) !important;
+}
+
+.bg-gradient-champagne {
+  background-color: #9A7840 !important;
+  background-image: var(--gradient-champagne) !important;
 }
 
 body {
   color: var(--foreground);
-  /* Mode Terang: latar #FAF9F6 dengan wash gradasi lembut (radial lavender berintensitas rendah di bagian atas) */
-  background: radial-gradient(circle at 50% 0%, rgba(167, 139, 250, 0.08) 0%, rgba(250, 249, 246, 0) 55%), #FAF9F6;
+  background-color: var(--background);
   min-height: 100vh;
   font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.dark body, body.dark {
-  background: #0B1020;
+/* Light mode wash gradient */
+body:not(.dark) {
+  background: radial-gradient(circle at 50% 0%, rgba(167, 139, 250, 0.08) 0%, rgba(250, 249, 246, 0) 55%), #FAF9F6;
 }
 
-/* Violet focus glow standard across inputs & buttons */
+.dark body, html.dark body {
+  background-color: #0B1020 !important;
+  background-image: none !important;
+}
+
+/* High-contrast focus state */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #6D5BE8 !important;
-  box-shadow: 0 0 0 3px rgba(109, 91, 232, 0.25) !important;
+  border-color: #5B4BDB !important;
+  box-shadow: 0 0 0 3px rgba(91, 75, 219, 0.3) !important;
+}
+
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  border-color: #A78BFA !important;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.35) !important;
 }
 
 /* Skeleton Loading Animation */
@@ -85,11 +138,7 @@ input:focus, textarea:focus, select:focus {
 .skeleton-box {
   position: relative;
   overflow: hidden;
-  background-color: #E2E8F0;
-}
-
-.dark .skeleton-box {
-  background-color: #111833;
+  background-color: var(--muted);
 }
 
 .skeleton-box::after {
@@ -102,8 +151,8 @@ input:focus, textarea:focus, select:focus {
   background-image: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.25) 20%,
-    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0.3) 20%,
+    rgba(255, 255, 255, 0.6) 60%,
     rgba(255, 255, 255, 0)
   );
   animation: shimmer 1.8s infinite;
@@ -131,9 +180,9 @@ input:focus, textarea:focus, select:focus {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #94A3B8;
   border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: #475569;
 }

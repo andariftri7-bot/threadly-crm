@@ -63,10 +63,10 @@ export default function OrdersPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Daftar Pesanan Toko
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Konfirmasi pesanan otomatis memotong stok varian dan memperbarui tahap loyalitas pelanggan.
           </p>
         </div>
@@ -82,20 +82,20 @@ export default function OrdersPage() {
       <Card className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" strokeWidth={1.5} />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-3.5" strokeWidth={1.5} />
             <input
               type="text"
               placeholder="Cari no. pesanan, nama pelanggan, no. resi..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+              className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-border bg-card text-card-foreground"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+            className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card text-card-foreground"
           >
             <option value="all">Semua Status Pesanan</option>
             <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
@@ -119,10 +119,10 @@ export default function OrdersPage() {
           onAction={() => {}}
         />
       ) : (
-        <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
-              <thead className="bg-slate-50 dark:bg-navy-800/60 text-xs font-semibold uppercase text-slate-500 border-b border-slate-200 dark:border-navy-800">
+            <table className="w-full text-left text-sm text-card-foreground">
+              <thead className="bg-muted/60/60 text-xs font-semibold uppercase text-muted-foreground border-b border-border">
                 <tr>
                   <th className="px-6 py-4">No. Pesanan</th>
                   <th className="px-6 py-4">Pelanggan</th>
@@ -133,14 +133,14 @@ export default function OrdersPage() {
                   <th className="px-6 py-4 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
+              <tbody className="divide-y divide-border">
                 {filteredOrders.map(order => (
                   <tr key={order.id} className="hover:bg-slate-50/80 dark:hover:bg-navy-800/40 transition">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-navy-900 dark:text-ivory-100">
+                      <div className="font-bold text-card-foreground">
                         #{order.order_number}
                       </div>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-muted-foreground">
                         {formatDateWIB(order.created_at)}
                       </div>
                       <span className="text-[10px] text-violet-600 dark:text-violet-400 font-medium">
@@ -149,10 +149,10 @@ export default function OrdersPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <div className="font-semibold text-navy-900 dark:text-ivory-100">
+                      <div className="font-semibold text-card-foreground">
                         {order.customer_name}
                       </div>
-                      <div className="text-xs text-slate-500 font-mono">
+                      <div className="text-xs text-muted-foreground font-mono">
                         {order.customer_phone}
                       </div>
                     </td>
@@ -167,9 +167,9 @@ export default function OrdersPage() {
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 font-bold text-navy-900 dark:text-ivory-100">
+                    <td className="px-6 py-4 font-bold text-card-foreground">
                       {formatRupiah(order.total_amount)}
-                      <div className="text-[10px] text-slate-400 font-normal">
+                      <div className="text-[10px] text-muted-foreground font-normal">
                         {order.payment_method}
                       </div>
                     </td>
@@ -177,7 +177,7 @@ export default function OrdersPage() {
                     <td className="px-6 py-4">
                       {getStatusBadge(order.status)}
                       {order.tracking_number && (
-                        <span className="block text-[11px] text-slate-500 font-mono mt-1">
+                        <span className="block text-[11px] text-muted-foreground font-mono mt-1">
                           Resi: {order.tracking_number}
                         </span>
                       )}
@@ -187,7 +187,7 @@ export default function OrdersPage() {
                       <select
                         value={order.status}
                         onChange={e => updateOrderStatus(order.id, e.target.value as OrderStatus)}
-                        className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 font-medium"
+                        className="text-xs px-2.5 py-1.5 rounded-lg border border-border bg-card font-medium"
                       >
                         <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
                         <option value="DP">DP</option>
@@ -202,7 +202,7 @@ export default function OrdersPage() {
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/orders/${order.id}`}
-                        className="inline-flex p-1.5 rounded-lg text-slate-600 hover:text-navy-900 dark:text-slate-400 dark:hover:text-ivory-100 hover:bg-slate-100 dark:hover:bg-navy-800 transition"
+                        className="inline-flex p-1.5 rounded-lg text-slate-600 hover:text-navy-900 dark:text-muted-foreground dark:hover:text-ivory-100 hover:bg-slate-100 dark:hover:bg-navy-800 transition"
                         title="Lihat Detail & Invoice"
                       >
                         <Eye className="w-4 h-4" strokeWidth={1.5} />

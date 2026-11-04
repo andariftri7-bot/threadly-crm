@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/lib/store-context';
 import { ToastProvider } from '@/components/ui';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -22,13 +23,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={plusJakartaSans.variable}>
-      <body className="min-h-screen bg-ivory-100 dark:bg-navy-950 text-navy-900 dark:text-ivory-100 antialiased selection:bg-violet-500 selection:text-white">
-        <ToastProvider>
-          <StoreProvider>
-            {children}
-          </StoreProvider>
-        </ToastProvider>
+    <html lang="id" className={plusJakartaSans.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var mode = localStorage.getItem('threadly_theme');
+                  var isDark = false;
+                  if (mode === 'dark') {
+                    isDark = true;
+                  } else if (mode === 'system') {
+                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  }
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-secondary selection:text-white">
+        <ThemeProvider>
+          <ToastProvider>
+            <StoreProvider>
+              {children}
+            </StoreProvider>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

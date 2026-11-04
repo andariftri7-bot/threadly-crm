@@ -45,10 +45,10 @@ export default function OrderDetailPage() {
   if (!order || !currentStore) {
     return (
       <div className="text-center py-16 space-y-4">
-        <h3 className="text-lg font-bold text-navy-900 dark:text-ivory-100">
+        <h3 className="text-lg font-bold text-card-foreground">
           Pesanan Tidak Ditemukan
         </h3>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           Pesanan ini mungkin telah dihapus atau berada pada toko lain.
         </p>
         <Link href="/orders">
@@ -121,13 +121,13 @@ export default function OrderDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link href="/orders">
-            <button className="p-2 rounded-xl border border-slate-200 dark:border-navy-700 hover:bg-slate-100 dark:hover:bg-navy-800 transition">
-              <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" strokeWidth={1.5} />
+            <button className="p-2 rounded-xl border border-border hover:bg-slate-100 dark:hover:bg-navy-800 transition">
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
             </button>
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+              <h2 className="text-2xl font-bold text-card-foreground">
                 Pesanan #{order.order_number}
               </h2>
               <Badge
@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
                 {order.status}
               </Badge>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Dibuat pada {formatDateWIB(order.created_at)} &bull; Sumber: {order.source}
             </p>
           </div>
@@ -184,13 +184,13 @@ export default function OrderDetailPage() {
       </div>
 
       {/* Status Workflow Action Bar */}
-      <Card className="p-4 bg-slate-50 dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800">
+      <Card className="p-4 bg-muted/40/60 border border-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Ubah Status Alur Transaksi
             </h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-muted-foreground mt-0.5">
               Perubahan status otomatis memperbarui stok varian dan kalkulasi tahap pelanggan.
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function OrderDetailPage() {
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition ${
                   order.status === st
                     ? 'bg-navy-900 text-white dark:bg-violet-600 shadow-sm'
-                    : 'bg-white dark:bg-navy-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-navy-700 hover:bg-slate-100'
+                    : 'bg-white dark:bg-navy-800 text-muted-foreground border border-border hover:bg-slate-100'
                 }`}
               >
                 {st}
@@ -227,24 +227,24 @@ export default function OrderDetailPage() {
         {/* Left 2 Cols: Order Items & Pricing Breakdown */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="space-y-4">
-            <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-card-foreground flex items-center gap-2">
               <Receipt className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
               <span>Rincian Varian Busana</span>
             </h3>
 
-            <div className="divide-y divide-slate-100 dark:divide-navy-800">
+            <div className="divide-y divide-border">
               {order.items?.map((item, idx) => (
                 <div key={idx} className="py-3 flex items-center justify-between text-xs">
                   <div>
-                    <p className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                    <p className="font-bold text-sm text-card-foreground">
                       {item.product_name}
                     </p>
-                    <p className="text-slate-500 mt-0.5">
+                    <p className="text-muted-foreground mt-0.5">
                       Varian: {item.variant_name} &bull; {formatRupiah(item.price)} &times; {item.quantity} pcs
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                    <p className="font-bold text-sm text-card-foreground">
                       {formatRupiah(item.subtotal)}
                     </p>
                   </div>
@@ -253,16 +253,16 @@ export default function OrderDetailPage() {
             </div>
 
             {/* Calculations */}
-            <div className="pt-4 border-t border-slate-100 dark:border-navy-800 space-y-2 text-xs">
-              <div className="flex justify-between text-slate-500">
+            <div className="pt-4 border-t border-border space-y-2 text-xs">
+              <div className="flex justify-between text-muted-foreground">
                 <span>Subtotal:</span>
-                <span className="font-semibold text-navy-900 dark:text-ivory-100">
+                <span className="font-semibold text-card-foreground">
                   {formatRupiah(order.subtotal)}
                 </span>
               </div>
-              <div className="flex justify-between text-slate-500">
+              <div className="flex justify-between text-muted-foreground">
                 <span>Ongkos Kirim:</span>
-                <span className="font-semibold text-navy-900 dark:text-ivory-100">
+                <span className="font-semibold text-card-foreground">
                   {formatRupiah(order.shipping_cost)}
                 </span>
               </div>
@@ -272,7 +272,7 @@ export default function OrderDetailPage() {
                   <span>-{formatRupiah(order.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-base font-bold text-navy-900 dark:text-ivory-100 pt-2 border-t border-slate-200 dark:border-navy-700">
+              <div className="flex justify-between text-base font-bold text-card-foreground pt-2 border-t border-border">
                 <span>TOTAL:</span>
                 <span className="text-violet-600 dark:text-violet-400">
                   {formatRupiah(order.total_amount)}
@@ -283,7 +283,7 @@ export default function OrderDetailPage() {
 
           {/* Delivery Tracking / Resi Card */}
           <Card className="space-y-3">
-            <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-card-foreground flex items-center gap-2">
               <Truck className="w-4 h-4 text-sky-500" strokeWidth={1.5} />
               <span>Nomor Resi & Ekspedisi Pengiriman</span>
             </h3>
@@ -309,32 +309,32 @@ export default function OrderDetailPage() {
         {/* Right Col: Customer & Payment Details */}
         <div className="space-y-6">
           <Card className="space-y-4">
-            <h3 className="text-base font-bold text-navy-900 dark:text-ivory-100 flex items-center gap-2">
+            <h3 className="text-base font-bold text-card-foreground flex items-center gap-2">
               <User className="w-4 h-4 text-violet-500" strokeWidth={1.5} />
               <span>Tujuan Pengiriman</span>
             </h3>
 
-            <div className="text-xs space-y-2 text-slate-600 dark:text-slate-300">
+            <div className="text-xs space-y-2 text-muted-foreground">
               <div>
-                <span className="text-slate-400 block">Nama Penerima:</span>
-                <p className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                <span className="text-muted-foreground block">Nama Penerima:</span>
+                <p className="font-bold text-sm text-card-foreground">
                   {order.customer_name}
                 </p>
               </div>
 
               <div>
-                <span className="text-slate-400 block">WhatsApp:</span>
+                <span className="text-muted-foreground block">WhatsApp:</span>
                 <p className="font-mono">{order.customer_phone}</p>
               </div>
 
               <div>
-                <span className="text-slate-400 block">Alamat Lengkap:</span>
+                <span className="text-muted-foreground block">Alamat Lengkap:</span>
                 <p className="leading-relaxed">
                   {order.customer_address || 'Tidak ada catatan alamat (ambil di toko)'}
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-slate-100 dark:border-navy-800">
+              <div className="pt-2 border-t border-border">
                 <Link
                   href={`/customers/${order.customer_id}`}
                   className="text-xs text-violet-600 dark:text-violet-400 font-semibold hover:underline block"
@@ -346,16 +346,16 @@ export default function OrderDetailPage() {
           </Card>
 
           <Card className="space-y-3">
-            <h4 className="text-sm font-bold text-navy-900 dark:text-ivory-100">
+            <h4 className="text-sm font-bold text-card-foreground">
               Metode Pembayaran
             </h4>
-            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <p className="text-xs font-semibold text-card-foreground">
               {order.payment_method}
             </p>
             {order.notes && (
-              <div className="pt-2 border-t border-slate-100 dark:border-navy-800">
-                <span className="text-slate-400 text-xs block mb-1">Catatan Pesanan:</span>
-                <p className="text-xs bg-slate-50 dark:bg-navy-800 p-2.5 rounded-xl text-slate-600 dark:text-slate-300 italic">
+              <div className="pt-2 border-t border-border">
+                <span className="text-muted-foreground text-xs block mb-1">Catatan Pesanan:</span>
+                <p className="text-xs bg-muted/60 p-2.5 rounded-xl text-muted-foreground italic">
                   &ldquo;{order.notes}&rdquo;
                 </p>
               </div>
@@ -386,13 +386,13 @@ export default function OrderDetailPage() {
           />
 
           <div>
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1">
               Metode Pembayaran
             </label>
             <select
               value={editPayment}
               onChange={e => setEditPayment(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-card text-card-foreground"
             >
               <option value="Transfer Bank BCA">Transfer Bank BCA</option>
               <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
@@ -404,7 +404,7 @@ export default function OrderDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1">
               Catatan Khusus Pesanan
             </label>
             <textarea
@@ -412,11 +412,11 @@ export default function OrderDetailPage() {
               value={editNotes}
               onChange={e => setEditNotes(e.target.value)}
               placeholder="Catatan pengiriman, request kado, dll..."
-              className="w-full p-2.5 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+              className="w-full p-2.5 text-xs rounded-xl border border-border bg-card text-card-foreground"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-navy-800">
+          <div className="flex justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"

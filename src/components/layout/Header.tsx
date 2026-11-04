@@ -4,6 +4,7 @@ import React from 'react';
 import { useStore } from '@/lib/store-context';
 import { Bell, X, Store as StoreIcon, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export function Header() {
   const {
@@ -14,17 +15,18 @@ export function Header() {
   } = useStore();
 
   return (
-    <header className="sticky top-0 z-20 bg-gradient-brand text-white border-b border-white/10 shadow-sm backdrop-blur-md">
+    <header className="sticky top-0 z-20 bg-[#0F172A] bg-gradient-brand text-white border-b border-white/10 shadow-sm backdrop-blur-md">
       {/* Realtime Notification Toast */}
       {lastRealtimeNotification && (
-        <div className="bg-emerald-600 text-white px-4 py-2.5 text-xs font-medium flex items-center justify-between shadow-sm animate-in slide-in-from-top">
+        <div className="bg-emerald-700 text-white px-4 py-2.5 text-xs font-semibold flex items-center justify-between shadow-sm animate-in slide-in-from-top">
           <div className="flex items-center gap-2">
             <Bell className="w-4 h-4 animate-bounce" strokeWidth={1.5} />
             <span>{lastRealtimeNotification}</span>
           </div>
           <button
             onClick={clearNotification}
-            className="p-1 hover:bg-emerald-700 rounded-md transition"
+            className="p-1 hover:bg-emerald-800 rounded-md transition"
+            aria-label="Tutup Notifikasi"
           >
             <X className="w-3.5 h-3.5" strokeWidth={1.5} />
           </button>
@@ -37,19 +39,22 @@ export function Header() {
           <h1 className="text-lg font-bold text-white tracking-tight">
             {currentStore?.name || 'Threadly CRM'}
           </h1>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/10 text-slate-200 border border-white/15">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/15 text-slate-100 font-medium border border-white/20">
             WIB (Asia/Jakarta)
           </span>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Theme Switcher: Terang / Gelap / Sistem */}
+          <ThemeToggle />
+
           {currentStore && (
             <Link
               href={`/${currentStore.slug}`}
               target="_blank"
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/20 bg-white/5 text-xs font-medium text-white hover:bg-white/15 transition shadow-sm"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:bg-white/20 transition shadow-sm"
             >
-              <StoreIcon className="w-3.5 h-3.5 text-champagne" strokeWidth={1.5} />
+              <StoreIcon className="w-3.5 h-3.5 text-[#EBD9B4]" strokeWidth={1.5} />
               <span>Lihat Etalase Publik</span>
             </Link>
           )}
@@ -61,7 +66,7 @@ export function Header() {
               logout();
             }}
             title="Keluar akun"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/20 bg-white/5 text-xs font-medium text-white/90 hover:text-rose-300 hover:border-rose-400 hover:bg-rose-950/40 transition shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:text-rose-200 hover:border-rose-400 hover:bg-rose-950/60 transition shadow-sm"
           >
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>Keluar</span>

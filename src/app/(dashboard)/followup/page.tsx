@@ -284,10 +284,10 @@ export default function FollowupPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+          <h2 className="text-2xl font-bold text-card-foreground">
             Tindak Lanjut &amp; Retensi Pelanggan
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Kirimkan pesan personal via WhatsApp agar pelanggan lama kembali berbelanja di {currentStore?.name}.
           </p>
         </div>
@@ -313,7 +313,7 @@ export default function FollowupPage() {
             className={`px-4 py-2 text-xs font-bold rounded-xl transition ${
               statusFilter === 'pending'
                 ? 'bg-navy-900 text-white dark:bg-violet-600 shadow-sm'
-                : 'bg-white dark:bg-navy-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-navy-800'
+                : 'bg-card text-slate-600 dark:text-muted-foreground border border-border'
             }`}
           >
             Perlu Ditindaklanjuti ({followupTasks.filter(t => t.status === 'pending').length})
@@ -323,7 +323,7 @@ export default function FollowupPage() {
             className={`px-4 py-2 text-xs font-bold rounded-xl transition ${
               statusFilter === 'completed'
                 ? 'bg-navy-900 text-white dark:bg-violet-600 shadow-sm'
-                : 'bg-white dark:bg-navy-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-navy-800'
+                : 'bg-card text-slate-600 dark:text-muted-foreground border border-border'
             }`}
           >
             Selesai Ditindaklanjuti ({followupTasks.filter(t => t.status === 'completed').length})
@@ -334,7 +334,7 @@ export default function FollowupPage() {
         <select
           value={typeFilter}
           onChange={e => setTypeFilter(e.target.value)}
-          className="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100"
+          className="px-3 py-2 text-xs rounded-xl border border-border bg-card text-card-foreground"
         >
           <option value="all">Semua Jenis Tugas</option>
           <option value="sleeping_customer">Pelanggan Tidur (&gt; 60 hari)</option>
@@ -366,21 +366,21 @@ export default function FollowupPage() {
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     {getTypeBadge(task.type)}
-                    <h4 className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                    <h4 className="font-bold text-sm text-card-foreground">
                       {task.title}
                     </h4>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
+                  <p className="text-xs text-slate-600 dark:text-muted-foreground">
                     {task.description}
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-muted-foreground">
                     Pelanggan: <strong>{task.customer_name}</strong> ({task.customer_phone}) &bull;{' '}
                     {formatDateWIB(task.due_date)}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-navy-800">
+              <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
                 {task.status === 'pending' ? (
                   <>
                     <Button
@@ -394,7 +394,7 @@ export default function FollowupPage() {
 
                     <button
                       onClick={() => completeFollowupTask(task.id)}
-                      className="p-2 rounded-xl text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition"
+                      className="p-2 rounded-xl text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition"
                       title="Tandai Selesai"
                     >
                       <Check className="w-4 h-4" strokeWidth={1.5} />
@@ -402,7 +402,7 @@ export default function FollowupPage() {
 
                     <button
                       onClick={() => dismissFollowupTask(task.id)}
-                      className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-navy-800 transition"
+                      className="p-2 rounded-xl text-muted-foreground hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-navy-800 transition"
                       title="Abaikan"
                     >
                       <X className="w-4 h-4" strokeWidth={1.5} />
@@ -428,9 +428,9 @@ export default function FollowupPage() {
       >
         <div className="space-y-4 pt-1">
           {/* Customer Context Information */}
-          <div className="p-3.5 bg-slate-50 dark:bg-navy-800/60 rounded-xl text-xs space-y-2 border border-slate-200 dark:border-navy-700">
+          <div className="p-3.5 bg-muted/60/60 rounded-xl text-xs space-y-2 border border-border">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-500 flex items-center gap-1.5">
+              <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5" strokeWidth={1.5} />
                 Profil Pelanggan
               </span>
@@ -438,17 +438,17 @@ export default function FollowupPage() {
                 Stage: {activeCustomer?.stage || 'Baru'}
               </Badge>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 dark:text-slate-300">
+            <div className="grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
               <div>
-                <span className="text-slate-400">Ukuran Favorit:</span>{' '}
+                <span className="text-muted-foreground">Ukuran Favorit:</span>{' '}
                 <strong>{activeCustomer?.favorite_size || 'Belum ada'}</strong>
               </div>
               <div>
-                <span className="text-slate-400">Warna Favorit:</span>{' '}
+                <span className="text-muted-foreground">Warna Favorit:</span>{' '}
                 <strong>{activeCustomer?.favorite_color || 'Belum ada'}</strong>
               </div>
               <div className="col-span-2">
-                <span className="text-slate-400">Pesanan Terakhir:</span>{' '}
+                <span className="text-muted-foreground">Pesanan Terakhir:</span>{' '}
                 <strong>
                   {activeLatestOrder
                     ? `${activeLatestOrder.items?.[0]?.product_name || 'Produk'} (${formatShortDate(activeLatestOrder.created_at)})`
@@ -460,7 +460,7 @@ export default function FollowupPage() {
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide">
                 Pratinjau &amp; Edit Pesan
               </label>
               <button
@@ -476,18 +476,18 @@ export default function FollowupPage() {
               rows={5}
               value={customizedMessage}
               onChange={e => setCustomizedMessage(e.target.value)}
-              className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+              className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
             />
           </div>
 
-          <div className="p-3 bg-violet-50/60 dark:bg-navy-800/40 rounded-xl text-[11px] text-slate-500 flex items-start gap-2 border border-violet-100 dark:border-navy-700">
+          <div className="p-3 bg-violet-50/60 dark:bg-navy-800/40 rounded-xl text-[11px] text-muted-foreground flex items-start gap-2 border border-violet-100 dark:border-navy-700">
             <AlertCircle className="w-4 h-4 text-violet-500 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
             <span>
               Pesan disesuaikan dengan persona toko dan aturan emoji minimal. Kamu bisa menyalin pesan atau langsung membuka WhatsApp.
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-navy-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border">
             <Button
               variant="outline"
               size="sm"

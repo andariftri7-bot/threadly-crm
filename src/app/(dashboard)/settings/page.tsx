@@ -380,22 +380,22 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       <div>
-        <h2 className="text-2xl font-bold text-navy-900 dark:text-ivory-100">
+        <h2 className="text-2xl font-bold text-card-foreground">
           Pengaturan Toko
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           Atur identitas butik, siklus pelanggan CRM, kerangka pesan cadangan, persona AI, dan tim kerja.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-navy-800 gap-6 overflow-x-auto pb-1">
+      <div className="flex border-b border-border gap-6 overflow-x-auto pb-1">
         <button
           onClick={() => setActiveTab('profile')}
           className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'profile'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           <Store className="w-4 h-4" strokeWidth={1.5} />
@@ -406,7 +406,7 @@ export default function SettingsPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'thresholds'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           <Sliders className="w-4 h-4" strokeWidth={1.5} />
@@ -417,7 +417,7 @@ export default function SettingsPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'templates'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           <MessageSquare className="w-4 h-4" strokeWidth={1.5} />
@@ -428,7 +428,7 @@ export default function SettingsPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'persona'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           <PenLine className="w-4 h-4" strokeWidth={1.5} />
@@ -439,7 +439,7 @@ export default function SettingsPage() {
           className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === 'team'
               ? 'border-violet-600 text-violet-600 dark:text-violet-400'
-              : 'border-transparent text-slate-500 hover:text-navy-900 dark:hover:text-ivory-100'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
           }`}
         >
           <Users className="w-4 h-4" strokeWidth={1.5} />
@@ -459,13 +459,13 @@ export default function SettingsPage() {
                   </span>
                   <Badge variant="purple">Masa Coba 7 Hari</Badge>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-muted-foreground">
                   Masa coba berlaku sampai {currentStore?.trial_ends_at ? formatShortDate(currentStore.trial_ends_at) : '7 hari'}.
                 </p>
               </div>
             </div>
 
-            <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+            <h3 className="font-bold text-base text-card-foreground">
               Identitas Toko &amp; Etalase Publik
             </h3>
 
@@ -501,18 +501,18 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Deskripsi Singkat Butik
               </label>
               <textarea
                 rows={3}
                 value={storeDesc}
                 onChange={e => setStoreDesc(e.target.value)}
-                className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
               />
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-navy-800">
+            <div className="flex justify-end pt-2 border-t border-border">
               <Button
                 type="submit"
                 variant="secondary"
@@ -531,10 +531,10 @@ export default function SettingsPage() {
         <form onSubmit={handleSaveThresholds} className="space-y-4">
           <Card className="space-y-5">
             <div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Siklus Pelanggan
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Atur kriteria otomatisasi pengelompokan pelanggan fashion tokomu agar tindak lanjut retensi berjalan tepat sasaran. Klik kartu untuk melihat daftar pelanggan pada tahap terkait.
               </p>
             </div>
@@ -547,12 +547,12 @@ export default function SettingsPage() {
                   setSelectedStageModal('Baru');
                   setStageModalSearch('');
                 }}
-                className="group p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/90 dark:bg-navy-800/60 dark:hover:bg-navy-800 border border-slate-200 dark:border-navy-700 hover:border-violet-400 dark:hover:border-violet-500 cursor-pointer transition shadow-sm space-y-2 select-none"
+                className="group p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/90 dark:bg-navy-800/60 dark:hover:bg-navy-800 border border-border hover:border-violet-400 dark:hover:border-violet-500 cursor-pointer transition shadow-sm space-y-2 select-none"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="default">Baru</Badge>
-                    <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                    <span className="font-bold text-xs text-card-foreground">
                       ({previewStageDistribution.newCount} Pelanggan)
                     </span>
                   </div>
@@ -561,7 +561,7 @@ export default function SettingsPage() {
                     <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </span>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed">
+                <p className="text-muted-foreground text-[11px] leading-relaxed">
                   Pelanggan yang baru pertama kali bertransaksi atau belum pernah bertransaksi di tokomu.
                 </p>
               </div>
@@ -586,7 +586,7 @@ export default function SettingsPage() {
                     <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </span>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed">
+                <p className="text-muted-foreground text-[11px] leading-relaxed">
                   Pelanggan yang bertransaksi dalam kurun waktu aktif (default: {activeDays} hari terakhir).
                 </p>
               </div>
@@ -611,7 +611,7 @@ export default function SettingsPage() {
                     <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </span>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed">
+                <p className="text-muted-foreground text-[11px] leading-relaxed">
                   Pelanggan yang telah berbelanja berulang kali (minimal {loyalOrders} pesanan) dalam {loyalDays} hari terakhir.
                 </p>
               </div>
@@ -636,17 +636,17 @@ export default function SettingsPage() {
                     <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </span>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 text-[11px] leading-relaxed">
+                <p className="text-muted-foreground text-[11px] leading-relaxed">
                   Pelanggan yang tidak pernah bertransaksi lebih dari {sleepingDays} hari (otomatis masuk daftar tindak lanjut retensi).
                 </p>
               </div>
             </div>
 
             {/* Formal Notification Message Below Stages */}
-            <div className="p-3.5 bg-slate-50 dark:bg-navy-800/80 rounded-xl border border-slate-200 dark:border-navy-700 flex items-center gap-2.5">
+            <div className="p-3.5 bg-muted/60 rounded-xl border border-border flex items-center gap-2.5">
               <Info className="w-4 h-4 text-violet-600 flex-shrink-0" strokeWidth={1.5} />
-              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
-                <span className="font-bold text-navy-900 dark:text-ivory-100 mr-1.5">Pratinjau Dampak Pengaturan:</span>
+              <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                <span className="font-bold text-card-foreground mr-1.5">Pratinjau Dampak Pengaturan:</span>
                 Distribusi kuantitas pelanggan di atas terhitung secara otomatis dan dinamis berdasarkan konfigurasi ambang batas kriteria siklus yang aktif saat ini.
               </p>
             </div>
@@ -692,7 +692,7 @@ export default function SettingsPage() {
               />
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-navy-800">
+            <div className="flex justify-end pt-2 border-t border-border">
               <Button
                 type="submit"
                 variant="secondary"
@@ -711,69 +711,69 @@ export default function SettingsPage() {
         <form onSubmit={handleSaveTemplates} className="space-y-4">
           <Card className="space-y-4">
             <div>
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+              <h3 className="font-bold text-base text-card-foreground">
                 Kerangka Pesan Cadangan
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Kerangka ini digunakan sebagai pesan alternatif ketika AI tidak aktif, atau sebagai dasar inspirasi balasan WhatsApp.
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-navy-800/60 rounded-xl text-[11px] text-slate-500 border border-slate-200 dark:border-navy-700">
+            <div className="p-3 bg-muted/60/60 rounded-xl text-[11px] text-muted-foreground border border-border">
               Gunakan variabel {'{nama}'}, {'{toko}'}, {'{toko_slug}'}, {'{produk}'}, {'{ukuran}'}, {'{warna}'}, {'{no_pesanan}'} untuk disisipkan otomatis.
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   1. Template Pelanggan Tidur (Ajak Kembali)
                 </label>
                 <textarea
                   rows={3}
                   value={tplSleeping}
                   onChange={e => setTplSleeping(e.target.value)}
-                  className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                  className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   2. Template Pesanan Menunggu Pembayaran (&gt; 24 Jam)
                 </label>
                 <textarea
                   rows={3}
                   value={tplUnpaid}
                   onChange={e => setTplUnpaid(e.target.value)}
-                  className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                  className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   3. Template Ucapan Ulang Tahun &amp; Diskon
                 </label>
                 <textarea
                   rows={3}
                   value={tplBirthday}
                   onChange={e => setTplBirthday(e.target.value)}
-                  className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                  className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   4. Template Restock Busana Favorit
                 </label>
                 <textarea
                   rows={3}
                   value={tplRestock}
                   onChange={e => setTplRestock(e.target.value)}
-                  className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                  className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-navy-800">
+            <div className="flex justify-end pt-2 border-t border-border">
               <Button
                 type="submit"
                 variant="secondary"
@@ -793,16 +793,16 @@ export default function SettingsPage() {
           <form onSubmit={handleSavePersona} className="space-y-4">
             <Card className="space-y-5">
               <div>
-                <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+                <h3 className="font-bold text-base text-card-foreground">
                   Persona &amp; Gaya Bahasa Asisten AI
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Tentukan bagaimana AI toko kamu berkomunikasi menyapa pelanggan butik lokal.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   Instruksi Karakter &amp; Nada Bicara
                 </label>
                 <textarea
@@ -810,16 +810,16 @@ export default function SettingsPage() {
                   value={aiPersona}
                   onChange={e => setAiPersona(e.target.value)}
                   placeholder="Contoh: Ramah, santai, empatik khas fashion advisor butik lokal Jakarta..."
-                  className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                  className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
                 />
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-muted-foreground mt-1">
                   AI hanya akan mengutip data harga dan stok riil dari katalog tokomu tanpa menebak atau berhalusinasi.
                 </p>
               </div>
 
               {/* Emoji Style Setting */}
               <div>
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   Emoji pada Pesan Chat
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -828,18 +828,18 @@ export default function SettingsPage() {
                     className={`p-3 rounded-xl border cursor-pointer transition ${
                       emojiStyle === 'bebas'
                         ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                        : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                        : 'border-border hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                      <span className="font-bold text-xs text-card-foreground">
                         Emoji Bebas
                       </span>
                       {emojiStyle === 'bebas' && (
                         <Badge variant="purple">Aktif</Badge>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-muted-foreground">
                       Bebas berekspresi tanpa batasan jumlah atau varian emoji.
                     </p>
                   </div>
@@ -849,18 +849,18 @@ export default function SettingsPage() {
                     className={`p-3 rounded-xl border cursor-pointer transition ${
                       emojiStyle === 'minimal'
                         ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                        : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                        : 'border-border hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                      <span className="font-bold text-xs text-card-foreground">
                         Minimal (Maksimal 2)
                       </span>
                       {emojiStyle === 'minimal' && (
                         <Badge variant="purple">Aktif</Badge>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-muted-foreground">
                       Hanya menggunakan emoji santun dan profesional dalam batas wajar.
                     </p>
                   </div>
@@ -870,32 +870,32 @@ export default function SettingsPage() {
                     className={`p-3 rounded-xl border cursor-pointer transition ${
                       emojiStyle === 'none'
                         ? 'border-violet-500 bg-violet-50/50 dark:bg-navy-800 ring-1 ring-violet-500'
-                        : 'border-slate-200 dark:border-navy-700 hover:border-slate-300'
+                        : 'border-border hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs text-navy-900 dark:text-ivory-100">
+                      <span className="font-bold text-xs text-card-foreground">
                         Tanpa Emoji
                       </span>
                       {emojiStyle === 'none' && (
                         <Badge variant="purple">Aktif</Badge>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-muted-foreground">
                       Pesan bersih murni teks formal tanpa ikon emotikon apapun.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-navy-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-border">
                 <div>
                   {currentStore?.last_persona_updated_at ? (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-muted-foreground">
                       Terakhir disimpan: {formatDateWIB(currentStore.last_persona_updated_at)}
                     </span>
                   ) : (
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-muted-foreground">
                       Gaya bahasa ini digunakan saat menyusun balasan chat.
                     </span>
                   )}
@@ -915,17 +915,17 @@ export default function SettingsPage() {
 
           {/* Panel Uji Balasan */}
           <Card className="space-y-4">
-            <div className="border-b border-slate-100 dark:border-navy-800 pb-3">
-              <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+            <div className="border-b border-border pb-3">
+              <h3 className="font-bold text-base text-card-foreground">
                 Uji Balasan Persona
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Coba kirimkan pertanyaan untuk melihat bagaimana persona dan aturan emoji di atas diterapkan pada pesan balasan.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                 Pertanyaan Simulasi
               </label>
               <textarea
@@ -933,7 +933,7 @@ export default function SettingsPage() {
                 value={testInquiry}
                 onChange={e => setTestInquiry(e.target.value)}
                 placeholder="Tulis pertanyaan uji coba di sini..."
-                className="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 focus:border-violet-500"
+                className="w-full p-3 text-xs rounded-xl border border-border bg-card text-card-foreground focus:border-violet-500"
               />
             </div>
 
@@ -950,11 +950,11 @@ export default function SettingsPage() {
             </div>
 
             {testReplyResult && (
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-800/60 border border-slate-200 dark:border-navy-700 space-y-2">
+              <div className="p-4 rounded-xl bg-muted/60/60 border border-border space-y-2">
                 <span className="text-[11px] font-bold text-violet-600 uppercase tracking-wider block">
                   Hasil Pratinjau Balasan:
                 </span>
-                <p className="text-xs text-navy-900 dark:text-ivory-100 leading-relaxed whitespace-pre-line">
+                <p className="text-xs text-card-foreground leading-relaxed whitespace-pre-line">
                   {testReplyResult}
                 </p>
               </div>
@@ -972,7 +972,7 @@ export default function SettingsPage() {
                 <span className="text-xs font-bold text-violet-900 dark:text-violet-200">
                   Penggunaan Kuota: {currentStoreMembers.length} dari {maxUsersAllowed} pengguna ({currentStore?.plan === 'pro' ? 'Paket Pro' : 'Paket Standar'})
                 </span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-muted-foreground">
                   {currentStore?.plan === 'pro'
                     ? 'Paket Pro mendukung hingga maksimal 5 anggota tim.'
                     : 'Paket Standar mendukung hingga maksimal 2 anggota tim.'}
@@ -992,7 +992,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            <h3 className="font-bold text-base text-navy-900 dark:text-ivory-100">
+            <h3 className="font-bold text-base text-card-foreground">
               Undang Anggota Tim / Kasir Toko
             </h3>
 
@@ -1009,14 +1009,14 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="sm:col-span-3">
-                <label className="block text-xs font-semibold text-navy-800 dark:text-slate-200 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-card-foreground uppercase tracking-wide mb-1.5">
                   Peran
                 </label>
                 <select
                   disabled={isQuotaReached}
                   value={inviteRole}
                   onChange={e => setInviteRole(e.target.value as 'owner' | 'staff')}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 text-navy-900 dark:text-ivory-100 disabled:opacity-50"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-card text-card-foreground disabled:opacity-50"
                 >
                   <option value="staff">Staff / Kasir</option>
                   <option value="owner">Owner</option>
@@ -1038,21 +1038,21 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="space-y-3">
-            <h4 className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+            <h4 className="font-bold text-sm text-card-foreground">
               Daftar Anggota Tim Toko ({currentStoreMembers.length})
             </h4>
-            <div className="divide-y divide-slate-100 dark:divide-navy-800">
+            <div className="divide-y divide-border">
               {currentStoreMembers.map((member) => (
                 <div key={member.id} className="py-3 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-navy-800 flex items-center justify-center font-bold text-navy-900 dark:text-ivory-100">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-navy-800 flex items-center justify-center font-bold text-card-foreground">
                       {(member.user_email || member.invited_email || 'U').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-bold text-navy-900 dark:text-ivory-100">
+                      <p className="font-bold text-card-foreground">
                         {member.user_email || member.invited_email}
                       </p>
-                      <p className="text-slate-400">
+                      <p className="text-muted-foreground">
                         Peran: <span className="uppercase font-semibold">{member.role}</span>
                       </p>
                     </div>
@@ -1076,7 +1076,7 @@ export default function SettingsPage() {
       >
         <div className="space-y-4">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" strokeWidth={1.5} />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-3" strokeWidth={1.5} />
             <Input
               placeholder="Cari nama, WhatsApp, ukuran favorit, warna..."
               value={stageModalSearch}
@@ -1085,9 +1085,9 @@ export default function SettingsPage() {
             />
           </div>
 
-          <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 dark:divide-navy-800">
+          <div className="max-h-[380px] overflow-y-auto divide-y divide-border">
             {stageModalCustomers.length === 0 ? (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-muted-foreground">
                 Tidak ada pelanggan yang ditemukan pada tahap {selectedStageModal}
                 {stageModalSearch ? ' dengan kata kunci tersebut' : ''}.
               </div>
@@ -1099,7 +1099,7 @@ export default function SettingsPage() {
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-sm text-navy-900 dark:text-ivory-100">
+                      <p className="font-bold text-sm text-card-foreground">
                         {cust.name}
                       </p>
                       <Badge
@@ -1117,11 +1117,11 @@ export default function SettingsPage() {
                       </Badge>
                     </div>
 
-                    <p className="text-xs text-slate-500 font-mono">
+                    <p className="text-xs text-muted-foreground font-mono">
                       {cust.phone_wa}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                       <span>Total Belanja: {formatRupiah(cust.total_spend || 0)}</span>
                       <span>•</span>
                       <span>{cust.order_count || 0} Pesanan</span>
@@ -1140,7 +1140,7 @@ export default function SettingsPage() {
                     {/* Profil Pelanggan Link - Selalu ada */}
                     <Link
                       href={`/customers/${cust.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-700 text-xs font-semibold text-navy-900 dark:text-ivory-100 transition shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-700 text-xs font-semibold text-card-foreground transition shadow-sm"
                     >
                       <span>Lihat Profil</span>
                       <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -1165,7 +1165,7 @@ export default function SettingsPage() {
             )}
           </div>
 
-          <div className="pt-2 border-t border-slate-100 dark:border-navy-800 flex justify-between items-center text-xs text-slate-400">
+          <div className="pt-2 border-t border-border flex justify-between items-center text-xs text-muted-foreground">
             <span>
               Menampilkan {stageModalCustomers.length} pelanggan
             </span>
