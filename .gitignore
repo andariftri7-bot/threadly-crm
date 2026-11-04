@@ -37,5 +37,8 @@ pnpm-debug.log*
 # vercel
 .vercel
 
+# github workflows (disabled from PAT push without workflow scope)
+.github/
+
 # typescript
 *.tsbuildinfo
