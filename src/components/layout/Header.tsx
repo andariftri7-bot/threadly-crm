@@ -34,17 +34,17 @@ export function Header() {
       )}
 
       {/* Main Header Bar */}
-      <div className="h-16 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-bold text-white tracking-tight">
+      <div className="h-16 px-4 sm:px-6 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <h1 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate max-w-[160px] sm:max-w-none">
             {currentStore?.name || 'Threadly CRM'}
           </h1>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/15 text-slate-100 font-medium border border-white/20">
+          <span className="hidden sm:inline-block text-xs px-2.5 py-0.5 rounded-full bg-white/15 text-slate-100 font-medium border border-white/20 flex-shrink-0">
             WIB (Asia/Jakarta)
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           {/* Theme Switcher: Terang / Gelap / Sistem */}
           <ThemeToggle />
 
@@ -52,7 +52,7 @@ export function Header() {
             <Link
               href={`/${currentStore.slug}`}
               target="_blank"
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:bg-white/20 transition shadow-sm"
+              className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:bg-white/20 transition shadow-sm"
             >
               <StoreIcon className="w-3.5 h-3.5 text-[#EBD9B4]" strokeWidth={1.5} />
               <span>Lihat Etalase Publik</span>
@@ -66,7 +66,7 @@ export function Header() {
               logout();
             }}
             title="Keluar akun"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:text-rose-200 hover:border-rose-400 hover:bg-rose-950/60 transition shadow-sm"
+            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-semibold text-white hover:text-rose-200 hover:border-rose-400 hover:bg-rose-950/60 transition shadow-sm touch-target"
           >
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>Keluar</span>

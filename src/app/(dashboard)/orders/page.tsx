@@ -120,7 +120,71 @@ export default function OrdersPage() {
         />
       ) : (
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
+          {/* Mobile Card List (< md) */}
+          <div className="md:hidden divide-y divide-border">
+            {filteredOrders.map(order => (
+              <div key={order.id} className="p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="font-bold text-sm text-card-foreground block">
+                      #{order.order_number}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground block">
+                      {formatDateWIB(order.created_at)}
+                    </span>
+                  </div>
+                  <div>{getStatusBadge(order.status)}</div>
+                </div>
+
+                <div className="bg-muted/40 p-3 rounded-xl border border-border space-y-1.5 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Pelanggan:</span>
+                    <span className="font-semibold text-card-foreground">{order.customer_name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total:</span>
+                    <span className="font-bold text-card-foreground">{formatRupiah(order.total_amount)}</span>
+                  </div>
+                  {order.items && order.items.length > 0 && (
+                    <div className="pt-1 border-t border-border/60 text-muted-foreground text-[11px]">
+                      {order.items.map(it => (
+                        <p key={it.id} className="truncate">
+                          &bull; {it.product_name} ({it.variant_name}) &times; {it.quantity}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <select
+                    value={order.status}
+                    onChange={e => updateOrderStatus(order.id, e.target.value as OrderStatus)}
+                    className="text-xs px-2.5 py-2 rounded-xl border border-border bg-card font-semibold touch-target"
+                  >
+                    <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+                    <option value="DP">DP</option>
+                    <option value="Lunas">Lunas</option>
+                    <option value="Dikemas">Dikemas</option>
+                    <option value="Dikirim">Dikirim</option>
+                    <option value="Selesai">Selesai</option>
+                    <option value="Batal">Batal</option>
+                  </select>
+
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted text-xs font-semibold shadow-sm touch-target"
+                  >
+                    <Eye className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Detail</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop & Tablet Table (>= md) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm text-card-foreground">
               <thead className="bg-muted/60/60 text-xs font-semibold uppercase text-muted-foreground border-b border-border">
                 <tr>
@@ -215,6 +279,19 @@ export default function OrdersPage() {
           </div>
         </div>
       )}
+
+      {/* Mobile Floating Action Button (FAB) */}
+      <div className="sm:hidden fixed bottom-20 right-4 z-30">
+        <Link href="/orders/new">
+          <button
+            type="button"
+            className="flex items-center gap-2 px-4 py-3 rounded-full bg-secondary bg-gradient-accent text-white font-bold text-xs shadow-lg shadow-violet-500/30 hover:scale-105 active:scale-95 transition-all touch-target"
+          >
+            <Plus className="w-4 h-4" strokeWidth={2} />
+            <span>Buat Pesanan</span>
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

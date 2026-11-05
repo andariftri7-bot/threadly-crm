@@ -35,6 +35,30 @@ export function middleware(req: NextRequest) {
     }
   }
 
+  // 1b. Support /superadmin and /superadmin/* routes
+  if (pathname === '/superadmin/login') {
+    if (isSuperadminUser) {
+      const adminUrl = req.nextUrl.clone();
+      adminUrl.pathname = '/admin';
+      return NextResponse.redirect(adminUrl);
+    }
+    return NextResponse.next();
+  }
+
+  if (pathname === '/superadmin' || pathname.startsWith('/superadmin/')) {
+    if (!isSuperadminUser) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/not-found';
+      const res = NextResponse.rewrite(url, { status: 404 });
+      res.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      return res;
+    }
+    // Authenticated superadmin directed to /admin panel
+    const adminUrl = req.nextUrl.clone();
+    adminUrl.pathname = '/admin';
+    return NextResponse.redirect(adminUrl);
+  }
+
   // 2. Guard /api/admin and /api/admin/*
   if (pathname === '/api/admin' || pathname.startsWith('/api/admin/')) {
     if (!isSuperadminUser) {
@@ -55,5 +79,13 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin', '/admin/:path*', '/api/admin/:path*', '/dashboard', '/dashboard/:path*'],
+  matcher: [
+    '/admin',
+    '/admin/:path*',
+    '/api/admin/:path*',
+    '/dashboard',
+    '/dashboard/:path*',
+    '/superadmin',
+    '/superadmin/:path*',
+  ],
 };

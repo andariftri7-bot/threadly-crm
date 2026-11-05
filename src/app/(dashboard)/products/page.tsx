@@ -1129,6 +1129,18 @@ export default function ProductsPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* Mobile Floating Action Button (FAB) */}
+      <div className="sm:hidden fixed bottom-20 right-4 z-30">
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-3 rounded-full bg-secondary bg-gradient-accent text-white font-bold text-xs shadow-lg shadow-violet-500/30 hover:scale-105 active:scale-95 transition-all touch-target"
+        >
+          <Plus className="w-4 h-4" strokeWidth={2} />
+          <span>Tambah Produk</span>
+        </button>
+      </div>
     </div>
   );
 }

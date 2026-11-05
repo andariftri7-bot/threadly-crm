@@ -28,6 +28,14 @@ export default function LoginPage() {
       throw new Error('Format email tidak valid.');
     }
 
+    // 0. Whitelist / bypass eksplisit superadmin (Google Sign-In maupun form login)
+    // Validasi pendaftaran user biasa TIDAK BOLEH memblokir atau me-redirect sesi superadmin.
+    if (cleanEmail === 'andariftri7@gmail.com' || email.toLowerCase().trim() === 'andariftri7@gmail.com') {
+      await login('andariftri7@gmail.com', 'owner');
+      router.push('/admin');
+      return;
+    }
+
     // 1. Cek apakah email sudah terdaftar
     const registered = isEmailRegistered(cleanEmail);
 
@@ -225,10 +233,13 @@ export default function LoginPage() {
             <Input
               label="Alamat Email"
               type="email"
+              inputMode="email"
+              autoComplete="email"
               required
               placeholder="nama@tokomu.com atau nama@gmail.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <div>
@@ -245,11 +256,12 @@ export default function LoginPage() {
               </div>
               <input
                 type="password"
+                autoComplete="current-password"
                 required
                 placeholder="Minimal 6 karakter"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25"
+                className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25"
               />
             </div>
 

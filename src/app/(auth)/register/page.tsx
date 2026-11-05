@@ -229,44 +229,55 @@ function RegisterForm() {
           <form onSubmit={handleRegister} className="space-y-4">
             <Input
               label="Nama Pemilik Toko"
+              autoComplete="name"
               required
               placeholder="Contoh: Riska Melinda"
               value={fullName}
               onChange={e => setFullName(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <Input
               label="Nama Butik / Toko Fashion"
+              autoComplete="organization"
               placeholder="Contoh: Butik Cantik Elegan (Opsional)"
               value={storeName}
               onChange={e => setStoreName(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <Input
               label="Alamat Email"
               type="email"
+              inputMode="email"
+              autoComplete="email"
               required
               placeholder="owner@butikmu.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <Input
               label="Kata Sandi"
               type="password"
+              autoComplete="new-password"
               required
               placeholder="Minimal 6 karakter"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <Input
               label="Konfirmasi Kata Sandi"
               type="password"
+              autoComplete="new-password"
               required
               placeholder="Ketik ulang kata sandi"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
+              className="min-h-[44px] text-base sm:text-sm"
             />
 
             <Button

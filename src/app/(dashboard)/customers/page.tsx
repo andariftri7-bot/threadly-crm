@@ -308,7 +308,70 @@ export default function CustomersPage() {
         />
       ) : (
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
+          {/* Mobile Card List (< md) */}
+          <div className="md:hidden divide-y divide-border">
+            {paginatedCustomers.map(customer => {
+              const normalizedWA = normalizeWhatsAppNumber(customer.phone_wa);
+
+              return (
+                <div key={customer.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 className="font-bold text-sm text-card-foreground">{customer.name}</h4>
+                      <p className="text-xs text-muted-foreground font-mono">{customer.phone_wa}</p>
+                    </div>
+                    <Badge variant={getStageBadgeVariant(customer.stage)}>
+                      {customer.stage}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-muted/40 p-2.5 rounded-xl border border-border">
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Ukuran / Warna</span>
+                      <span className="font-semibold text-card-foreground">
+                        {customer.favorite_size || '-'} / {customer.favorite_color || '-'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Total Belanja</span>
+                      <span className="font-bold text-card-foreground">
+                        {formatRupiah(customer.total_spend)} ({customer.order_count}x)
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-muted-foreground">
+                      Beli: {customer.last_purchase_date ? formatShortDate(customer.last_purchase_date) : 'Belum pernah'}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {normalizedWA && (
+                        <a
+                          href={`https://wa.me/${normalizedWA}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm touch-target"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                          <span>WA</span>
+                        </a>
+                      )}
+                      <Link
+                        href={`/customers/${customer.id}`}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted text-xs font-semibold shadow-sm touch-target"
+                      >
+                        <Eye className="w-3.5 h-3.5" strokeWidth={1.5} />
+                        <span>Detail</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop & Tablet Table (>= md) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm text-card-foreground">
               <thead className="bg-muted/60/60 text-xs font-semibold uppercase text-muted-foreground border-b border-border">
                 <tr>
@@ -441,6 +504,18 @@ export default function CustomersPage() {
           </div>
         </div>
       )}
+
+      {/* Mobile Floating Action Button (FAB) */}
+      <div className="sm:hidden fixed bottom-20 right-4 z-30">
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-3 rounded-full bg-secondary bg-gradient-accent text-white font-bold text-xs shadow-lg shadow-violet-500/30 hover:scale-105 active:scale-95 transition-all touch-target"
+        >
+          <Plus className="w-4 h-4" strokeWidth={2} />
+          <span>Tambah Pelanggan</span>
+        </button>
+      </div>
 
       {/* Quick Add Customer Modal with Duplicate Detection */}
       <Modal

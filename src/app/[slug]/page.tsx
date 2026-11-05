@@ -255,7 +255,7 @@ export default function PublicStorefrontPage() {
                   Belum ada koleksi produk yang aktif di etalase ini.
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {storeProducts.map(product => {
                     const isSelected = selectedProduct?.id === product.id;
                     const inStockTotal =

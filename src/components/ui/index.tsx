@@ -83,7 +83,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={generatedId}
           ref={ref}
           className={cn(
-            'w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed',
+            'w-full px-3.5 py-2.5 text-base sm:text-sm min-h-[44px] bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground/75 transition-all focus:border-ring focus:ring-2 focus:ring-ring/25 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed',
             error && 'border-destructive focus:border-destructive focus:ring-destructive/25',
             className
           )}
@@ -148,7 +148,7 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   return (
     <div
       className={cn(
-        'bg-card border border-border rounded-2xl shadow-sm p-6 text-card-foreground transition-all',
+        'bg-card border border-border rounded-2xl shadow-sm p-4 sm:p-6 text-card-foreground transition-all',
         className
       )}
       {...props}
@@ -188,23 +188,23 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div
         className={cn(
-          'w-full bg-card rounded-2xl shadow-2xl border border-border p-6 space-y-4 max-h-[90vh] overflow-y-auto text-card-foreground',
+          'w-full bg-card rounded-t-3xl sm:rounded-2xl shadow-2xl border border-border p-5 sm:p-6 space-y-4 max-h-[90dvh] sm:max-h-[90vh] overflow-y-auto text-card-foreground animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 pb-safe sm:pb-6',
           maxWidths[maxWidth]
         )}
       >
         <div className="flex items-start justify-between border-b border-border pb-3">
           <div>
-            <h3 className="text-lg font-bold text-card-foreground">{title}</h3>
+            <h3 className="text-base sm:text-lg font-bold text-card-foreground">{title}</h3>
             {description && (
               <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
+            className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition touch-target flex items-center justify-center"
           >
             <X className="w-5 h-5" strokeWidth={1.5} />
           </button>

@@ -541,66 +541,48 @@ export default function SuperAdminPage() {
             </div>
 
             <div className="bg-card border border-border rounded-2xl overflow-hidden">
-              <table className="w-full text-left text-xs text-muted-foreground">
-                <thead className="bg-muted/80 uppercase font-bold text-muted-foreground border-b border-border">
-                  <tr>
-                    <th className="p-4">Toko Fashion</th>
-                    <th className="p-4">Alamat Etalase</th>
-                    <th className="p-4">Paket &amp; Masa Coba</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-center">Pelanggan</th>
-                    <th className="p-4 text-center">Produk</th>
-                    <th className="p-4 text-center">Pesanan</th>
-                    <th className="p-4 text-right">Aksi Super Admin</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filteredStores.map(store => {
-                    const stats = platformStats.storeStats[store.id] || { customers: 0, products: 0, orders: 0 };
-                    const storeCustCount = stats.customers;
-                    const storeProdCount = stats.products;
-                    const storeOrderCount = stats.orders;
+              {/* Mobile Card List (< md) */}
+              <div className="md:hidden divide-y divide-border">
+                {filteredStores.map(store => {
+                  const stats = platformStats.storeStats[store.id] || { customers: 0, products: 0, orders: 0 };
+                  return (
+                    <div key={store.id} className="p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-bold text-card-foreground text-sm">{store.name}</p>
+                          <p className="text-[11px] text-muted-foreground font-mono">/{store.slug}</p>
+                        </div>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            store.status === 'active'
+                              ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                              : 'bg-rose-950 text-rose-400 border border-rose-800'
+                          }`}
+                        >
+                          {store.status.toUpperCase()}
+                        </span>
+                      </div>
 
-                    return (
-                      <tr key={store.id} className="hover:bg-card/40">
-                        <td className="p-4">
-                          <p className="font-bold text-white text-sm">{store.name}</p>
-                          <p className="text-[11px] text-slate-500 font-mono">ID: {store.id}</p>
-                        </td>
-                        <td className="p-4 font-mono text-violet-400">
-                          /{store.slug}
-                        </td>
-                        <td className="p-4">
-                          <div className="flex flex-col gap-1">
-                            <span
-                              className={`w-fit px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                store.plan === 'pro'
-                                  ? 'bg-violet-950 text-violet-300 border border-violet-800'
-                                  : 'bg-slate-700 text-muted-foreground border border-slate-600'
-                              }`}
-                            >
-                              {store.plan || 'Standar'}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground">
-                              Trial s/d {store.trial_ends_at ? formatShortDate(store.trial_ends_at) : '7 hari'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              store.status === 'active'
-                                ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                                : 'bg-rose-950 text-rose-400 border border-rose-800'
-                            }`}
-                          >
-                            {store.status.toUpperCase()}
-                          </span>
-                        </td>
-                        <td className="p-4 text-center font-bold">{storeCustCount}</td>
-                        <td className="p-4 text-center font-bold">{storeProdCount}</td>
-                        <td className="p-4 text-center font-bold">{storeOrderCount}</td>
-                        <td className="p-4 text-right space-x-2">
+                      <div className="grid grid-cols-3 gap-2 text-center p-2 rounded-xl bg-muted/40 border border-border text-xs">
+                        <div>
+                          <span className="text-[10px] text-muted-foreground block">Pelanggan</span>
+                          <span className="font-bold text-card-foreground">{stats.customers}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-muted-foreground block">Produk</span>
+                          <span className="font-bold text-card-foreground">{stats.products}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-muted-foreground block">Pesanan</span>
+                          <span className="font-bold text-card-foreground">{stats.orders}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-1 items-center justify-between">
+                        <div className="text-[10px] text-muted-foreground">
+                          Paket: <strong className="uppercase text-card-foreground">{store.plan || 'Standar'}</strong>
+                        </div>
+                        <div className="flex gap-2">
                           <button
                             onClick={() => {
                               setPlanTarget({
@@ -611,13 +593,11 @@ export default function SuperAdminPage() {
                               setNewPlan(store.plan === 'pro' ? 'standar' : 'pro');
                               setPlanReason('');
                             }}
-                            className="p-1.5 px-2.5 rounded-lg text-xs font-semibold bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 transition border border-violet-500/30"
-                            title="Ubah Paket Langganan"
+                            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 transition border border-violet-500/30 touch-target"
                           >
                             <Sparkles className="w-3.5 h-3.5 inline mr-1" strokeWidth={1.5} />
                             Ubah Paket
                           </button>
-
                           <button
                             onClick={() =>
                               setToggleTarget({
@@ -626,27 +606,131 @@ export default function SuperAdminPage() {
                                 currentStatus: store.status,
                               })
                             }
-                            className={`p-1.5 rounded-lg text-xs font-semibold transition ${
+                            className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition border touch-target ${
                               store.status === 'active'
-                                ? 'text-rose-400 hover:bg-rose-950/40'
-                                : 'text-emerald-400 hover:bg-emerald-950/40'
+                                ? 'text-rose-400 border-rose-800/40 hover:bg-rose-950/40'
+                                : 'text-emerald-400 border-emerald-800/40 hover:bg-emerald-950/40'
                             }`}
-                            title={store.status === 'active' ? 'Nonaktifkan Toko' : 'Aktifkan Toko'}
                           >
                             <Power className="w-4 h-4 inline mr-1" strokeWidth={1.5} />
                             {store.status === 'active' ? 'Nonaktifkan' : 'Aktifkan'}
                           </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
 
-                          <span className="p-1 px-2.5 rounded-lg text-[11px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 inline-flex items-center gap-1">
-                            <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
-                            Privasi Terlindungi
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              {/* Desktop Table (>= md) */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left text-xs text-muted-foreground">
+                  <thead className="bg-muted/80 uppercase font-bold text-muted-foreground border-b border-border">
+                    <tr>
+                      <th className="p-4">Toko Fashion</th>
+                      <th className="p-4">Alamat Etalase</th>
+                      <th className="p-4">Paket &amp; Masa Coba</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4 text-center">Pelanggan</th>
+                      <th className="p-4 text-center">Produk</th>
+                      <th className="p-4 text-center">Pesanan</th>
+                      <th className="p-4 text-right">Aksi Super Admin</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {filteredStores.map(store => {
+                      const stats = platformStats.storeStats[store.id] || { customers: 0, products: 0, orders: 0 };
+                      const storeCustCount = stats.customers;
+                      const storeProdCount = stats.products;
+                      const storeOrderCount = stats.orders;
+
+                      return (
+                        <tr key={store.id} className="hover:bg-card/40">
+                          <td className="p-4">
+                            <p className="font-bold text-white text-sm">{store.name}</p>
+                            <p className="text-[11px] text-slate-500 font-mono">ID: {store.id}</p>
+                          </td>
+                          <td className="p-4 font-mono text-violet-400">
+                            /{store.slug}
+                          </td>
+                          <td className="p-4">
+                            <div className="flex flex-col gap-1">
+                              <span
+                                className={`w-fit px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                  store.plan === 'pro'
+                                    ? 'bg-violet-950 text-violet-300 border border-violet-800'
+                                    : 'bg-slate-700 text-muted-foreground border border-slate-600'
+                                }`}
+                              >
+                                {store.plan || 'Standar'}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground">
+                                Trial s/d {store.trial_ends_at ? formatShortDate(store.trial_ends_at) : '7 hari'}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                store.status === 'active'
+                                  ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                                  : 'bg-rose-950 text-rose-400 border border-rose-800'
+                              }`}
+                            >
+                              {store.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="p-4 text-center font-bold">{storeCustCount}</td>
+                          <td className="p-4 text-center font-bold">{storeProdCount}</td>
+                          <td className="p-4 text-center font-bold">{storeOrderCount}</td>
+                          <td className="p-4 text-right space-x-2">
+                            <button
+                              onClick={() => {
+                                setPlanTarget({
+                                  id: store.id,
+                                  name: store.name,
+                                  currentPlan: store.plan || 'standar',
+                                });
+                                setNewPlan(store.plan === 'pro' ? 'standar' : 'pro');
+                                setPlanReason('');
+                              }}
+                              className="p-1.5 px-2.5 rounded-lg text-xs font-semibold bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 transition border border-violet-500/30"
+                              title="Ubah Paket Langganan"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 inline mr-1" strokeWidth={1.5} />
+                              Ubah Paket
+                            </button>
+
+                            <button
+                              onClick={() =>
+                                setToggleTarget({
+                                  id: store.id,
+                                  name: store.name,
+                                  currentStatus: store.status,
+                                })
+                              }
+                              className={`p-1.5 rounded-lg text-xs font-semibold transition ${
+                                store.status === 'active'
+                                  ? 'text-rose-400 hover:bg-rose-950/40'
+                                  : 'text-emerald-400 hover:bg-emerald-950/40'
+                              }`}
+                              title={store.status === 'active' ? 'Nonaktifkan Toko' : 'Aktifkan Toko'}
+                            >
+                              <Power className="w-4 h-4 inline mr-1" strokeWidth={1.5} />
+                              {store.status === 'active' ? 'Nonaktifkan' : 'Aktifkan'}
+                            </button>
+
+                            <span className="p-1 px-2.5 rounded-lg text-[11px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 inline-flex items-center gap-1">
+                              <Shield className="w-3.5 h-3.5" strokeWidth={1.5} />
+                              Privasi Terlindungi
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
