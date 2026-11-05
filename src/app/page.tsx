@@ -670,7 +670,113 @@ export default function LandingPage() {
               Perbandingan Fitur Lengkap
             </h3>
 
-            <div className="bg-card border border-border rounded-2xl overflow-x-auto shadow-sm">
+            {/* Mobile Swipeable Comparison Cards (< md) */}
+            <div className="md:hidden space-y-2">
+              <p className="text-[11px] text-muted-foreground text-center flex items-center justify-center gap-1">
+                <span>&larr; Geser ke samping untuk membandingkan paket &rarr;</span>
+              </p>
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 px-4 -mx-4">
+                {/* Standar Card */}
+                <div className="min-w-[85%] snap-center bg-card border-2 border-border rounded-2xl p-5 space-y-4 shadow-sm">
+                  <div className="border-b border-border pb-3">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Paket Standar</span>
+                    <p className="text-2xl font-extrabold text-card-foreground mt-1">Rp20.000 <span className="text-xs font-normal text-muted-foreground">/ bulan</span></p>
+                  </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Batas Pengguna:</span>
+                      <span className="font-semibold text-card-foreground">2 Pengguna</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Basis Pelanggan:</span>
+                      <span className="font-semibold text-card-foreground">300 Pelanggan</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Katalog Produk:</span>
+                      <span className="font-semibold text-card-foreground">100 Produk</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Tindak Lanjut WA:</span>
+                      <span className="font-semibold text-card-foreground">Dasar (Tidur &amp; Unpaid)</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Impor &amp; Ekspor:</span>
+                      <span className="font-semibold text-card-foreground">Hanya Ekspor CSV</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Asisten AI:</span>
+                      <span className="font-semibold text-card-foreground">30 / Bulan</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Dashboard Lanjutan:</span>
+                      <span className="font-semibold text-muted-foreground">-</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-muted-foreground">Dukungan:</span>
+                      <span className="font-semibold text-card-foreground">Standar</span>
+                    </div>
+                  </div>
+                  <Link href="/register" className="block pt-2">
+                    <Button variant="outline" size="sm" className="w-full">
+                      Pilih Standar
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* Pro Card */}
+                <div className="min-w-[85%] snap-center bg-card border-2 border-secondary bg-secondary/5 rounded-2xl p-5 space-y-4 shadow-md relative">
+                  <div className="border-b border-secondary/20 pb-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-secondary">Paket Pro</span>
+                      <span className="bg-secondary text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">Populer</span>
+                    </div>
+                    <p className="text-2xl font-extrabold text-card-foreground mt-1">Rp45.000 <span className="text-xs font-normal text-muted-foreground">/ bulan</span></p>
+                  </div>
+                  <div className="space-y-2.5 text-xs">
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Batas Pengguna:</span>
+                      <span className="font-bold text-secondary">Hingga 5 Pengguna</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Basis Pelanggan:</span>
+                      <span className="font-bold text-secondary">Tanpa Batas</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Katalog Produk:</span>
+                      <span className="font-bold text-secondary">Tanpa Batas</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Tindak Lanjut WA:</span>
+                      <span className="font-bold text-secondary">Lengkap (Ultah + Restock)</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Impor &amp; Ekspor:</span>
+                      <span className="font-bold text-secondary">Impor &amp; Ekspor Lengkap</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Asisten AI:</span>
+                      <span className="font-bold text-secondary">300 / Bulan + Kustom</span>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-border/60">
+                      <span className="text-muted-foreground">Dashboard Lanjutan:</span>
+                      <span className="font-bold text-success">Termasuk</span>
+                    </div>
+                    <div className="flex justify-between py-1">
+                      <span className="text-muted-foreground">Dukungan:</span>
+                      <span className="font-bold text-success">Prioritas WhatsApp</span>
+                    </div>
+                  </div>
+                  <Link href="/register" className="block pt-2">
+                    <Button variant="secondary" size="sm" className="w-full">
+                      Pilih Pro
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Table (>= md) */}
+            <div className="hidden md:block bg-card border border-border rounded-2xl overflow-x-auto shadow-sm">
               <table className="w-full min-w-[500px] text-xs text-left">
                 <thead className="bg-muted text-[11px] font-bold text-muted-foreground uppercase border-b border-border">
                   <tr>

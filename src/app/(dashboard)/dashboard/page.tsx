@@ -700,81 +700,142 @@ export default function DashboardPage() {
                   : `Belum ada pelanggan pada siklus ${selectedStageModal}.`}
               </div>
             ) : (
-              <table className="w-full text-left text-xs text-muted-foreground">
-                <thead className="bg-muted/60 uppercase font-bold text-muted-foreground border-b border-border sticky top-0">
-                  <tr>
-                    <th className="p-3">Pelanggan</th>
-                    <th className="p-3">Preferensi</th>
-                    <th className="p-3">Total Belanja</th>
-                    <th className="p-3">Order Terakhir</th>
-                    <th className="p-3 text-right">Tindakan Retensi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
+              <>
+                {/* Mobile Card List (< md) */}
+                <div className="md:hidden divide-y divide-border">
                   {stageCustomers.map(cust => (
-                    <tr key={cust.id} className="hover:bg-slate-50/70 dark:hover:bg-navy-800/50 transition">
-                      <td className="p-3">
-                        <p className="font-bold text-card-foreground">{cust.name}</p>
-                        <p className="text-[11px] font-mono text-muted-foreground">{cust.phone_wa}</p>
-                      </td>
-                      <td className="p-3">
-                        <p className="text-xs">
-                          {cust.favorite_size ? `Size: ${cust.favorite_size}` : '-'}
-                          {cust.favorite_color ? ` / ${cust.favorite_color}` : ''}
-                        </p>
-                        {cust.preferred_style && (
-                          <p className="text-[10px] text-muted-foreground">{cust.preferred_style}</p>
-                        )}
-                      </td>
-                      <td className="p-3">
-                        <p className="font-bold text-violet-600 dark:text-violet-400">
-                          {formatRupiah(cust.total_spend)}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground">{cust.order_count} transaksi</p>
-                      </td>
-                      <td className="p-3">
-                        <p className="text-xs">
-                          {cust.last_purchase_date ? formatShortDate(cust.last_purchase_date) : 'Belum pernah'}
-                        </p>
-                      </td>
-                      <td className="p-3 text-right space-x-2">
-                        {selectedStageModal === 'Tidur' ? (
-                          <a
-                            href={getSleepingWaLink(cust)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
-                            <span>Kirim WhatsApp</span>
-                          </a>
-                        ) : (
-                          <a
-                            href={buildWhatsAppLink(
-                              cust.phone_wa,
-                              `Halo Kak ${cust.name}! Salam hangat dari ${currentStore?.name || 'kami'}. Ada yang bisa kami bantu seputar koleksi fashion hari ini?`
-                            )}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-navy-800 text-xs font-medium transition"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5 text-emerald-500" strokeWidth={1.5} />
-                            <span>WA</span>
-                          </a>
-                        )}
-
-                        <Link
-                          href={`/customers/${cust.id}`}
-                          className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100 transition"
-                          title="Buka Profil Lengkap"
+                    <div key={cust.id} className="p-3.5 space-y-2.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-bold text-sm text-card-foreground">{cust.name}</p>
+                          <p className="text-xs text-muted-foreground font-mono">{cust.phone_wa}</p>
+                        </div>
+                        <Badge
+                          variant={
+                            selectedStageModal === 'Setia'
+                              ? 'purple'
+                              : selectedStageModal === 'Aktif'
+                              ? 'success'
+                              : selectedStageModal === 'Tidur'
+                              ? 'warning'
+                              : 'default'
+                          }
                         >
-                          <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
-                        </Link>
-                      </td>
-                    </tr>
+                          {cust.stage}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs bg-muted/40 p-2.5 rounded-xl border border-border">
+                        <div>
+                          <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Preferensi</span>
+                          <span className="font-medium text-card-foreground">
+                            {cust.favorite_size ? `Size ${cust.favorite_size}` : '-'}
+                            {cust.favorite_color ? ` / ${cust.favorite_color}` : ''}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Total Belanja</span>
+                          <span className="font-bold text-violet-600 dark:text-violet-400">
+                            {formatRupiah(cust.total_spend)} ({cust.order_count}x)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-[11px] text-muted-foreground">
+                          Order: {cust.last_purchase_date ? formatShortDate(cust.last_purchase_date) : 'Belum pernah'}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {selectedStageModal === 'Tidur' && (
+                            <a
+                              href={getSleepingWaLink(cust)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm touch-target"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                              <span>Kirim WhatsApp</span>
+                            </a>
+                          )}
+                          <Link
+                            href={`/customers/${cust.id}`}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border bg-card text-card-foreground hover:bg-muted text-xs font-semibold shadow-sm touch-target"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            <span>Profil</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+
+                {/* Desktop Table (>= md) */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs text-muted-foreground">
+                    <thead className="bg-muted/60 uppercase font-bold text-muted-foreground border-b border-border sticky top-0">
+                      <tr>
+                        <th className="p-3">Pelanggan</th>
+                        <th className="p-3">Preferensi</th>
+                        <th className="p-3">Total Belanja</th>
+                        <th className="p-3">Order Terakhir</th>
+                        <th className="p-3 text-right">Tindakan Retensi</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {stageCustomers.map(cust => (
+                        <tr key={cust.id} className="hover:bg-slate-50/70 dark:hover:bg-navy-800/50 transition">
+                          <td className="p-3">
+                            <p className="font-bold text-card-foreground">{cust.name}</p>
+                            <p className="text-[11px] font-mono text-muted-foreground">{cust.phone_wa}</p>
+                          </td>
+                          <td className="p-3">
+                            <p className="text-xs">
+                              {cust.favorite_size ? `Size: ${cust.favorite_size}` : '-'}
+                              {cust.favorite_color ? ` / ${cust.favorite_color}` : ''}
+                            </p>
+                            {cust.preferred_style && (
+                              <p className="text-[10px] text-muted-foreground">{cust.preferred_style}</p>
+                            )}
+                          </td>
+                          <td className="p-3">
+                            <p className="font-bold text-violet-600 dark:text-violet-400">
+                              {formatRupiah(cust.total_spend)}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">{cust.order_count} transaksi</p>
+                          </td>
+                          <td className="p-3">
+                            <p className="text-xs">
+                              {cust.last_purchase_date ? formatShortDate(cust.last_purchase_date) : 'Belum pernah'}
+                            </p>
+                          </td>
+                          <td className="p-3 text-right space-x-2">
+                            {selectedStageModal === 'Tidur' ? (
+                              <a
+                                href={getSleepingWaLink(cust)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-sm"
+                              >
+                                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                <span>Kirim WhatsApp</span>
+                              </a>
+                            ) : null}
+
+                            <Link
+                              href={`/customers/${cust.id}`}
+                              className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100 transition"
+                              title="Buka Profil Lengkap"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
 

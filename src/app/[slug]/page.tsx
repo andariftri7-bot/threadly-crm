@@ -188,7 +188,7 @@ export default function PublicStorefrontPage() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-4xl mx-auto p-4 sm:p-6 mt-4">
+      <main className="max-w-4xl mx-auto p-4 sm:p-6 pb-28 md:pb-8 mt-4">
         {submittedOrderNumber ? (
           /* Order Confirmation Screen */
           <Card className="max-w-lg mx-auto text-center p-8 space-y-4 animate-in zoom-in-95">
@@ -316,7 +316,7 @@ export default function PublicStorefrontPage() {
             </div>
 
             {/* Order Form Card (5 Cols) */}
-            <div className="md:col-span-5">
+            <div id="order-form" className="md:col-span-5 scroll-mt-6">
               <Card className="sticky top-6 p-6 space-y-5 border-border shadow-md">
                 <div className="border-b border-border pb-3">
                   <h3 className="font-bold text-base text-navy-900">Form Pemesanan Cepat</h3>
@@ -471,6 +471,31 @@ export default function PublicStorefrontPage() {
           </div>
         )}
       </main>
+
+      {/* Mobile Fixed Bottom Order Action */}
+      {!submittedOrderNumber && selectedProduct && (
+        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-card/95 backdrop-blur-md border-t border-border p-3 pb-safe shadow-2xl animate-in slide-in-from-bottom duration-200">
+          <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
+            <div className="truncate">
+              <p className="text-xs font-bold text-navy-900 truncate">{selectedProduct.name}</p>
+              <p className="text-xs font-extrabold text-violet-600">
+                {formatRupiah((selectedProduct.price || 0) * orderQty)}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('order-form');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-4 py-2.5 rounded-xl bg-secondary bg-gradient-accent text-white font-bold text-xs shadow-md flex items-center gap-1.5 touch-target flex-shrink-0"
+            >
+              <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
+              <span>Pesan Sekarang</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
