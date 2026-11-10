@@ -655,6 +655,24 @@ const auditSuite = [
     req: 4.5,
     type: 'normal-text',
   },
+  {
+    page: 'Super Admin (/admin)',
+    element: 'Active Tab & Accent Text',
+    mode: 'light',
+    fg: tokens.light.secondary,
+    bg: tokens.light.bg,
+    req: 4.5,
+    type: 'normal-text',
+  },
+  {
+    page: 'Super Admin (/admin)',
+    element: 'Active Tab & Accent Text',
+    mode: 'dark',
+    fg: tokens.dark.accent,
+    bg: tokens.dark.card,
+    req: 4.5,
+    type: 'normal-text',
+  },
 
   // 5. PUBLIC STOREFRONT (/[slug])
   {

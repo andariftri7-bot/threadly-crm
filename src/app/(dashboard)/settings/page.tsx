@@ -7,6 +7,7 @@ import { Card, Button, Input, Badge, Modal, useToast } from '@/components/ui';
 import { formatShortDate, formatDateWIB, formatRupiah, buildWhatsAppLink } from '@/lib/utils';
 import { defaultLLMProvider, enforceChatEmojis } from '@/lib/llm/provider';
 import { CustomerStage, Customer } from '@/types';
+import { PLANS_CONFIG } from '@/config/plans.config';
 import {
   Store,
   Sliders,
@@ -24,6 +25,7 @@ import {
   ExternalLink,
   MessageCircle,
   Search,
+  CreditCard,
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -36,11 +38,26 @@ export default function SettingsPage() {
     customers,
     orders,
     products,
+    aiRuns,
     recalculateAllCustomerStages,
   } = useStore();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'thresholds' | 'templates' | 'persona' | 'team'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'thresholds' | 'templates' | 'persona' | 'team' | 'billing'>('profile');
+  const [upgradeHint, setUpgradeHint] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    const upgradeParam = params.get('upgrade');
+    if (tabParam === 'billing' || tabParam === 'profile' || tabParam === 'thresholds' || tabParam === 'templates' || tabParam === 'persona' || tabParam === 'team') {
+      setActiveTab(tabParam);
+    }
+    if (upgradeParam === 'pro' || upgradeParam === 'renew') {
+      setUpgradeHint(upgradeParam);
+    }
+  }, []);
 
   // Store Profile State
   const [storeName, setStoreName] = useState(currentStore?.name || '');
@@ -444,6 +461,17 @@ export default function SettingsPage() {
         >
           <Users className="w-4 h-4" strokeWidth={1.5} />
           <span>Manajemen Tim &amp; Staf</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('billing')}
+          className={`pb-3 text-sm font-bold border-b-2 transition flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'billing'
+              ? 'border-violet-600 text-violet-600 dark:text-violet-400'
+              : 'border-transparent text-muted-foreground hover:text-navy-900 dark:hover:text-ivory-100'
+          }`}
+        >
+          <CreditCard className="w-4 h-4" strokeWidth={1.5} />
+          <span>Paket &amp; Kuota AI</span>
         </button>
       </div>
 
@@ -1066,6 +1094,116 @@ export default function SettingsPage() {
           </Card>
         </div>
       )}
+
+      {/* TAB 6: Paket & Kuota AI (Target dari Link Pembayaran Notifikasi Kuota AI) */}
+      {activeTab === 'billing' && (() => {
+        const activePlanKey = (currentStore?.plan === 'pro' ? 'pro' : 'standar') as 'standar' | 'pro';
+        const activePlanCfg = PLANS_CONFIG[activePlanKey];
+        const now = new Date();
+        const usedTokensMonth = aiRuns
+          .filter(r => {
+            if (!currentStore || r.store_id !== currentStore.id) return false;
+            const d = new Date(r.created_at);
+            return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+          })
+          .reduce((sum, r) => sum + Number(r.total_tokens || 0), 0);
+        const pct = activePlanCfg.aiTokenLimitPerMonth > 0
+          ? Math.min(100, Math.round((usedTokensMonth / activePlanCfg.aiTokenLimitPerMonth) * 100))
+          : 0;
+        const adminContactWa = buildWhatsAppLink(
+          '081234567890',
+          `Halo Tim Threadly, toko ${currentStore?.name || ''} (${currentStore?.slug || ''}) ingin konfirmasi perpanjangan / upgrade ke ${activePlanKey === 'standar' ? 'Paket Pro (Rp45.000/bln)' : 'perpanjangan Paket Pro'}.`
+        );
+
+        return (
+          <div className="space-y-6">
+            {upgradeHint && (
+              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                <div>
+                  <p className="font-bold">Pemberitahuan Kuota AI Asisten Threadly</p>
+                  <p className="mt-0.5">
+                    {upgradeHint === 'pro'
+                      ? 'Kuota token AI Paket Standar kamu mendekati/mencapai batas. Upgrade ke Paket Pro untuk kapasitas 150.000 token/bulan.'
+                      : 'Perbarui periode langganan Paket Pro kamu agar kuota token AI tetap lancar.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <Card className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-bold text-base text-card-foreground">Paket Aktif &amp; Konsumsi Token AI Bulanan</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Pantau batas pemakaian token AI bulan berjalan dan opsi perpanjangan atau upgrade paket.
+                  </p>
+                </div>
+                <Badge variant={activePlanKey === 'pro' ? 'purple' : 'default'} className="w-fit">
+                  {activePlanCfg.name} ({activePlanCfg.formattedPrice}/bln)
+                </Badge>
+              </div>
+
+              <div className="p-4 rounded-xl bg-muted/50 border border-border space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-card-foreground">Kuota Token AI Bulan Ini</span>
+                  <span className="font-mono font-bold text-card-foreground">
+                    {usedTokensMonth.toLocaleString('id-ID')} / {activePlanCfg.aiTokenLimitPerMonth.toLocaleString('id-ID')} ({pct}%)
+                  </span>
+                </div>
+                <div className="w-full h-2.5 rounded-full bg-card border border-border overflow-hidden">
+                  <div
+                    className={`h-2.5 rounded-full transition-all duration-500 ${
+                      pct >= 100 ? 'bg-rose-600' : pct >= 80 ? 'bg-amber-500' : 'bg-emerald-600'
+                    }`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  Masa coba aktif s/d {currentStore?.trial_ends_at ? formatShortDate(currentStore.trial_ends_at) : '7 hari'}.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {(['standar', 'pro'] as const).map(planId => {
+                  const cfg = PLANS_CONFIG[planId];
+                  const isCurrent = activePlanKey === planId;
+                  return (
+                    <div
+                      key={planId}
+                      className={`p-4 rounded-2xl border space-y-3 ${
+                        isCurrent ? 'border-secondary bg-secondary/5' : 'border-border bg-card'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-bold text-sm text-card-foreground">{cfg.name}</h4>
+                        <Badge variant={isCurrent ? 'purple' : 'default'}>
+                          {isCurrent ? 'Paket Saat Ini' : cfg.formattedPrice + '/bln'}
+                        </Badge>
+                      </div>
+                      <p className="text-xl font-black text-card-foreground">
+                        {cfg.formattedPrice} <span className="text-xs font-normal text-muted-foreground">/ bulan</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Kuota AI: <strong className="text-card-foreground">{cfg.aiTokenLimitPerMonth.toLocaleString('id-ID')} token/bln</strong> ({cfg.aiUsagePerMonth} pemakaian)
+                      </p>
+                      <a
+                        href={adminContactWa}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-secondary text-white hover:opacity-95 transition"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                        {isCurrent ? 'Perpanjang Paket via Admin' : `Upgrade ke ${cfg.name}`}
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          </div>
+        );
+      })()}
 
       {/* Modal Daftar Pelanggan per Tahap Siklus (Revisi Dashboard Toko Butir 1) */}
       <Modal

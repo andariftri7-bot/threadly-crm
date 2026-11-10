@@ -42,3 +42,6 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# local platform settings fallback
+.threadly-platform-settings.json

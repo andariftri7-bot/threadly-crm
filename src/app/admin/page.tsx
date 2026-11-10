@@ -68,6 +68,12 @@ interface PaymentAllocation {
   count: number;
 }
 
+interface DraftPaymentAllocation {
+  method: string;
+  amountStr: string;
+  countStr: string;
+}
+
 interface SubscriptionTransaction {
   id: string;
   invoiceNumber: string;
@@ -124,10 +130,10 @@ export default function SuperAdminPage() {
 
   // Editable Manual Payment Method Allocations (persisted to Supabase / platform metadata)
   const [manualAllocations, setManualAllocations] = useState<PaymentAllocation[] | null>(null);
-  const [allocationsSyncSource, setAllocationsSyncSource] = useState<'supabase' | 'local' | 'computed'>('computed');
+  const [allocationsSyncSource, setAllocationsSyncSource] = useState<'supabase' | 'metadata' | 'local' | 'computed'>('computed');
   const [allocationsUpdatedAt, setAllocationsUpdatedAt] = useState<string | null>(null);
   const [isAllocationModalOpen, setIsAllocationModalOpen] = useState(false);
-  const [draftAllocations, setDraftAllocations] = useState<PaymentAllocation[]>([]);
+  const [draftAllocations, setDraftAllocations] = useState<DraftPaymentAllocation[]>([]);
   const [isSavingAllocations, setIsSavingAllocations] = useState(false);
 
   // Access Protection Check flag (evaluated after all hooks)
@@ -186,7 +192,7 @@ export default function SuperAdminPage() {
           }
         } else if (financePeriod === 'last_30d') {
           const diffDays = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24);
-          if (diffDays > 30) return false;
+          if (diffDays < 0 || diffDays > 30) return false;
         } else if (financePeriod === 'this_year') {
           if (orderDate.getFullYear() !== currentYear) return false;
         }
@@ -205,7 +211,7 @@ export default function SuperAdminPage() {
     });
   }, [allPlatformOrders, financeStore, financePlan, financePeriod, financeSearch, allStores]);
 
-  // Generate SaaS Subscription Billing Records from store creation month up to current month
+  // Generate SaaS Subscription Billing Records from store creation month up to current date (never in the future)
   const allSubscriptionTransactions = useMemo(() => {
     const list: SubscriptionTransaction[] = [];
     const now = new Date();
@@ -224,6 +230,9 @@ export default function SuperAdminPage() {
 
       while ((iterYear < endYear || (iterYear === endYear && iterMonth <= endMonth)) && cycles < 12) {
         const cycleDate = new Date(iterYear, iterMonth, dayOfMonth, 10, 30, 0);
+        if (cycleDate.getTime() > now.getTime()) {
+          break;
+        }
         const isCurrentCycle = iterYear === endYear && iterMonth === endMonth;
         const methodIdx = (idx + cycles) % PAYMENT_METHOD_CATEGORIES.length;
         const slugCode = store.slug.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 4) || 'THRD';
@@ -277,7 +286,7 @@ export default function SuperAdminPage() {
           }
         } else if (financePeriod === 'last_30d') {
           const diffDays = (now.getTime() - txDate.getTime()) / (1000 * 60 * 60 * 24);
-          if (diffDays > 30) return false;
+          if (diffDays < 0 || diffDays > 30) return false;
         } else if (financePeriod === 'this_year') {
           if (txDate.getFullYear() !== currentYear) return false;
         }
@@ -409,7 +418,7 @@ export default function SuperAdminPage() {
         const plan = (store.plan || 'standar') as 'standar' | 'pro';
         const saasFee = plan === 'pro' ? PLANS_CONFIG.pro.priceMonthly : PLANS_CONFIG.standar.priceMonthly;
         const storePaidSubs = filteredSubscriptionTransactions.filter(t => t.storeId === store.id && t.status === 'Lunas');
-        const storeSaasTotal = storePaidSubs.reduce((sum, t) => sum + t.amount, 0) || saasFee;
+        const storeSaasTotal = storePaidSubs.reduce((sum, t) => sum + t.amount, 0);
 
         return {
           storeId: store.id,
@@ -446,7 +455,7 @@ export default function SuperAdminPage() {
     }));
   }, [filteredSubscriptionTransactions]);
 
-  // Load saved payment allocations from localStorage and Supabase API
+  // Load saved payment allocations from localStorage and Supabase / server metadata API
   useEffect(() => {
     if (!isAuthorizedSuperadmin) return;
 
@@ -468,7 +477,9 @@ export default function SuperAdminPage() {
       .then(data => {
         if (data && Array.isArray(data.allocations) && data.allocations.length > 0) {
           setManualAllocations(data.allocations);
-          setAllocationsSyncSource(data.source === 'supabase' ? 'supabase' : 'local');
+          setAllocationsSyncSource(
+            data.source === 'supabase' ? 'supabase' : data.source === 'metadata' ? 'metadata' : 'local'
+          );
           if (data.updatedAt) setAllocationsUpdatedAt(data.updatedAt);
           try {
             localStorage.setItem(PAYMENT_ALLOCATION_STORAGE_KEY, JSON.stringify(data.allocations));
@@ -505,8 +516,9 @@ export default function SuperAdminPage() {
     const curYear = now.getFullYear();
     const curMonth = now.getMonth();
     const appOrigin =
+      (typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '') ||
       process.env.NEXT_PUBLIC_APP_URL ||
-      (typeof window !== 'undefined' ? window.location.origin : 'https://threadly.id');
+      'https://threadly.id';
 
     return allStores.map(store => {
       const plan = (store.plan === 'pro' ? 'pro' : 'standar') as 'standar' | 'pro';
@@ -516,10 +528,11 @@ export default function SuperAdminPage() {
       const ownerMember =
         storeMembers.find(m => m.store_id === store.id && m.role === 'owner') ||
         storeMembers.find(m => m.store_id === store.id);
-      const ownerEmail =
+      const ownerEmail = (
         ownerMember?.user_email ||
         ownerMember?.invited_email ||
-        `owner.${store.slug}@threadly.id`;
+        `owner.${store.slug}@threadly.id`
+      ).trim();
 
       const storeMonthRuns = aiRuns.filter(run => {
         if (run.store_id !== store.id) return false;
@@ -542,8 +555,9 @@ export default function SuperAdminPage() {
       const notifyText = `Halo ${store.name}, kuota AI asisten Threadly CRM kamu untuk periode ini telah habis / mencapai batas. Yuk segera perbarui atau upgrade paket langgananmu agar layanan balasan otomatis tetap berjalan lancar! ${paymentLink}`;
 
       const cleanPhone = normalizeWhatsAppNumber(store.phone_wa || '');
-      const waHref = buildWhatsAppLink(store.phone_wa || '', notifyText);
-      const mailtoHref = `mailto:${encodeURIComponent(ownerEmail)}?subject=${encodeURIComponent(
+      const hasValidWa = cleanPhone.length >= 8;
+      const waHref = hasValidWa ? buildWhatsAppLink(store.phone_wa || '', notifyText) : '';
+      const mailtoHref = `mailto:${ownerEmail}?subject=${encodeURIComponent(
         'Pemberitahuan Kuota AI Threadly CRM'
       )}&body=${encodeURIComponent(notifyText)}`;
 
@@ -553,6 +567,7 @@ export default function SuperAdminPage() {
         storeSlug: store.slug,
         phoneWa: store.phone_wa || '-',
         normalizedWa: cleanPhone,
+        hasValidWa,
         ownerEmail,
         plan,
         planLabel: plan === 'pro' ? 'Pro' : 'Standar',
@@ -568,6 +583,11 @@ export default function SuperAdminPage() {
       };
     });
   }, [allStores, storeMembers, aiRuns]);
+
+  const currentMonthAiTokens = useMemo(
+    () => storeAiQuotaRows.reduce((sum, row) => sum + row.usedTokens, 0),
+    [storeAiQuotaRows]
+  );
 
   const filteredAiQuotaRows = useMemo(() => {
     return storeAiQuotaRows.filter(row => {
@@ -689,8 +709,8 @@ export default function SuperAdminPage() {
         const found = currentData.find(item => item.method === method);
         return {
           method,
-          amount: found ? Number(found.amount || 0) : 0,
-          count: found ? Number(found.count || 0) : 0,
+          amountStr: String(found ? Number(found.amount || 0) : 0),
+          countStr: String(found ? Number(found.count || 0) : 0),
         };
       })
     );
@@ -699,18 +719,15 @@ export default function SuperAdminPage() {
 
   const handleSaveAllocations = async () => {
     setIsSavingAllocations(true);
-    const normalized = draftAllocations.map(item => ({
-      method: item.method,
-      amount: Math.max(0, Math.round(Number(item.amount) || 0)),
-      count: Math.max(0, Math.round(Number(item.count) || 0)),
-    }));
-
-    try {
-      localStorage.setItem(PAYMENT_ALLOCATION_STORAGE_KEY, JSON.stringify(normalized));
-    } catch {
-      // ignore
-    }
-    setManualAllocations(normalized);
+    const normalized: PaymentAllocation[] = draftAllocations.map(item => {
+      const parsedAmount = Number(item.amountStr);
+      const parsedCount = Number(item.countStr);
+      return {
+        method: item.method,
+        amount: Number.isFinite(parsedAmount) ? Math.max(0, Math.round(parsedAmount)) : 0,
+        count: Number.isFinite(parsedCount) ? Math.max(0, Math.round(parsedCount)) : 0,
+      };
+    });
 
     try {
       const res = await fetch('/api/admin/payment-allocations', {
@@ -719,28 +736,50 @@ export default function SuperAdminPage() {
         body: JSON.stringify({ allocations: normalized }),
       });
 
-      if (res.ok) {
-        const payload = await res.json();
-        setAllocationsSyncSource(payload.persistedToSupabase ? 'supabase' : 'local');
-        setAllocationsUpdatedAt(payload.updatedAt || new Date().toISOString());
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
         showToast(
-          payload.persistedToSupabase
-            ? 'Alokasi pembayaran disimpan ke database Supabase.'
-            : 'Alokasi pembayaran disimpan ke metadata platform.',
-          'success'
+          errBody?.message || `Gagal menyimpan alokasi pembayaran (HTTP ${res.status}).`,
+          'error'
         );
-      } else {
-        setAllocationsSyncSource('local');
-        setAllocationsUpdatedAt(new Date().toISOString());
-        showToast('Alokasi pembayaran disimpan ke metadata lokal platform.', 'success');
+        return;
       }
+
+      const payload = await res.json();
+      try {
+        localStorage.setItem(PAYMENT_ALLOCATION_STORAGE_KEY, JSON.stringify(normalized));
+      } catch {
+        // ignore
+      }
+      setManualAllocations(normalized);
+      setAllocationsSyncSource(
+        payload.persistedToSupabase
+          ? 'supabase'
+          : payload.source === 'metadata'
+          ? 'metadata'
+          : 'local'
+      );
+      setAllocationsUpdatedAt(payload.updatedAt || new Date().toISOString());
+      showToast(
+        payload.persistedToSupabase
+          ? 'Alokasi pembayaran disimpan ke database Supabase.'
+          : 'Alokasi pembayaran disimpan ke metadata server platform.',
+        'success'
+      );
+      setIsAllocationModalOpen(false);
     } catch {
+      try {
+        localStorage.setItem(PAYMENT_ALLOCATION_STORAGE_KEY, JSON.stringify(normalized));
+      } catch {
+        // ignore
+      }
+      setManualAllocations(normalized);
       setAllocationsSyncSource('local');
       setAllocationsUpdatedAt(new Date().toISOString());
-      showToast('Alokasi pembayaran disimpan ke metadata lokal platform.', 'success');
+      showToast('Koneksi server terputus; alokasi pembayaran disimpan di penyimpanan lokal browser.', 'warning');
+      setIsAllocationModalOpen(false);
     } finally {
       setIsSavingAllocations(false);
-      setIsAllocationModalOpen(false);
     }
   };
 
@@ -775,8 +814,14 @@ export default function SuperAdminPage() {
   const chartGridStroke = isDark ? 'rgba(148, 163, 184, 0.16)' : 'rgba(100, 116, 139, 0.18)';
   const chartTickColor = isDark ? '#CBD5E1' : '#334155';
 
-  const draftTotalAmount = draftAllocations.reduce((s, i) => s + Number(i.amount || 0), 0);
-  const draftTotalCount = draftAllocations.reduce((s, i) => s + Number(i.count || 0), 0);
+  const draftTotalAmount = draftAllocations.reduce((s, i) => {
+    const val = Number(i.amountStr);
+    return s + (Number.isFinite(val) && val > 0 ? Math.round(val) : 0);
+  }, 0);
+  const draftTotalCount = draftAllocations.reduce((s, i) => {
+    const val = Number(i.countStr);
+    return s + (Number.isFinite(val) && val > 0 ? Math.round(val) : 0);
+  }, 0);
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 sm:p-6 lg:p-10 font-sans">
@@ -829,7 +874,7 @@ export default function SuperAdminPage() {
                 {activeStores} toko aktif beroperasional
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary dark:text-accent flex items-center justify-center flex-shrink-0">
               <Building2 className="w-6 h-6" strokeWidth={1.5} />
             </div>
           </div>
@@ -859,7 +904,7 @@ export default function SuperAdminPage() {
             onClick={() => setActiveTab('overview')}
             className={`pb-3 border-b-2 transition whitespace-nowrap ${
               activeTab === 'overview'
-                ? 'border-secondary text-secondary'
+                ? 'border-secondary dark:border-accent text-secondary dark:text-accent'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -870,7 +915,7 @@ export default function SuperAdminPage() {
             onClick={() => setActiveTab('finance')}
             className={`pb-3 border-b-2 transition whitespace-nowrap ${
               activeTab === 'finance'
-                ? 'border-secondary text-secondary'
+                ? 'border-secondary dark:border-accent text-secondary dark:text-accent'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -881,7 +926,7 @@ export default function SuperAdminPage() {
             onClick={() => setActiveTab('ai_logs')}
             className={`pb-3 border-b-2 transition whitespace-nowrap ${
               activeTab === 'ai_logs'
-                ? 'border-secondary text-secondary'
+                ? 'border-secondary dark:border-accent text-secondary dark:text-accent'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -1240,7 +1285,7 @@ export default function SuperAdminPage() {
                   </div>
                 </div>
                 <h3 className="text-2xl font-black text-sky-700 dark:text-sky-400 mt-2">
-                  {formatRupiah(financialMetrics.totalPlatformRevenue || financialMetrics.mrrTotal)}
+                  {formatRupiah(financialMetrics.totalPlatformRevenue)}
                 </h3>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   Estimasi MRR SaaS: {formatRupiah(financialMetrics.mrrTotal)} / bln
@@ -1270,14 +1315,24 @@ export default function SuperAdminPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                   <div>
                     <h4 className="font-bold text-sm text-card-foreground flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+                      <TrendingUp className="w-4 h-4 text-secondary dark:text-accent" strokeWidth={1.5} />
                       Tren Pertumbuhan Akumulasi Pemasukan Platform
                     </h4>
                     <p className="text-xs text-muted-foreground">
                       Akumulasi pendapatan langganan SaaS terfilter dari seluruh siklus penagihan.
                     </p>
                   </div>
-                  <Badge variant="purple">{cumulativeRevenueSeries.length} Periode</Badge>
+                  <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#6D5BE8]" />
+                      Akumulasi
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#C9A96E]" />
+                      Bulanan
+                    </span>
+                    <Badge variant="purple" className="w-fit">{cumulativeRevenueSeries.length} Periode</Badge>
+                  </div>
                 </div>
 
                 {cumulativeRevenueSeries.length === 0 ? (
@@ -1287,7 +1342,7 @@ export default function SuperAdminPage() {
                 ) : (
                   <div className="h-[260px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={cumulativeRevenueSeries} margin={{ top: 10, right: 16, left: 4, bottom: 0 }}>
+                      <AreaChart data={cumulativeRevenueSeries} margin={{ top: 12, right: 16, left: 4, bottom: 0 }}>
                         <defs>
                           <linearGradient id="threadlyAccumulatedGrad" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#6D5BE8" stopOpacity={0.55} />
@@ -1339,7 +1394,8 @@ export default function SuperAdminPage() {
                           strokeWidth={2.5}
                           fillOpacity={1}
                           fill="url(#threadlyAccumulatedGrad)"
-                          activeDot={{ r: 5, fill: '#C9A96E', stroke: '#FFFFFF', strokeWidth: 2 }}
+                          dot={{ r: 4, fill: '#6D5BE8', stroke: '#FFFFFF', strokeWidth: 2 }}
+                          activeDot={{ r: 6, fill: '#C9A96E', stroke: '#FFFFFF', strokeWidth: 2 }}
                         />
                         <Area
                           type="monotone"
@@ -1349,6 +1405,8 @@ export default function SuperAdminPage() {
                           strokeWidth={2}
                           fillOpacity={1}
                           fill="url(#threadlyMonthlyGrad)"
+                          dot={{ r: 3.5, fill: '#C9A96E', stroke: '#FFFFFF', strokeWidth: 1.5 }}
+                          activeDot={{ r: 5, fill: '#C9A96E', stroke: '#FFFFFF', strokeWidth: 2 }}
                         />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -1360,7 +1418,7 @@ export default function SuperAdminPage() {
               <div className="bg-card border border-border rounded-2xl p-5 shadow-sm flex flex-col justify-between">
                 <div>
                   <h4 className="font-bold text-sm text-card-foreground flex items-center gap-2">
-                    <PieChartIcon className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+                    <PieChartIcon className="w-4 h-4 text-secondary dark:text-accent" strokeWidth={1.5} />
                     Porsi Pendapatan Paket
                   </h4>
                   <p className="text-xs text-muted-foreground">
@@ -1373,52 +1431,57 @@ export default function SuperAdminPage() {
                     Belum ada transaksi lunas pada filter ini.
                   </div>
                 ) : (
-                  <div className="relative h-[195px] w-full my-2">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={planRevenueShareData}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={56}
-                          outerRadius={82}
-                          paddingAngle={4}
-                          stroke="none"
-                        >
-                          {planRevenueShareData.map((entry, idx) => (
-                            <Cell key={`plan-slice-${idx}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          content={({ active, payload }) => {
-                            if (!active || !payload || payload.length === 0) return null;
-                            const d = payload[0].payload as { name: string; value: number; count: number };
-                            const share =
-                              financialMetrics.totalPlatformRevenue > 0
-                                ? Math.round((d.value / financialMetrics.totalPlatformRevenue) * 100)
-                                : 0;
-                            return (
-                              <div className="bg-popover border border-border rounded-xl p-2.5 shadow-xl text-xs">
-                                <p className="font-bold text-foreground">{d.name}</p>
-                                <p className="text-muted-foreground font-semibold">
-                                  {formatRupiah(d.value)} ({share}%)
-                                </p>
-                                <p className="text-[11px] text-muted-foreground">{d.count} tagihan lunas</p>
-                              </div>
-                            );
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                      <span className="text-[10px] uppercase font-bold text-muted-foreground">Total</span>
-                      <span className="text-sm font-black text-card-foreground">
-                        {formatRupiah(financialMetrics.totalPlatformRevenue)}
-                      </span>
-                    </div>
-                  </div>
+                  (() => {
+                    const activePlanSlices = planRevenueShareData.filter(d => d.value > 0);
+                    return (
+                      <div className="relative h-[195px] w-full my-2">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={activePlanSlices}
+                              dataKey="value"
+                              nameKey="name"
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={56}
+                              outerRadius={82}
+                              paddingAngle={activePlanSlices.length > 1 ? 4 : 0}
+                              stroke="none"
+                            >
+                              {activePlanSlices.map((entry, idx) => (
+                                <Cell key={`plan-slice-${idx}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip
+                              content={({ active, payload }) => {
+                                if (!active || !payload || payload.length === 0) return null;
+                                const d = payload[0].payload as { name: string; value: number; count: number };
+                                const share =
+                                  financialMetrics.totalPlatformRevenue > 0
+                                    ? Math.round((d.value / financialMetrics.totalPlatformRevenue) * 100)
+                                    : 0;
+                                return (
+                                  <div className="bg-popover border border-border rounded-xl p-2.5 shadow-xl text-xs">
+                                    <p className="font-bold text-foreground">{d.name}</p>
+                                    <p className="text-muted-foreground font-semibold">
+                                      {formatRupiah(d.value)} ({share}%)
+                                    </p>
+                                    <p className="text-[11px] text-muted-foreground">{d.count} tagihan lunas</p>
+                                  </div>
+                                );
+                              }}
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                          <span className="text-[10px] uppercase font-bold text-muted-foreground">Total</span>
+                          <span className="text-sm font-black text-card-foreground">
+                            {formatRupiah(financialMetrics.totalPlatformRevenue)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()
                 )}
 
                 <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-border">
@@ -1454,7 +1517,7 @@ export default function SuperAdminPage() {
                   <h4 className="font-bold text-sm text-card-foreground">Rangkuman Kontribusi Langganan per Toko Fashion</h4>
                   <p className="text-xs text-muted-foreground">Paket langganan SaaS, tarif bulanan, dan status billing operasional penyewa.</p>
                 </div>
-                <Badge variant="purple">{storeFinancialPerformance.length} Toko Terdaftar</Badge>
+                <Badge variant="purple" className="w-fit self-start sm:self-auto">{storeFinancialPerformance.length} Toko Terdaftar</Badge>
               </div>
 
               <div className="overflow-x-auto">
@@ -1517,13 +1580,15 @@ export default function SuperAdminPage() {
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <h4 className="font-bold text-sm text-card-foreground flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+                      <BarChart3 className="w-4 h-4 text-secondary dark:text-accent" strokeWidth={1.5} />
                       Distribusi Metode Pembayaran Langganan Platform
                     </h4>
-                    <Badge variant={allocationsSyncSource === 'supabase' ? 'success' : 'champagne'} className="text-[10px]">
+                    <Badge variant={allocationsSyncSource === 'supabase' ? 'success' : 'champagne'} className="text-[10px] w-fit">
                       <Database className="w-3 h-3 mr-1" strokeWidth={1.5} />
                       {allocationsSyncSource === 'supabase'
                         ? 'Tersinkron Supabase'
+                        : allocationsSyncSource === 'metadata'
+                        ? 'Tersimpan di Server'
                         : allocationsSyncSource === 'local'
                         ? 'Metadata Tersimpan'
                         : 'Hitungan Otomatis'}
@@ -1540,6 +1605,7 @@ export default function SuperAdminPage() {
                   size="sm"
                   onClick={handleOpenAllocationModal}
                   leftIcon={<SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={1.5} />}
+                  className="self-start sm:self-auto"
                 >
                   Kelola Alokasi Pembayaran
                 </Button>
@@ -1631,8 +1697,8 @@ export default function SuperAdminPage() {
                   <h4 className="font-bold text-sm text-card-foreground">Rincian Transaksi Platform Interaktif</h4>
                   <p className="text-xs text-muted-foreground">Daftar riwayat transaksi langganan dan pembayaran paket oleh para pemilik toko.</p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <Badge variant="purple">{filteredSubscriptionTransactions.length} Tagihan Terfilter</Badge>
+                <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+                  <Badge variant="purple" className="w-fit">{filteredSubscriptionTransactions.length} Tagihan Terfilter</Badge>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -1680,7 +1746,7 @@ export default function SuperAdminPage() {
                           </td>
                           <td className="p-3 text-card-foreground">{tx.billingPeriod}</td>
                           <td className="p-3">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] bg-muted border border-border text-card-foreground font-medium">
+                            <span className="inline-block px-2.5 py-0.5 rounded-lg text-[10px] bg-muted border border-border text-card-foreground font-medium">
                               {tx.paymentMethod}
                             </span>
                           </td>
@@ -1756,8 +1822,8 @@ export default function SuperAdminPage() {
                     Pantau batas kuota token bulanan per tenant dan kirim notifikasi WhatsApp atau Email otomatis saat kuota menipis/habis.
                   </p>
                 </div>
-                <Badge variant="purple">
-                  Total Platform: {totalPlatformAiTokens.toLocaleString('id-ID')} Token
+                <Badge variant="purple" className="w-fit self-start sm:self-auto">
+                  Bulan Ini: {currentMonthAiTokens.toLocaleString('id-ID')} Token
                 </Badge>
               </div>
 
@@ -1806,7 +1872,14 @@ export default function SuperAdminPage() {
                           </span>
                           <span className="font-bold text-card-foreground">{row.rawPct}%</span>
                         </div>
-                        <div className="w-full h-2 rounded-full bg-muted overflow-hidden border border-border/50">
+                        <div
+                          role="progressbar"
+                          aria-label={`Pemakaian kuota AI ${row.storeName}`}
+                          aria-valuenow={row.progressPct}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          className="w-full h-2 rounded-full bg-muted overflow-hidden border border-border/50"
+                        >
                           <div
                             className={`h-2 rounded-full transition-all duration-500 ${
                               row.quotaStatus === 'Token Habis'
@@ -1821,15 +1894,27 @@ export default function SuperAdminPage() {
                       </div>
 
                       <div className="flex flex-wrap gap-2 pt-1">
-                        <a
-                          href={row.waHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-700 text-white hover:bg-emerald-800 transition touch-target"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
-                          Notifikasi WhatsApp
-                        </a>
+                        {row.hasValidWa ? (
+                          <a
+                            href={row.waHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-700 text-white hover:bg-emerald-800 transition touch-target"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            Notifikasi WhatsApp
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            disabled
+                            title="Nomor WhatsApp pemilik toko belum tersedia"
+                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-muted text-muted-foreground border border-border opacity-60 cursor-not-allowed touch-target"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            WA Tidak Tersedia
+                          </button>
+                        )}
                         <a
                           href={row.mailtoHref}
                           className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-border bg-muted text-foreground hover:bg-muted/80 transition touch-target"
@@ -1873,7 +1958,7 @@ export default function SuperAdminPage() {
                                 <span className="font-mono">{row.phoneWa}</span>
                               </p>
                               <p className="flex items-center gap-1.5">
-                                <Mail className="w-3 h-3 text-secondary" strokeWidth={1.5} />
+                                <Mail className="w-3 h-3 text-secondary dark:text-accent" strokeWidth={1.5} />
                                 <span className="font-mono">{row.ownerEmail}</span>
                               </p>
                             </div>
@@ -1891,7 +1976,14 @@ export default function SuperAdminPage() {
                                 </span>
                                 <span className="font-bold text-card-foreground">{row.rawPct}%</span>
                               </div>
-                              <div className="w-full h-2.5 rounded-full bg-muted overflow-hidden border border-border/60">
+                              <div
+                                role="progressbar"
+                                aria-label={`Pemakaian kuota AI ${row.storeName}`}
+                                aria-valuenow={row.progressPct}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                                className="w-full h-2.5 rounded-full bg-muted overflow-hidden border border-border/60"
+                              >
                                 <div
                                   className={`h-2.5 rounded-full transition-all duration-500 ${
                                     row.quotaStatus === 'Token Habis'
@@ -1923,16 +2015,28 @@ export default function SuperAdminPage() {
                           </td>
                           <td className="p-4 text-right">
                             <div className="inline-flex flex-wrap items-center justify-end gap-2">
-                              <a
-                                href={row.waHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-700 text-white hover:bg-emerald-800 transition shadow-sm"
-                                title={`Kirim WhatsApp ke ${row.phoneWa}`}
-                              >
-                                <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
-                                Notifikasi WhatsApp
-                              </a>
+                              {row.hasValidWa ? (
+                                <a
+                                  href={row.waHref}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-700 text-white hover:bg-emerald-800 transition shadow-sm"
+                                  title={`Kirim WhatsApp ke ${row.phoneWa}`}
+                                >
+                                  <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                  Notifikasi WhatsApp
+                                </a>
+                              ) : (
+                                <button
+                                  type="button"
+                                  disabled
+                                  title="Nomor WhatsApp pemilik toko belum tersedia"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-muted text-muted-foreground border border-border opacity-60 cursor-not-allowed"
+                                >
+                                  <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                  WA Tidak Tersedia
+                                </button>
+                              )}
                               <a
                                 href={row.mailtoHref}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-border bg-card text-foreground hover:bg-muted transition shadow-sm"
@@ -1965,7 +2069,9 @@ export default function SuperAdminPage() {
         <div className="space-y-4 pt-1">
           <div className="space-y-3">
             {draftAllocations.map((item, idx) => {
-              const pct = draftTotalAmount > 0 ? ((item.amount / draftTotalAmount) * 100).toFixed(1) : '0.0';
+              const parsedAmount = Number(item.amountStr);
+              const safeAmount = Number.isFinite(parsedAmount) && parsedAmount > 0 ? Math.round(parsedAmount) : 0;
+              const pct = draftTotalAmount > 0 ? ((safeAmount / draftTotalAmount) * 100).toFixed(1) : '0.0';
               return (
                 <div
                   key={item.method}
@@ -1990,11 +2096,11 @@ export default function SuperAdminPage() {
                       type="number"
                       min={0}
                       step={1000}
-                      value={item.amount}
+                      value={item.amountStr}
                       onChange={e => {
-                        const val = Math.max(0, Number(e.target.value) || 0);
+                        const raw = e.target.value;
                         setDraftAllocations(prev =>
-                          prev.map((p, i) => (i === idx ? { ...p, amount: val } : p))
+                          prev.map((p, i) => (i === idx ? { ...p, amountStr: raw.startsWith('-') ? '0' : raw } : p))
                         );
                       }}
                     />
@@ -2006,11 +2112,11 @@ export default function SuperAdminPage() {
                       type="number"
                       min={0}
                       step={1}
-                      value={item.count}
+                      value={item.countStr}
                       onChange={e => {
-                        const val = Math.max(0, Math.round(Number(e.target.value) || 0));
+                        const raw = e.target.value;
                         setDraftAllocations(prev =>
-                          prev.map((p, i) => (i === idx ? { ...p, count: val } : p))
+                          prev.map((p, i) => (i === idx ? { ...p, countStr: raw.startsWith('-') ? '0' : raw } : p))
                         );
                       }}
                     />
@@ -2022,7 +2128,7 @@ export default function SuperAdminPage() {
 
           <div className="p-3.5 rounded-xl bg-secondary/10 border border-secondary/30 flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="font-semibold text-card-foreground">
-              Total Alokasi Tersimpan: <strong className="text-secondary">{formatRupiah(draftTotalAmount)}</strong>
+              Total Alokasi Tersimpan: <strong className="text-secondary dark:text-accent">{formatRupiah(draftTotalAmount)}</strong>
             </span>
             <span className="text-muted-foreground font-mono">
               {draftTotalCount} total transaksi
@@ -2034,7 +2140,15 @@ export default function SuperAdminPage() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setDraftAllocations(computedPaymentAllocations)}
+              onClick={() =>
+                setDraftAllocations(
+                  computedPaymentAllocations.map(item => ({
+                    method: item.method,
+                    amountStr: String(item.amount),
+                    countStr: String(item.count),
+                  }))
+                )
+              }
             >
               Sinkronkan dari Tagihan Aktif
             </Button>

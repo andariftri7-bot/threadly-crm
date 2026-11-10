@@ -667,6 +667,17 @@ assert(adminCode.includes('Laporan_Transaksi_Threadly_'), 'BAGIAN 5: Penamaan fi
 const emojiRegex = /\p{Extended_Pictographic}/u;
 assert(!emojiRegex.test(adminCode), 'BAGIAN 6: Halaman Super Admin (/admin) 100% bebas emoji pada antarmuka');
 
+// BAGIAN 7: Regresi Edge Cases (Future billing date, mailto RFC, single-point AreaChart, WA validation, billing link)
+assert(adminCode.includes('cycleDate.getTime() > now.getTime()'), 'BAGIAN 3/5: Siklus billing masa depan dicegah agar tidak muncul tagihan Lunas tanggal mendatang');
+assert(adminCode.includes('mailto:${ownerEmail}') && !adminCode.includes('mailto:${encodeURIComponent(ownerEmail)}'), 'BAGIAN 2: Tautan mailto: mempertahankan simbol @ standar RFC tanpa %40');
+assert(adminCode.includes('hasValidWa'), 'BAGIAN 2: Tombol WA memeriksa validitas nomor telepon sebelum membuat tautan wa.me');
+assert(adminCode.includes("dot={{ r: 4, fill: '#6D5BE8'"), 'BAGIAN 3: AreaChart memiliki titik dot eksplisit agar filter 1 periode tetap terlihat');
+const updatedSettingsCode = fs.readFileSync(path.resolve(process.cwd(), 'src/app/(dashboard)/settings/page.tsx'), 'utf-8');
+const billingSection = updatedSettingsCode.slice(updatedSettingsCode.indexOf("activeTab === 'billing'"));
+assert(updatedSettingsCode.includes("tabParam === 'billing'") && billingSection.length > 100 && !emojiRegex.test(billingSection), 'BAGIAN 2: Halaman /settings?tab=billing mendukung link pembayaran & bebas emoji UI');
+const paymentApiCode = fs.readFileSync(path.resolve(process.cwd(), 'src/app/api/admin/payment-allocations/route.ts'), 'utf-8');
+assert(paymentApiCode.includes('readServerFallbackSetting') && paymentApiCode.includes('writeServerFallbackSetting'), 'BAGIAN 4: API /api/admin/payment-allocations memiliki persistence metadata server saat Supabase offline');
+
 // Test SheetJS Excel round-trip buffer generation
 const { createRequire } = await import('module');
 const req = createRequire(import.meta.url);

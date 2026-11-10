@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-11-10T11:06:37.645Z",
-  "totalChecks": 65,
-  "passed": 65,
+  "timestamp": "2026-11-10T11:39:33.700Z",
+  "totalChecks": 67,
+  "passed": 67,
   "failed": 0,
   "viewports": [
     "375px (Mobile)",
@@ -655,6 +655,28 @@
       "req": 4.5,
       "type": "normal-text",
       "ratio": 5.48,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "Active Tab & Accent Text",
+      "mode": "light",
+      "fg": "#5B4BDB",
+      "bg": "#FAF9F6",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 5.74,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "Active Tab & Accent Text",
+      "mode": "dark",
+      "fg": "#A78BFA",
+      "bg": "#111833",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 6.42,
       "passed": true
     },
     {

@@ -267,10 +267,23 @@ async function main() {
     check(financeStats.text.includes('Porsi Pendapatan Paket'), 'Donut Chart heading rendered');
     check(financeStats.text.includes('Kelola Alokasi Pembayaran'), 'Button "Kelola Alokasi Pembayaran" rendered');
     check(financeStats.text.includes('Unduh File Excel'), 'Button "Unduh File Excel" rendered');
+    check(!financeStats.text.includes('19 Nov 2026'), 'No future-dated Lunas transactions (19 Nov 2026) appear in table');
     check(!/\p{Extended_Pictographic}/u.test(financeStats.text), 'Live DOM finance tab contains ZERO emoji');
 
     await cdp.screenshot(path.join(screenshotsDir, 'admin-finance-dark.png'), true);
     console.log('   Saved screenshot: public/screenshots/admin-finance-dark.png');
+
+    // Edge case: Bulan Ini filter -> single-point AreaChart MUST still render visible dot circles
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Bulan Ini').click()
+    `);
+    await sleep(600);
+    const singlePointDots = await cdp.evalJs(`document.querySelectorAll('.recharts-area-dots circle, .recharts-dot').length`);
+    check(singlePointDots >= 1, `Single-period AreaChart (Bulan Ini) renders visible dot circles (found: ${singlePointDots})`);
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Semua Waktu').click()
+    `);
+    await sleep(400);
 
     // Open Kelola Alokasi Pembayaran Modal
     await cdp.evalJs(`
@@ -288,20 +301,58 @@ async function main() {
     await cdp.screenshot(path.join(screenshotsDir, 'admin-allocation-modal-dark.png'), false);
     console.log('   Saved screenshot: public/screenshots/admin-allocation-modal-dark.png');
 
-    // Edit E-Wallet Nominal to 500000 and Frekuensi to 12, then click Simpan Perubahan
+    // Edge case: Test setting ALL 4 payment methods to 0 -> verify 0% without NaN
     await cdp.evalJs(`
       (function() {
         const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
         const numInputs = Array.from(document.querySelectorAll('input[type="number"]'));
-        // Row 0 = VA (0,1), Row 1 = E-Wallet (2,3)
-        if (numInputs[2] && numInputs[3]) {
-          setter.call(numInputs[2], '500000');
+        numInputs.forEach(inp => {
+          setter.call(inp, '0');
+          inp.dispatchEvent(new Event('input', { bubbles: true }));
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      })()
+    `);
+    await sleep(250);
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Simpan Perubahan')).click()
+    `);
+    await sleep(700);
+    const zeroSaveText = await cdp.evalJs(`document.body.innerText`);
+    check(!zeroSaveText.includes('NaN') && zeroSaveText.includes('0% dari total alokasi'), 'Zeroed allocations render 0% cleanly without NaN');
+
+    // Re-open modal and verify clearing input with empty string "" then typing 500000 / 12 works cleanly
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Kelola Alokasi Pembayaran')).click()
+    `);
+    await sleep(400);
+    await cdp.evalJs(`
+      (function() {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        const numInputs = Array.from(document.querySelectorAll('input[type="number"]'));
+        // First clear to empty string to test typing UX
+        if (numInputs[2]) {
+          setter.call(numInputs[2], '');
           numInputs[2].dispatchEvent(new Event('input', { bubbles: true }));
-          numInputs[2].dispatchEvent(new Event('change', { bubbles: true }));
-          setter.call(numInputs[3], '12');
-          numInputs[3].dispatchEvent(new Event('input', { bubbles: true }));
-          numInputs[3].dispatchEvent(new Event('change', { bubbles: true }));
         }
+      })()
+    `);
+    const clearedVal = await cdp.evalJs(`document.querySelectorAll('input[type="number"]')[2]?.value`);
+    check(clearedVal === '', 'Clearing numeric input in modal allows empty string without snapping to 0');
+
+    // Restore realistic values and set E-Wallet to 500000 / 12
+    await cdp.evalJs(`
+      (function() {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        const numInputs = Array.from(document.querySelectorAll('input[type="number"]'));
+        const vals = ['85000', '3', '500000', '12', '85000', '3', '85000', '3'];
+        vals.forEach((v, idx) => {
+          if (numInputs[idx]) {
+            setter.call(numInputs[idx], v);
+            numInputs[idx].dispatchEvent(new Event('input', { bubbles: true }));
+            numInputs[idx].dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
       })()
     `);
     await sleep(300);
@@ -310,10 +361,11 @@ async function main() {
     `);
     await sleep(800);
 
-    // Verify dynamic update and reload persistence
+    // Verify dynamic update AND persistence even after wiping localStorage (proving server persistence!)
     const afterSaveText = await cdp.evalJs(`document.body.innerText`);
     check(afterSaveText.includes('Rp500.000') && afterSaveText.includes('12 trx'), 'Edited payment allocation updated immediately on page');
 
+    await cdp.evalJs(`localStorage.removeItem('threadly_platform_payment_allocations')`);
     await cdp.send('Page.reload', { ignoreCache: false });
     await sleep(1600);
     await cdp.evalJs(`
@@ -321,7 +373,7 @@ async function main() {
     `);
     await sleep(900);
     const afterReloadText = await cdp.evalJs(`document.body.innerText`);
-    check(afterReloadText.includes('Rp500.000') && afterReloadText.includes('12 trx'), 'Saved payment allocation persisted across page reload');
+    check(afterReloadText.includes('Rp500.000') && afterReloadText.includes('12 trx'), 'Saved payment allocation persisted across page reload even with wiped localStorage (server API persistence)');
 
     // Test BAGIAN 5: Unfiltered Excel download
     await cdp.evalJs(`
@@ -379,9 +431,57 @@ async function main() {
       const rowsPro = XLSX.utils.sheet_to_json(wbPro.Sheets[wbPro.SheetNames[0]]);
       const allArePro = rowsPro.length > 0 && rowsPro.every(r => r['Paket'] === 'Paket Pro');
       check(allArePro, `Filtered Excel (Paket Pro) exported ONLY Pro transactions (${rowsPro.length} rows)`);
+      fs.unlinkSync(path.join(tmpDownloadDir, filteredExcelFile));
     } else {
       check(false, 'Filtered Excel download succeeded');
     }
+
+    // Edge case: Export .xlsx when search filter yields 0 rows
+    await cdp.evalJs(`
+      (function() {
+        const inp = document.querySelector('input[placeholder="Cari transaksi / toko..."]');
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        setter.call(inp, 'TokoYangTidakAdaXYZ999');
+        inp.dispatchEvent(new Event('input', { bubbles: true }));
+      })()
+    `);
+    await sleep(400);
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Unduh File Excel')).click()
+    `);
+    let emptyExcelFile = null;
+    for (let i = 0; i < 20; i++) {
+      const files = fs.readdirSync(tmpDownloadDir).filter(f => f.endsWith('.xlsx'));
+      if (files.length > 0) {
+        emptyExcelFile = files[0];
+        break;
+      }
+      await sleep(250);
+    }
+    if (emptyExcelFile) {
+      const wbEmpty = XLSX.readFile(path.join(tmpDownloadDir, emptyExcelFile));
+      const sheetEmpty = wbEmpty.Sheets[wbEmpty.SheetNames[0]];
+      const rowsEmpty = XLSX.utils.sheet_to_json(sheetEmpty);
+      const headersEmpty = XLSX.utils.sheet_to_json(sheetEmpty, { header: 1 })[0];
+      check(headersEmpty.length === 8 && rowsEmpty.length === 0, 'Empty search Excel export preserves 8 headers with 0 rows');
+      fs.unlinkSync(path.join(tmpDownloadDir, emptyExcelFile));
+    } else {
+      check(false, 'Empty search Excel download succeeded');
+    }
+
+    // Clear search and plan filter before Light Mode screenshot
+    await cdp.evalJs(`
+      (function() {
+        const sel = document.querySelector('select[aria-label="Filter Paket Langganan"]');
+        const selSetter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value').set;
+        selSetter.call(sel, 'all');
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        const inp = document.querySelector('input[placeholder="Cari transaksi / toko..."]');
+        const inpSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        inpSetter.call(inp, '');
+        inp.dispatchEvent(new Event('input', { bubbles: true }));
+      })()
+    `);
 
     // Test Light Mode on Finance Tab & Screenshot
     await cdp.evalJs(`localStorage.setItem('threadly_theme', 'light')`);
@@ -426,18 +526,21 @@ async function main() {
       'WhatsApp link formats normalized 62... number and required auto-draft message'
     );
     check(aiTabAudit.mailLinks.length >= 3, `Rendered ${aiTabAudit.mailLinks.length} mailto: notification links`);
+    const mailPrefix = (aiTabAudit.mailLinks[0] || '').split('?')[0];
     check(
+      mailPrefix.includes('@') &&
+      !mailPrefix.includes('%40') &&
       aiTabAudit.mailLinks[0]?.includes('subject=Pemberitahuan%20Kuota%20AI%20Threadly%20CRM') &&
       decodeURIComponent(aiTabAudit.mailLinks[0] || '').includes('kuota AI asisten Threadly CRM kamu untuk periode ini telah habis / mencapai batas'),
-      'Email mailto link includes required subject and reminder body'
+      'Email mailto link preserves raw @ address and includes required subject & reminder body'
     );
     check(!/\p{Extended_Pictographic}/u.test(aiTabAudit.text), 'Live DOM AI Quota tab contains ZERO emoji');
 
     await cdp.screenshot(path.join(screenshotsDir, 'admin-ai-quota-dark.png'), true);
     console.log('   Saved screenshot: public/screenshots/admin-ai-quota-dark.png');
 
-    // Test 6: Mobile Viewport 390x844 responsiveness
-    console.log('\n8. Verifying Mobile 390x844 responsiveness & screenshot...');
+    // Test 6: Mobile Viewport 390x844 responsiveness (AI Quota + Finance Tabs)
+    console.log('\n8. Verifying Mobile 390x844 responsiveness & screenshots...');
     await cdp.send('Emulation.setDeviceMetricsOverride', {
       width: 390,
       height: 844,
@@ -445,10 +548,59 @@ async function main() {
       mobile: true,
     });
     await sleep(500);
-    const mobileOverflow = await cdp.evalJs(`document.documentElement.scrollWidth <= window.innerWidth`);
-    check(mobileOverflow, 'Mobile 390px layout has zero horizontal overflow');
+    const mobileAiOverflow = await cdp.evalJs(`document.documentElement.scrollWidth <= window.innerWidth`);
+    check(mobileAiOverflow, 'Mobile 390px AI Quota layout has zero horizontal overflow');
     await cdp.screenshot(path.join(screenshotsDir, 'admin-mobile.png'), true);
     console.log('   Saved screenshot: public/screenshots/admin-mobile.png');
+
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Laporan Keuangan Interaktif')).click()
+    `);
+    await sleep(900);
+    const mobileFinanceOverflow = await cdp.evalJs(`document.documentElement.scrollWidth <= window.innerWidth`);
+    check(mobileFinanceOverflow, 'Mobile 390px Finance Charts layout has zero horizontal overflow');
+
+    // Reset server-side fallback setting so workspace stays clean
+    await cdp.evalJs(`
+      fetch('/api/admin/payment-allocations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reset: true })
+      })
+    `);
+    await sleep(300);
+
+    // Test 7: Verify payment link target /settings?tab=billing&upgrade=pro as Store Owner
+    console.log('\n9. Verifying /settings?tab=billing&upgrade=pro payment link target...');
+    await cdp.evalJs(`
+      localStorage.removeItem('threadly_user');
+      document.cookie = 'threadly_auth=; path=/; max-age=0; SameSite=Lax';
+    `);
+    await cdp.send('Page.navigate', { url: `${BASE_URL}/login` });
+    await sleep(1400);
+    await cdp.evalJs(`
+      (function() {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        const emailEl = document.querySelector('input[type="email"]');
+        const passEl = document.querySelector('input[type="password"]');
+        setter.call(emailEl, 'owner.koleksilokal@threadly.id');
+        emailEl.dispatchEvent(new Event('input', { bubbles: true }));
+        setter.call(passEl, 'OwnerPassword123!');
+        passEl.dispatchEvent(new Event('input', { bubbles: true }));
+      })()
+    `);
+    await sleep(250);
+    await cdp.evalJs(`document.querySelector('form button[type="submit"]').click()`);
+    await sleep(1800);
+    await cdp.send('Page.navigate', { url: `${BASE_URL}/settings?tab=billing&upgrade=pro&toko=koleksilokal` });
+    await sleep(1500);
+    const billingText = await cdp.evalJs(`document.body.innerText`);
+    check(
+      billingText.includes('Paket Aktif & Konsumsi Token AI Bulanan') &&
+      billingText.includes('Pemberitahuan Kuota AI Asisten Threadly') &&
+      billingText.includes('15.300 / 15.000'),
+      'Payment link /settings?tab=billing&upgrade=pro opens billing & AI quota upgrade panel cleanly'
+    );
 
     check(cdp.exceptions.length === 0, `Zero uncaught browser runtime exceptions (found: ${cdp.exceptions.length})`);
   } finally {
