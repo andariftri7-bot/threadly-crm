@@ -2225,7 +2225,7 @@ export default function SuperAdminPage() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-bold text-xs text-card-foreground">Standar</span>
-                  <span className="text-[10px] text-secondary font-semibold">Rp20.000/bln</span>
+                  <span className="text-[10px] text-secondary dark:text-accent font-semibold">Rp20.000/bln</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">1 Toko &bull; 2 User &bull; 15.000 Token AI</p>
               </button>
@@ -2241,7 +2241,7 @@ export default function SuperAdminPage() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-bold text-xs text-card-foreground">Pro</span>
-                  <span className="text-[10px] text-secondary font-semibold">Rp45.000/bln</span>
+                  <span className="text-[10px] text-secondary dark:text-accent font-semibold">Rp45.000/bln</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">1 Toko &bull; 5 User &bull; 150.000 Token AI</p>
               </button>

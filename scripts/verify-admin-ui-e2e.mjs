@@ -15,6 +15,10 @@ import path from 'path';
 import os from 'os';
 import { spawn } from 'child_process';
 import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const PROJECT_ROOT = path.resolve(path.dirname(__filename), '..');
 
 const require = createRequire(import.meta.url);
 const XLSX = require('xlsx');
@@ -145,22 +149,53 @@ class CDPClient {
 }
 
 async function main() {
+  if (!fs.existsSync(path.join(PROJECT_ROOT, '.next', 'BUILD_ID'))) {
+    throw new Error('Production build missing (.next/BUILD_ID not found). Run "npm run build" before running E2E.');
+  }
+
   const tmpProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'threadly-chrome-'));
   const tmpDownloadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'threadly-dl-'));
-  const screenshotsDir = path.resolve('public/screenshots');
+  const screenshotsDir = path.join(PROJECT_ROOT, 'public', 'screenshots');
   fs.mkdirSync(screenshotsDir, { recursive: true });
 
   console.log('1. Starting Next.js production server on port', PORT);
   const nextProc = spawn('cmd.exe', ['/c', `npx.cmd next start -p ${PORT} -H 127.0.0.1`], {
-    cwd: process.cwd(),
+    cwd: PROJECT_ROOT,
     stdio: 'pipe',
+  });
+  let nextStderr = '';
+  let nextExited = false;
+  let nextExitCode = null;
+  nextProc.stderr?.on('data', chunk => {
+    nextStderr += chunk.toString();
+  });
+  nextProc.on('exit', code => {
+    nextExited = true;
+    nextExitCode = code;
   });
 
   let chromeProc = null;
   let cdp = null;
 
   try {
-    await waitForHttp(`${BASE_URL}/`, 30000);
+    const startWait = Date.now();
+    while (Date.now() - startWait < 30000) {
+      if (nextExited) {
+        throw new Error(`next start exited early with code ${nextExitCode}: ${nextStderr.trim()}`);
+      }
+      try {
+        const res = await fetch(`${BASE_URL}/`);
+        if (res.status < 500) break;
+      } catch (err) {
+        if (err?.cause?.code === 'EACCES') {
+          throw new Error(`Localhost HTTP fetch blocked by sandbox (EACCES) for ${BASE_URL}/`);
+        }
+      }
+      await sleep(300);
+    }
+    if (Date.now() - startWait >= 30000) {
+      throw new Error(`Timeout waiting for ${BASE_URL}/`);
+    }
     console.log('   Next.js server ready.');
 
     console.log('2. Launching Headless Chrome...');
@@ -248,6 +283,36 @@ async function main() {
 
     await cdp.screenshot(path.join(screenshotsDir, 'admin-overview-dark.png'), true);
     console.log('   Saved screenshot: public/screenshots/admin-overview-dark.png');
+
+    // Verify Plan Change Modal dark-mode contrast (Rp20.000/bln & Rp45.000/bln use dark:text-accent #A78BFA)
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.offsetParent !== null && b.textContent.includes('Ubah Paket'))?.click()
+    `);
+    await sleep(300);
+    const planModalColors = await cdp.evalJs(`
+      (function() {
+        const spans = Array.from(document.querySelectorAll('span'));
+        const std = spans.find(s => s.textContent.trim() === 'Rp20.000/bln');
+        const pro = spans.find(s => s.textContent.trim() === 'Rp45.000/bln');
+        return {
+          isDark: document.documentElement.classList.contains('dark'),
+          hasTitle: document.body.innerText.includes('Ubah Paket Langganan Toko'),
+          stdColor: std ? getComputedStyle(std).color : null,
+          proColor: pro ? getComputedStyle(pro).color : null,
+        };
+      })()
+    `);
+    check(
+      planModalColors.isDark &&
+      planModalColors.hasTitle &&
+      planModalColors.stdColor === 'rgb(167, 139, 250)' &&
+      planModalColors.proColor === 'rgb(167, 139, 250)',
+      `Plan Change modal dark-mode price labels use WCAG AA accent #A78BFA (got isDark=${planModalColors.isDark}, std=${planModalColors.stdColor}, pro=${planModalColors.proColor})`
+    );
+    await cdp.evalJs(`
+      Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Batal')?.click()
+    `);
+    await sleep(250);
 
     // Test 4: BAGIAN 3, 4, 5 — Finance Tab, Recharts, Editable Allocations, Excel Export
     console.log('\n6. Verifying BAGIAN 3, 4 & 5 (Finance Charts, Editable Allocations, SheetJS Excel)...');

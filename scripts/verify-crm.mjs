@@ -677,6 +677,13 @@ const billingSection = updatedSettingsCode.slice(updatedSettingsCode.indexOf("ac
 assert(updatedSettingsCode.includes("tabParam === 'billing'") && billingSection.length > 100 && !emojiRegex.test(billingSection), 'BAGIAN 2: Halaman /settings?tab=billing mendukung link pembayaran & bebas emoji UI');
 const paymentApiCode = fs.readFileSync(path.resolve(process.cwd(), 'src/app/api/admin/payment-allocations/route.ts'), 'utf-8');
 assert(paymentApiCode.includes('readServerFallbackSetting') && paymentApiCode.includes('writeServerFallbackSetting'), 'BAGIAN 4: API /api/admin/payment-allocations memiliki persistence metadata server saat Supabase offline');
+const unguardedAdminSecondary = adminCode.split(/\r?\n/).filter(l => l.includes('text-secondary') && !l.includes('dark:text-accent'));
+assert(
+  unguardedAdminSecondary.length === 0 &&
+  adminCode.includes('text-secondary dark:text-accent font-semibold">Rp20.000/bln') &&
+  adminCode.includes('text-secondary dark:text-accent font-semibold">Rp45.000/bln'),
+  'BAGIAN 1/UI: Seluruh text-secondary pada /admin (termasuk modal Ubah Paket) memiliki dark:text-accent WCAG AA'
+);
 
 // Test SheetJS Excel round-trip buffer generation
 const { createRequire } = await import('module');
