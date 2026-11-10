@@ -37,6 +37,7 @@ export interface PlatformStats {
   totalCustomers: number;
   totalOrders: number;
   totalAiRuns: number;
+  totalAiTokens: number;
   storeStats: Record<string, { customers: number; products: number; orders: number }>;
 }
 
@@ -201,6 +202,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(data.customers || []));
       localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(data.orders || []));
       localStorage.setItem(STORAGE_KEYS.STORE_MEMBERS, JSON.stringify(data.storeMembers || []));
+      if (Array.isArray(data.aiRuns)) {
+        localStorage.setItem(STORAGE_KEYS.AI_RUNS, JSON.stringify(data.aiRuns));
+        setAiRuns(data.aiRuns);
+      }
 
       setAllStores(data.stores);
       setStoreMembers(data.storeMembers || []);
@@ -256,6 +261,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const storedMembers = localStorage.getItem(STORAGE_KEYS.STORE_MEMBERS);
       let loadedMembers: StoreMember[] = storedMembers ? JSON.parse(storedMembers) : [];
       setStoreMembers(loadedMembers);
+
+      const rawAudit = localStorage.getItem(STORAGE_KEYS.AUDIT_LOGS);
+      if (rawAudit) {
+        setAuditLogs(JSON.parse(rawAudit));
+      }
+
+      const rawAi = localStorage.getItem(STORAGE_KEYS.AI_RUNS);
+      if (rawAi) {
+        setAiRuns(JSON.parse(rawAi));
+      } else if (loadedStores.length > 0) {
+        fetch('/api/seed')
+          .then(r => (r.ok ? r.json() : null))
+          .then(data => {
+            if (data && Array.isArray(data.aiRuns)) {
+              localStorage.setItem(STORAGE_KEYS.AI_RUNS, JSON.stringify(data.aiRuns));
+              setAiRuns(data.aiRuns);
+            }
+          })
+          .catch(() => {});
+      }
 
       if (loadedStores.length > 0) {
         setAllStores(loadedStores);
@@ -377,6 +402,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       setOrders([]);
       setStockMovements([]);
       setFollowupTasks([]);
+      const rawAudit = localStorage.getItem(STORAGE_KEYS.AUDIT_LOGS);
+      if (rawAudit) setAuditLogs(JSON.parse(rawAudit));
+      const rawAi = localStorage.getItem(STORAGE_KEYS.AI_RUNS);
+      if (rawAi) {
+        setAiRuns(JSON.parse(rawAi));
+      } else {
+        fetch('/api/seed')
+          .then(r => (r.ok ? r.json() : null))
+          .then(data => {
+            if (data && Array.isArray(data.aiRuns)) {
+              localStorage.setItem(STORAGE_KEYS.AI_RUNS, JSON.stringify(data.aiRuns));
+              setAiRuns(data.aiRuns);
+            }
+          })
+          .catch(() => {});
+      }
     } else {
       // Regular user: strict 1 user = 1 store isolation
       if (existingMember) {
@@ -1548,12 +1589,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         };
       }
 
+      const totalAiTokens = aiList.reduce((sum, r) => sum + Number(r.total_tokens || 0), 0);
+
       return {
         totalStores: storesList.length,
         activeStores: storesList.filter(s => s.status === 'active').length,
         totalCustomers: custsList.length,
         totalOrders: ordersList.length,
         totalAiRuns: aiList.length,
+        totalAiTokens,
         storeStats,
       };
     } catch {
@@ -1563,10 +1607,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         totalCustomers: customers.length,
         totalOrders: orders.length,
         totalAiRuns: aiRuns.length,
+        totalAiTokens: aiRuns.reduce((sum, r) => sum + Number(r.total_tokens || 0), 0),
         storeStats: {},
       };
     }
-  }, [allStores, customers.length, orders.length, aiRuns.length]);
+  }, [allStores, customers.length, orders.length, aiRuns]);
 
   const getAllPlatformOrders = useCallback((): Order[] => {
     try {

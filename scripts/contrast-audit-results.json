@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-11-05T11:26:25.328Z",
-  "totalChecks": 58,
-  "passed": 58,
+  "timestamp": "2026-11-10T11:06:37.645Z",
+  "totalChecks": 65,
+  "passed": 65,
   "failed": 0,
   "viewports": [
     "375px (Mobile)",
@@ -578,6 +578,83 @@
       "req": 4.5,
       "type": "normal-text",
       "ratio": 16.69,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Aman\"",
+      "mode": "light",
+      "fg": "#064E3B",
+      "bg": "#D1FAE5",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 8.57,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Aman\"",
+      "mode": "dark",
+      "fg": "#A7F3D0",
+      "bg": "#064E3B",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 7.58,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Hampir Habis\"",
+      "mode": "light",
+      "fg": "#78350F",
+      "bg": "#FEF3C7",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 8.15,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Hampir Habis\"",
+      "mode": "dark",
+      "fg": "#FDE68A",
+      "bg": "#78350F",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 7.28,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Token Habis\"",
+      "mode": "light",
+      "fg": "#881337",
+      "bg": "#FFE4E6",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 7.97,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "AI Quota Badge \"Token Habis\"",
+      "mode": "dark",
+      "fg": "#FECDD3",
+      "bg": "#881337",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 6.78,
+      "passed": true
+    },
+    {
+      "page": "Super Admin (/admin)",
+      "element": "WhatsApp Notification Button",
+      "mode": "both",
+      "fg": "#FFFFFF",
+      "bg": "#047857",
+      "req": 4.5,
+      "type": "normal-text",
+      "ratio": 5.48,
       "passed": true
     },
     {

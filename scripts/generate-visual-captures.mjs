@@ -115,7 +115,60 @@ const pages = [
 ];
 
 for (const p of pages) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  const isAdmin = p.name.startsWith('admin-page');
+  const svg = isAdmin
+    ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+    <rect width="800" height="500" fill="${p.bg}"/>
+    <rect x="0" y="0" width="800" height="60" fill="${p.headerBg}" stroke="${p.border}" stroke-width="1"/>
+    <rect x="30" y="15" width="30" height="30" rx="8" fill="#5B4BDB"/>
+    <text x="70" y="35" fill="${p.textMain}" font-family="sans-serif" font-size="16" font-weight="bold">Threadly Platform Super Admin</text>
+    <rect x="650" y="15" width="120" height="30" rx="8" fill="${p.heroBg}"/>
+    <text x="670" y="34" fill="${p.heroText}" font-family="sans-serif" font-size="11" font-weight="bold">Platform Root</text>
+
+    <text x="30" y="95" fill="${p.textMain}" font-family="sans-serif" font-size="18" font-weight="bold">${p.title}</text>
+    <text x="30" y="116" fill="${p.textMuted}" font-family="sans-serif" font-size="12">Metrik Bersih (Total Toko &amp; Token AI), Grafik Recharts, Kuota AI, Alokasi Pembayaran, Ekspor .XLSX</text>
+
+    <!-- 2 Top Cleaned Metric Cards -->
+    <rect x="30" y="135" width="360" height="86" rx="14" fill="${p.cardBg}" stroke="${p.border}" stroke-width="1.5"/>
+    <text x="50" y="160" fill="${p.textMuted}" font-family="sans-serif" font-size="11" font-weight="bold">TOTAL TOKO</text>
+    <text x="50" y="192" fill="${p.textMain}" font-family="sans-serif" font-size="26" font-weight="900">3</text>
+    <text x="85" y="192" fill="#15803D" font-family="sans-serif" font-size="11" font-weight="bold">3 toko aktif beroperasional</text>
+
+    <rect x="410" y="135" width="360" height="86" rx="14" fill="${p.cardBg}" stroke="${p.border}" stroke-width="1.5"/>
+    <text x="430" y="160" fill="${p.textMuted}" font-family="sans-serif" font-size="11" font-weight="bold">TOTAL KONSUMSI TOKEN AI PLATFORM</text>
+    <text x="430" y="192" fill="#6D5BE8" font-family="sans-serif" font-size="26" font-weight="900">148.800</text>
+    <text x="550" y="192" fill="${p.textMuted}" font-family="sans-serif" font-size="11">75 eksekusi AI</text>
+
+    <!-- Chart Preview & AI Quota Monitor -->
+    <rect x="30" y="238" width="460" height="232" rx="14" fill="${p.cardBg}" stroke="${p.border}" stroke-width="1.5"/>
+    <text x="50" y="264" fill="${p.textMain}" font-family="sans-serif" font-size="13" font-weight="bold">Tren Akumulasi Pemasukan Platform &amp; Alokasi Pembayaran</text>
+    <polyline points="55,410 135,385 215,355 295,325 375,295 460,280" fill="none" stroke="#6D5BE8" stroke-width="3"/>
+    <rect x="55" y="425" width="135" height="28" rx="8" fill="#5B4BDB"/>
+    <text x="72" y="443" fill="#FFFFFF" font-family="sans-serif" font-size="11" font-weight="bold">Unduh File Excel</text>
+    <rect x="205" y="425" width="165" height="28" rx="8" fill="${p.heroBg}" stroke="#C9A96E" stroke-width="1"/>
+    <text x="218" y="443" fill="${p.heroText}" font-family="sans-serif" font-size="11" font-weight="bold">Kelola Alokasi Pembayaran</text>
+
+    <rect x="510" y="238" width="260" height="232" rx="14" fill="${p.cardBg}" stroke="${p.border}" stroke-width="1.5"/>
+    <text x="528" y="264" fill="${p.textMain}" font-family="sans-serif" font-size="13" font-weight="bold">Kuota Token AI &amp; Notifikasi</text>
+    <rect x="528" y="282" width="224" height="50" rx="8" fill="${p.bg}" stroke="${p.border}" stroke-width="1"/>
+    <text x="540" y="302" fill="${p.textMain}" font-family="sans-serif" font-size="11" font-weight="bold">Koleksi Lokal (Standar)</text>
+    <rect x="665" y="288" width="76" height="18" rx="9" fill="#FFE4E6"/>
+    <text x="674" y="301" fill="#881337" font-family="sans-serif" font-size="9" font-weight="bold">Token Habis</text>
+    <rect x="540" y="314" width="200" height="6" rx="3" fill="#DC2626"/>
+
+    <rect x="528" y="344" width="224" height="50" rx="8" fill="${p.bg}" stroke="${p.border}" stroke-width="1"/>
+    <text x="540" y="364" fill="${p.textMain}" font-family="sans-serif" font-size="11" font-weight="bold">Batik Heritage (Pro)</text>
+    <rect x="665" y="350" width="76" height="18" rx="9" fill="#FEF3C7"/>
+    <text x="671" y="363" fill="#78350F" font-family="sans-serif" font-size="9" font-weight="bold">Hampir Habis</text>
+    <rect x="540" y="376" width="172" height="6" rx="3" fill="#F59E0B"/>
+
+    <rect x="528" y="406" width="224" height="50" rx="8" fill="${p.bg}" stroke="${p.border}" stroke-width="1"/>
+    <text x="540" y="426" fill="${p.textMain}" font-family="sans-serif" font-size="11" font-weight="bold">Urban Thrift (Standar)</text>
+    <rect x="688" y="412" width="52" height="18" rx="9" fill="#D1FAE5"/>
+    <text x="701" y="425" fill="#064E3B" font-family="sans-serif" font-size="9" font-weight="bold">Aman</text>
+    <rect x="540" y="438" width="60" height="6" rx="3" fill="#16A34A"/>
+  </svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
     <rect width="800" height="500" fill="${p.bg}"/>
     <!-- Top Bar -->
     <rect x="0" y="0" width="800" height="60" fill="${p.headerBg}" stroke="${p.border}" stroke-width="1"/>
@@ -205,11 +258,45 @@ const mobilePages = [
     textMuted: '#334155',
     cardBg: '#FFFFFF',
     border: '#E2E8F0',
+    isAdminMobile: true,
   },
 ];
 
 for (const mp of mobilePages) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+  const svg = mp.isAdminMobile
+    ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+    <rect width="390" height="844" fill="${mp.bg}"/>
+    <rect x="0" y="0" width="390" height="70" fill="${mp.headerBg}" stroke="${mp.border}" stroke-width="1"/>
+    <rect x="20" y="22" width="28" height="28" rx="8" fill="#5B4BDB"/>
+    <text x="56" y="41" fill="${mp.textMain}" font-family="sans-serif" font-size="14" font-weight="bold">Threadly Super Admin</text>
+    <text x="20" y="102" fill="${mp.textMain}" font-family="sans-serif" font-size="16" font-weight="bold">${mp.title}</text>
+    <text x="20" y="122" fill="${mp.textMuted}" font-family="sans-serif" font-size="11">Total Toko, Token AI, Kuota AI &amp; Ekspor .XLSX</text>
+    <rect x="20" y="140" width="168" height="82" rx="12" fill="${mp.cardBg}" stroke="${mp.border}" stroke-width="1.5"/>
+    <text x="32" y="164" fill="${mp.textMuted}" font-family="sans-serif" font-size="10" font-weight="bold">TOTAL TOKO</text>
+    <text x="32" y="196" fill="${mp.textMain}" font-family="sans-serif" font-size="22" font-weight="900">3</text>
+    <rect x="202" y="140" width="168" height="82" rx="12" fill="${mp.cardBg}" stroke="${mp.border}" stroke-width="1.5"/>
+    <text x="214" y="164" fill="${mp.textMuted}" font-family="sans-serif" font-size="9" font-weight="bold">TOKEN AI PLATFORM</text>
+    <text x="214" y="196" fill="#5B4BDB" font-family="sans-serif" font-size="20" font-weight="900">148.800</text>
+    <rect x="20" y="240" width="350" height="175" rx="14" fill="${mp.cardBg}" stroke="${mp.border}" stroke-width="1.5"/>
+    <text x="34" y="266" fill="${mp.textMain}" font-family="sans-serif" font-size="13" font-weight="bold">Koleksi Lokal Boutique</text>
+    <rect x="275" y="250" width="80" height="22" rx="11" fill="#FFE4E6"/>
+    <text x="284" y="264" fill="#881337" font-family="sans-serif" font-size="10" font-weight="bold">Token Habis</text>
+    <text x="34" y="292" fill="${mp.textMuted}" font-family="sans-serif" font-size="11">15.300 / 15.000 token (102%)</text>
+    <rect x="34" y="304" width="320" height="8" rx="4" fill="#DC2626"/>
+    <rect x="34" y="330" width="160" height="34" rx="8" fill="#047857"/>
+    <text x="48" y="351" fill="#FFFFFF" font-family="sans-serif" font-size="11" font-weight="bold">Notifikasi WhatsApp</text>
+    <rect x="204" y="330" width="150" height="34" rx="8" fill="#F1F5F9" stroke="${mp.border}" stroke-width="1"/>
+    <text x="242" y="351" fill="${mp.textMain}" font-family="sans-serif" font-size="11" font-weight="bold">Kirim Email</text>
+    <rect x="20" y="432" width="350" height="145" rx="14" fill="${mp.cardBg}" stroke="${mp.border}" stroke-width="1.5"/>
+    <text x="34" y="458" fill="${mp.textMain}" font-family="sans-serif" font-size="13" font-weight="bold">Batik Heritage Solo (Pro)</text>
+    <rect x="268" y="442" width="86" height="22" rx="11" fill="#FEF3C7"/>
+    <text x="276" y="456" fill="#78350F" font-family="sans-serif" font-size="10" font-weight="bold">Hampir Habis</text>
+    <text x="34" y="484" fill="${mp.textMuted}" font-family="sans-serif" font-size="11">129.000 / 150.000 token (86%)</text>
+    <rect x="34" y="496" width="275" height="8" rx="4" fill="#F59E0B"/>
+    <rect x="34" y="520" width="160" height="34" rx="8" fill="#5B4BDB"/>
+    <text x="64" y="541" fill="#FFFFFF" font-family="sans-serif" font-size="11" font-weight="bold">Unduh File Excel</text>
+  </svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
     <rect width="390" height="844" fill="${mp.bg}"/>
     <!-- Safe Area / Header -->
     <rect x="0" y="0" width="390" height="70" fill="${mp.headerBg}" stroke="${mp.border}" stroke-width="1"/>

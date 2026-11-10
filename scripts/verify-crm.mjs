@@ -612,6 +612,76 @@ assert(globalsCssCode.includes('--gradient-brand') && globalsCssCode.includes('-
 assert(globalsCssCode.includes('#0B1020') && globalsCssCode.includes('#111833'), 'CSS Variables memuat mode gelap latar #0B1020 dan permukaan #111833');
 assert(globalsCssCode.includes('radial-gradient(circle at 50% 0%'), 'Body mode terang memiliki wash radial lavender berintensitas rendah');
 
+// ==============================================================================
+// 19. REVISI DASHBOARD SUPER ADMIN (BAGIAN 1 - BAGIAN 5)
+// ==============================================================================
+console.log('\n19. Pengujian Revisi Dashboard Super Admin (Bagian 1 - Bagian 5):');
+
+// BAGIAN 1: Pembersihan Metrik Redundan
+assert(!adminCode.includes('Total Pelanggan'), 'BAGIAN 1: Kartu statistik "TOTAL PELANGGAN" telah dihapus dari /admin');
+assert(!adminCode.includes('Total Pesanan'), 'BAGIAN 1: Kartu statistik "TOTAL PESANAN" telah dihapus dari /admin');
+assert(!adminCode.includes('Audit Keamanan'), 'BAGIAN 1: Kartu statistik "AUDIT KEAMANAN" telah dihapus dari /admin');
+assert(!adminCode.includes('Audit Log Kepatuhan Privasi'), 'BAGIAN 1: Tab sub-menu "Audit Log Kepatuhan Privasi" telah dihapus');
+assert(adminCode.includes('TOTAL TOKO'), 'BAGIAN 1: Kartu statistik "TOTAL TOKO" dipertahankan');
+assert(adminCode.includes('TOTAL KONSUMSI TOKEN AI PLATFORM'), 'BAGIAN 1: Label kartu AI diperbarui menjadi "TOTAL KONSUMSI TOKEN AI PLATFORM"');
+
+// BAGIAN 2: Fitur Pemantauan Kuota AI & Notifikasi Toko
+assert(PLANS_CONFIG.standar.aiTokenLimitPerMonth === 15000, 'BAGIAN 2: Batas kuota token AI Paket Standar = 15.000 token/bulan');
+assert(PLANS_CONFIG.pro.aiTokenLimitPerMonth === 150000, 'BAGIAN 2: Batas kuota token AI Paket Pro = 150.000 token/bulan');
+assert(adminCode.includes('Monitoring Kuota Token AI per Toko'), 'BAGIAN 2: Tab Log Pemakaian AI menampilkan tabel monitoring kuota token AI per toko');
+assert(adminCode.includes('Aman') && adminCode.includes('Hampir Habis') && adminCode.includes('Token Habis'), 'BAGIAN 2: Badge status kuota Aman, Hampir Habis, dan Token Habis terdefinisi');
+assert(adminCode.includes('Notifikasi WhatsApp') && adminCode.includes('buildWhatsAppLink'), 'BAGIAN 2: Tombol Notifikasi WhatsApp dengan wa.me terpasang');
+assert(adminCode.includes('Kirim Email') && adminCode.includes('mailto:'), 'BAGIAN 2: Tombol Kirim Email dengan mailto: terpasang');
+assert(adminCode.includes('Pemberitahuan Kuota AI Threadly CRM'), 'BAGIAN 2: Subject email Pemberitahuan Kuota AI Threadly CRM sesuai ketentuan');
+assert(adminCode.includes('kuota AI asisten Threadly CRM kamu untuk periode ini telah habis / mencapai batas'), 'BAGIAN 2: Draf pesan otomatis pengingat kuota AI sesuai ketentuan');
+
+if (seedJson && Array.isArray(seedJson.aiRuns)) {
+  const koleksilokalTokens = seedJson.aiRuns.filter(r => r.store_id === 'store_koleksi_lokal').reduce((s, r) => s + r.total_tokens, 0);
+  const batikTokens = seedJson.aiRuns.filter(r => r.store_id === 'store_batik_heritage').reduce((s, r) => s + r.total_tokens, 0);
+  const thriftTokens = seedJson.aiRuns.filter(r => r.store_id === 'store_urban_thrift').reduce((s, r) => s + r.total_tokens, 0);
+  assert(koleksilokalTokens >= 15000, `Seed AI Runs Koleksi Lokal (${koleksilokalTokens}) memicu status Token Habis`);
+  assert(batikTokens >= 120000 && batikTokens < 150000, `Seed AI Runs Batik Heritage (${batikTokens}) memicu status Hampir Habis`);
+  assert(thriftTokens > 0 && thriftTokens < 12000, `Seed AI Runs Urban Thrift (${thriftTokens}) memicu status Aman`);
+}
+
+// BAGIAN 3: Visualisasi Chart Pendapatan Platform (Recharts)
+assert(adminCode.includes('AreaChart') && adminCode.includes('Tren Pertumbuhan Akumulasi Pemasukan Platform'), 'BAGIAN 3: Area Chart tren pertumbuhan akumulasi pemasukan platform menggunakan Recharts');
+assert(adminCode.includes('PieChart') && adminCode.includes('Porsi Pendapatan Paket'), 'BAGIAN 3: Donut Chart perbandingan porsi pendapatan Paket Standar vs Paket Pro menggunakan Recharts');
+
+// BAGIAN 4: Distribusi Metode Pembayaran Manual (Editable & Supabase)
+assert(adminCode.includes('Kelola Alokasi Pembayaran'), 'BAGIAN 4: Tombol "Kelola Alokasi Pembayaran" tersedia');
+assert(adminCode.includes('Virtual Account') && adminCode.includes('E-Wallet (QRIS/GoPay/OVO/ShopeePay)') && adminCode.includes('Auto-Debit') && adminCode.includes('Transfer Bank'), 'BAGIAN 4: Keempat kategori metode pembayaran tersedia di modal');
+assert(adminCode.includes('Simpan Perubahan') && adminCode.includes('/api/admin/payment-allocations'), 'BAGIAN 4: Tombol Simpan Perubahan terhubung ke API persistence');
+assert(adminCode.includes('BarChart'), 'BAGIAN 4: Horizontal Bar Chart interaktif terpasang untuk persentase proporsi dinamis');
+const paymentApiExists = fs.existsSync(path.resolve(process.cwd(), 'src/app/api/admin/payment-allocations/route.ts'));
+assert(paymentApiExists, 'BAGIAN 4: API Route /api/admin/payment-allocations tersedia');
+const migration003Exists = fs.existsSync(path.resolve(process.cwd(), 'supabase/migrations/003_platform_settings.sql'));
+assert(migration003Exists, 'BAGIAN 4: Migrasi SQL 003_platform_settings.sql tersedia untuk metadata Supabase');
+
+// BAGIAN 5: Ekspor Laporan Transaksi ke File Excel (.xlsx) menggunakan SheetJS
+assert(adminCode.includes('Unduh File Excel') && adminCode.includes('FileSpreadsheet'), 'BAGIAN 5: Tombol "Unduh File Excel" dengan ikon Lucide FileSpreadsheet tersedia');
+assert(adminCode.includes("import * as XLSX from 'xlsx'"), 'BAGIAN 5: Menggunakan library SheetJS (xlsx)');
+assert(adminCode.includes('Laporan_Transaksi_Threadly_'), 'BAGIAN 5: Penamaan file sesuai format Laporan_Transaksi_Threadly_[YYYY-MM-DD].xlsx');
+
+// BAGIAN 6: Zero Emoji Check in /admin UI
+const emojiRegex = /\p{Extended_Pictographic}/u;
+assert(!emojiRegex.test(adminCode), 'BAGIAN 6: Halaman Super Admin (/admin) 100% bebas emoji pada antarmuka');
+
+// Test SheetJS Excel round-trip buffer generation
+const { createRequire } = await import('module');
+const req = createRequire(import.meta.url);
+const XLSX = req('xlsx');
+const sampleWs = XLSX.utils.aoa_to_sheet([
+  ['No Tagihan', 'Nama Toko', 'Paket', 'Periode', 'Metode Bayar', 'Nominal', 'Tanggal', 'Status'],
+  ['INV-SAAS-KOLE-202611', 'Koleksi Lokal Boutique', 'Paket Standar', 'November 2026', 'Virtual Account', 20000, '10 Nov 2026, 10.30 WIB', 'Lunas'],
+]);
+const sampleWb = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(sampleWb, sampleWs, 'Transaksi Platform');
+const xlsxBuf = XLSX.write(sampleWb, { type: 'buffer', bookType: 'xlsx' });
+const parsedWb = XLSX.read(xlsxBuf, { type: 'buffer' });
+const parsedRows = XLSX.utils.sheet_to_json(parsedWb.Sheets['Transaksi Platform']);
+assert(parsedRows.length === 1 && parsedRows[0]['No Tagihan'] === 'INV-SAAS-KOLE-202611' && parsedRows[0]['Nominal'] === 20000, 'BAGIAN 5: Uji round-trip SheetJS menghasilkan berkas .xlsx valid dengan 8 kolom');
+
 // Final Summary
 console.log(`\n=========================================`);
 console.log(`Hasil Pengujian: ${passedTests} LULUS, ${failedTests} GAGAL.`);

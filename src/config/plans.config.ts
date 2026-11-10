@@ -17,6 +17,7 @@ export interface PlanFeatureLimits {
   maxCustomers: number | null; // null = unlimited
   maxProducts: number | null; // null = unlimited
   aiUsagePerMonth: number;
+  aiTokenLimitPerMonth: number;
   hasCustomAiPersona: boolean;
   hasAdvancedDashboard: boolean;
   hasBirthdayRetention: boolean;
@@ -41,6 +42,7 @@ export const PLANS_CONFIG: Record<PlanType, PlanFeatureLimits> = {
     maxCustomers: 300,
     maxProducts: 100,
     aiUsagePerMonth: 30,
+    aiTokenLimitPerMonth: 15000,
     hasCustomAiPersona: false,
     hasAdvancedDashboard: false,
     hasBirthdayRetention: false,
@@ -73,6 +75,7 @@ export const PLANS_CONFIG: Record<PlanType, PlanFeatureLimits> = {
     maxCustomers: null, // Unlimited
     maxProducts: null, // Unlimited
     aiUsagePerMonth: 300,
+    aiTokenLimitPerMonth: 150000,
     hasCustomAiPersona: true,
     hasAdvancedDashboard: true,
     hasBirthdayRetention: true,

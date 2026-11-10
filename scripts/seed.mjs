@@ -7550,6 +7550,49 @@ const orders = [
   }
 ];
 
+const nowMs = Date.now();
+const monthStartMs = new Date(new Date().getFullYear(), new Date().getMonth(), 1, 8, 0, 0).getTime();
+const buildRunTimestamp = (idx, total) => {
+  const span = Math.max(3600000, nowMs - monthStartMs);
+  const offset = Math.floor(((idx + 1) / (total + 1)) * span);
+  return new Date(monthStartMs + offset).toISOString();
+};
+
+const aiFeatureTypes = ['chat_to_order', 'reply_composer', 'customer_summary'];
+
+const generateStoreAiRuns = (storeId, count, totalTokensTarget) => {
+  const runs = [];
+  const basePerRun = Math.floor(totalTokensTarget / count);
+  let remaining = totalTokensTarget;
+  for (let i = 0; i < count; i++) {
+    const tokens = i === count - 1 ? remaining : basePerRun;
+    remaining -= tokens;
+    const promptTokens = Math.round(tokens * 0.62);
+    const completionTokens = tokens - promptTokens;
+    runs.push({
+      id: `ai_seed_${storeId}_${i + 1}`,
+      store_id: storeId,
+      feature_type: aiFeatureTypes[i % aiFeatureTypes.length],
+      prompt_tokens: promptTokens,
+      completion_tokens: completionTokens,
+      total_tokens: tokens,
+      latency_ms: 210 + ((i * 37) % 340),
+      status: 'success',
+      created_at: buildRunTimestamp(i, count),
+    });
+  }
+  return runs;
+};
+
+const aiRuns = [
+  // Koleksi Lokal Boutique (Standar: limit 15.000 -> 15.300 token = Token Habis)
+  ...generateStoreAiRuns('store_koleksi_lokal', 25, 15300),
+  // Batik Heritage Solo (Pro: limit 150.000 -> 129.000 token = Hampir Habis 86%)
+  ...generateStoreAiRuns('store_batik_heritage', 40, 129000),
+  // Urban Thrift Haven (Standar: limit 15.000 -> 4.500 token = Aman 30%)
+  ...generateStoreAiRuns('store_urban_thrift', 10, 4500),
+];
+
 const seedPayload = {
   users,
   stores,
@@ -7557,6 +7600,7 @@ const seedPayload = {
   products,
   customers,
   orders,
+  aiRuns,
   timestamp: new Date().toISOString(),
 };
 
@@ -7564,5 +7608,5 @@ const targetPath = path.resolve(process.cwd(), 'seed-data.json');
 fs.writeFileSync(targetPath, JSON.stringify(seedPayload, null, 2), 'utf-8');
 
 console.log('✅ [Threadly] Data seed berhasil ditulis ke: ' + targetPath);
-console.log('📦 Ringkasan: ' + users.length + ' Akun, ' + stores.length + ' Toko, ' + products.length + ' Produk, ' + customers.length + ' Pelanggan, ' + orders.length + ' Pesanan.');
+console.log('📦 Ringkasan: ' + users.length + ' Akun, ' + stores.length + ' Toko, ' + products.length + ' Produk, ' + customers.length + ' Pelanggan, ' + orders.length + ' Pesanan, ' + aiRuns.length + ' AI Runs.');
 console.log('🎉 Siap digunakan untuk pengujian menyeluruh!');
